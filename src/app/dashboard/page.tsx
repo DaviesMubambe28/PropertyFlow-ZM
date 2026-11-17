@@ -8,8 +8,8 @@ import { getPlanById } from "@/lib/store";
 
 export default function DashboardOverviewPage() {
   const { state, activeOrg } = useAppContext();
-  const orgProperties = state.properties.filter((property) => property.orgId === activeOrg?.id && property.status === "active");
-  const activeLeads = state.leads.filter((lead) => lead.orgId === activeOrg?.id && !["won", "lost"].includes(lead.stage));
+  const orgProperties = state.properties.filter((property) => property.orgId === activeOrg?.id && property.status === "available");
+  const activeLeads = state.leads.filter((lead) => lead.orgId === activeOrg?.id && !["converted", "lost"].includes(lead.stage));
   const openDeals = state.deals.filter((deal) => deal.orgId === activeOrg?.id && deal.status === "open");
   const openDealValue = openDeals.reduce((total, deal) => total + deal.amount, 0);
   const activePlan = activeOrg ? getPlanById(state.subscriptionPlans, activeOrg.subscriptionPlanId) : null;

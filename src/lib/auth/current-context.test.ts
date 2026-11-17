@@ -24,7 +24,7 @@ describe("mapOperationalData", () => {
     const result = mapOperationalData({
       properties: [{ id: "property-1", organization_id: "org-1", title: "Kabulonga Home", type: "house", listing_type: "sale", price: "750000.00", location: "Lusaka", bedrooms: 3, bathrooms: 2, area: "180.5", status: "active", image_url: null, description: "Family home", featured: false, created_at: "2026-11-17T00:00:00Z" }],
       contacts: [{ id: "contact-1", organization_id: "org-1", name: "Buyer One", email: "buyer@test.local", phone: "+260", category: "buyer", lead_source: "Website", budget: "K750,000", notes: "", created_at: "2026-11-17T00:00:00Z" }],
-      leads: [], viewings: [], tasks: [], deals: [],
+      leads: [], viewings: [], tasks: [], deals: [], leadInteractions: [],
     });
     expect(result.properties[0]).toMatchObject({ orgId: "org-1", listingType: "sale", price: 750000, area: 180.5 });
     expect(result.contacts[0]).toMatchObject({ orgId: "org-1", leadSource: "Website" });

@@ -12,10 +12,13 @@ export default function ContactsPage() {
     name: "",
     email: "",
     phone: "",
+    whatsapp: "",
     category: "buyer",
     leadSource: "Website",
     budget: "K500,000",
     notes: "",
+    preferredLocation: "",
+    preferences: "",
   });
 
   const orgContacts = state.contacts.filter((contact) => contact.orgId === activeOrg?.id);
@@ -54,6 +57,8 @@ export default function ContactsPage() {
               <label className="block text-sm font-medium">Lead source<input name="leadSource" value={form.leadSource} onChange={(event) => setForm({ ...form, leadSource: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]" /></label>
             </div>
             <label className="block text-sm font-medium">Budget<input name="budget" value={form.budget} onChange={(event) => setForm({ ...form, budget: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]" /></label>
+            <div className="grid gap-4 sm:grid-cols-2"><label className="block text-sm font-medium">WhatsApp<input name="whatsapp" type="tel" value={form.whatsapp} onChange={(event) => setForm({ ...form, whatsapp: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]" /></label><label className="block text-sm font-medium">Preferred location<input name="preferredLocation" value={form.preferredLocation} onChange={(event) => setForm({ ...form, preferredLocation: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]" /></label></div>
+            <label className="block text-sm font-medium">Property preferences<textarea name="preferences" value={form.preferences} onChange={(event) => setForm({ ...form, preferences: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]" rows={3} /></label>
             <label className="block text-sm font-medium">Notes<textarea name="notes" value={form.notes} onChange={(event) => setForm({ ...form, notes: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]" rows={4} /></label>
             {result.message && <p role={result.status === "error" ? "alert" : "status"} className="text-sm text-[#526174]">{result.message}</p>}
             <button type="submit" disabled={pending || !activeOrg} className="brand-button-primary w-full rounded-xl px-4 py-3 text-sm font-medium text-white disabled:opacity-60">{pending ? "Saving…" : "Add contact"}</button>

@@ -40,7 +40,8 @@ describe("createProperty", () => {
     expect(mocks.insert).toHaveBeenCalledWith({
       organization_id: "30000000-0000-4000-8000-000000000001", title: "Kabulonga Home", type: "House",
       listing_type: "sale", price: 750000, location: "Lusaka", bedrooms: 3, bathrooms: 2,
-      area: 180, description: "A family home", image_url: null, created_by: "user-1",
+      province: "Lusaka", area: 180, description: "A family home", image_url: null,
+      status: "available", owner_name: "", owner_phone: "", assigned_to: "user-1", created_by: "user-1",
     });
     expect(result.status).toBe("success");
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/dashboard");

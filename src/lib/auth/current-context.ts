@@ -36,6 +36,7 @@ type OperationalRows = {
   viewings: Record<string, unknown>[];
   tasks: Record<string, unknown>[];
   deals: Record<string, unknown>[];
+  leadInteractions: Record<string, unknown>[];
 };
 
 export function mapOperationalData(rows: OperationalRows): NonNullable<AuthenticatedIdentity["data"]> {
@@ -44,13 +45,16 @@ export function mapOperationalData(rows: OperationalRows): NonNullable<Authentic
       id: String(row.id), orgId: String(row.organization_id), title: String(row.title), type: String(row.type),
       listingType: row.listing_type as "sale" | "rent", price: Number(row.price), location: String(row.location),
       bedrooms: Number(row.bedrooms), bathrooms: Number(row.bathrooms), area: Number(row.area),
+      province: String(row.province ?? ""), ownerName: String(row.owner_name ?? ""),
+      ownerPhone: String(row.owner_phone ?? ""), assignedTo: row.assigned_to ? String(row.assigned_to) : undefined,
       status: row.status as AppState["properties"][number]["status"], imageUrl: String(row.image_url ?? ""),
       description: String(row.description), featured: Boolean(row.featured), createdAt: String(row.created_at),
     })),
     contacts: rows.contacts.map((row) => ({
       id: String(row.id), orgId: String(row.organization_id), name: String(row.name), email: String(row.email),
       phone: String(row.phone), category: String(row.category), leadSource: String(row.lead_source),
-      budget: String(row.budget), notes: String(row.notes), createdAt: String(row.created_at),
+      whatsapp: String(row.whatsapp ?? ""), preferredLocation: String(row.preferred_location ?? ""),
+      preferences: String(row.preferences ?? ""), budget: String(row.budget), notes: String(row.notes), createdAt: String(row.created_at),
     })),
     leads: rows.leads.map((row) => ({
       id: String(row.id), orgId: String(row.organization_id), contactId: String(row.contact_id),
@@ -62,12 +66,15 @@ export function mapOperationalData(rows: OperationalRows): NonNullable<Authentic
       id: String(row.id), orgId: String(row.organization_id), leadId: String(row.lead_id),
       propertyId: String(row.property_id), date: String(row.scheduled_at), agentId: String(row.agent_id),
       status: row.status as AppState["viewings"][number]["status"], notes: String(row.notes),
+      feedback: String(row.feedback ?? ""), outcome: row.outcome as AppState["viewings"][number]["outcome"],
     })),
     tasks: rows.tasks.map((row) => ({
       id: String(row.id), orgId: String(row.organization_id), title: String(row.title),
       description: String(row.description), assigneeId: String(row.assignee_id), dueDate: String(row.due_at),
       priority: row.priority as AppState["tasks"][number]["priority"],
       status: row.status as AppState["tasks"][number]["status"], createdAt: String(row.created_at),
+      contactId: row.contact_id ? String(row.contact_id) : undefined,
+      propertyId: row.property_id ? String(row.property_id) : undefined,
     })),
     deals: rows.deals.map((row) => ({
       id: String(row.id), orgId: String(row.organization_id), leadId: String(row.lead_id),
@@ -75,6 +82,15 @@ export function mapOperationalData(rows: OperationalRows): NonNullable<Authentic
       status: row.status as AppState["deals"][number]["status"], assignedTo: String(row.assigned_to),
       notes: String(row.notes), createdAt: String(row.created_at),
       closedAt: row.closed_at ? String(row.closed_at) : undefined,
+      transactionType: row.transaction_type as "sale" | "rental",
+      closingDate: row.closing_date ? String(row.closing_date) : undefined,
+      leaseStart: row.lease_start ? String(row.lease_start) : undefined,
+      monthlyRent: row.monthly_rent == null ? undefined : Number(row.monthly_rent),
+    })),
+    leadInteractions: rows.leadInteractions.map((row) => ({
+      id: String(row.id), orgId: String(row.organization_id), leadId: String(row.lead_id),
+      interactionType: row.interaction_type as AppState["leadInteractions"][number]["interactionType"],
+      summary: String(row.summary), createdBy: String(row.created_by), createdAt: String(row.created_at),
     })),
   };
 }
@@ -132,6 +148,7 @@ export async function loadWorkspaceIdentity(supabase: SupabaseServerClient, user
     supabase.from("viewings").select("*").order("scheduled_at"),
     supabase.from("tasks").select("*").order("due_at"),
     supabase.from("deals").select("*").order("created_at", { ascending: false }),
+    supabase.from("lead_interactions").select("*").order("created_at", { ascending: false }),
   ]);
   if (results.some((result) => result.error)) throw new Error("Unable to load workspace records.");
   identity.data = mapOperationalData({
@@ -141,6 +158,7 @@ export async function loadWorkspaceIdentity(supabase: SupabaseServerClient, user
     viewings: (results[3].data ?? []) as Record<string, unknown>[],
     tasks: (results[4].data ?? []) as Record<string, unknown>[],
     deals: (results[5].data ?? []) as Record<string, unknown>[],
+    leadInteractions: (results[6].data ?? []) as Record<string, unknown>[],
   });
   return identity;
 }

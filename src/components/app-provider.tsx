@@ -25,7 +25,7 @@ interface AppContextValue {
 export type AuthenticatedIdentity = {
   user: User;
   organizations: AppState["organizations"];
-  data?: Pick<AppState, "properties" | "contacts" | "leads" | "viewings" | "tasks" | "deals">;
+  data?: Pick<AppState, "properties" | "contacts" | "leads" | "viewings" | "tasks" | "deals" | "leadInteractions">;
 };
 
 const AppContext = createContext<AppContextValue | undefined>(undefined);

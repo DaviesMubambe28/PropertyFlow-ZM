@@ -17,7 +17,7 @@ export default function PropertiesPage() {
   const [location, setLocation] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
-  const activeProperties = state.properties.filter((property) => property.status === "active");
+  const activeProperties = state.properties.filter((property) => property.status === "available");
   const propertyTypes = [...new Set(activeProperties.map((property) => property.type))].sort();
   const normalizedQuery = query.trim().toLowerCase();
   const normalizedLocation = location.trim().toLowerCase();

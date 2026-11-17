@@ -10,7 +10,7 @@ import { formatCurrency } from "@/lib/tenant";
 
 export function PropertyDetailClient({ id }: { id: string }) {
   const { state } = useAppContext();
-  const property = state.properties.find((item) => item.id === id && item.status === "active");
+  const property = state.properties.find((item) => item.id === id && item.status === "available");
 
   return (
     <div className="min-h-screen bg-[#F7F9FC] text-[#17212F]">

@@ -4,18 +4,19 @@ import { useActionState, useState } from "react";
 import Link from "next/link";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { useAppContext } from "@/components/app-provider";
-import { createLead, initialOperationState, updateLeadStage } from "@/actions/operations";
+import { addLeadInteraction, createLead, initialOperationState, updateLeadStage } from "@/actions/operations";
 
-const stages = ["new", "contacted", "qualified", "viewing_scheduled", "negotiation", "won", "lost"];
+const stages = ["new", "contacted", "interested", "viewing_scheduled", "negotiation", "converted", "lost"];
 
 export default function PipelinePage() {
   const { state, activeOrg } = useAppContext();
   const [result, formAction, pending] = useActionState(createLead, initialOperationState);
+  const [interactionState, interactionAction, interactionPending] = useActionState(addLeadInteraction, initialOperationState);
   const [form, setForm] = useState({ title: "", contactId: "", propertyId: "", value: "", notes: "" });
 
   const orgLeads = state.leads.filter((lead) => lead.orgId === activeOrg?.id);
   const orgContacts = state.contacts.filter((contact) => contact.orgId === activeOrg?.id);
-  const orgProperties = state.properties.filter((property) => property.orgId === activeOrg?.id && property.status === "active");
+  const orgProperties = state.properties.filter((property) => property.orgId === activeOrg?.id && property.status === "available");
 
   return (
     <DashboardShell>
@@ -90,6 +91,15 @@ export default function PipelinePage() {
               );
             })}
           </div>
+          <form action={interactionAction} className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <h3 className="font-semibold text-slate-900">Record customer interaction</h3>
+            <input type="hidden" name="organizationId" value={activeOrg?.id ?? ""} />
+            <div className="mt-3 grid gap-3 sm:grid-cols-2"><label className="text-sm font-medium">Lead<select name="leadId" className="mt-1.5 w-full rounded-xl border border-slate-200 px-3 py-2.5" required><option value="">Choose lead</option>{orgLeads.map((lead) => <option key={lead.id} value={lead.id}>{lead.title}</option>)}</select></label><label className="text-sm font-medium">Interaction type<select name="interactionType" className="mt-1.5 w-full rounded-xl border border-slate-200 px-3 py-2.5"><option value="note">Note</option><option value="call">Call</option><option value="whatsapp">WhatsApp</option><option value="email">Email</option><option value="meeting">Meeting</option></select></label></div>
+            <label className="mt-3 block text-sm font-medium">Summary<textarea name="summary" rows={3} className="mt-1.5 w-full rounded-xl border border-slate-200 px-3 py-2.5" required /></label>
+            {interactionState.message && <p role={interactionState.status === "error" ? "alert" : "status"} className="mt-2 text-sm text-slate-600">{interactionState.message}</p>}
+            <button disabled={interactionPending || !orgLeads.length} className="brand-button-primary mt-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50">{interactionPending ? "Saving…" : "Record interaction"}</button>
+            {state.leadInteractions.filter((item) => item.orgId === activeOrg?.id).slice(0, 5).map((item) => <p key={item.id} className="mt-3 border-t border-slate-200 pt-3 text-xs text-slate-600"><span className="font-semibold uppercase">{item.interactionType}</span> · {item.summary}</p>)}
+          </form>
         </div>
       </div>
     </DashboardShell>

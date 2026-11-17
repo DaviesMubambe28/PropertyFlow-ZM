@@ -16,11 +16,15 @@ export default function PropertiesPage() {
     listingType: "sale",
     price: "780000",
     location: "Lusaka",
+    province: "Lusaka",
     bedrooms: "3",
     bathrooms: "2",
     area: "180",
     description: "",
     imageUrl: "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80",
+    status: "available",
+    ownerName: "",
+    ownerPhone: "",
   });
 
   const orgProperties = state.properties.filter((property) => property.orgId === activeOrg?.id);
@@ -61,6 +65,10 @@ export default function PropertiesPage() {
               </select></label>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block text-sm font-medium">Province<input name="province" value={form.province} onChange={(event) => setForm({ ...form, province: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]" /></label>
+              <label className="block text-sm font-medium">Availability<select name="status" value={form.status} onChange={(event) => setForm({ ...form, status: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]"><option value="available">Available</option><option value="reserved">Reserved</option><option value="under_offer">Under offer</option><option value="sold">Sold</option><option value="rented">Rented</option><option value="unavailable">Unavailable</option><option value="draft">Draft</option></select></label>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
               <label className="block text-sm font-medium">Price (ZMW)<input name="price" type="number" min="0" value={form.price} onChange={(event) => setForm({ ...form, price: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]" required /></label>
               <label className="block text-sm font-medium">Location<input name="location" value={form.location} onChange={(event) => setForm({ ...form, location: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]" required /></label>
             </div>
@@ -71,6 +79,7 @@ export default function PropertiesPage() {
             </div>
             <label className="block text-sm font-medium">Description<textarea name="description" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]" rows={4} /></label>
             <label className="block text-sm font-medium">Image URL<input name="imageUrl" type="url" value={form.imageUrl} onChange={(event) => setForm({ ...form, imageUrl: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]" /></label>
+            <div className="grid gap-4 sm:grid-cols-2"><label className="block text-sm font-medium">Property owner<input name="ownerName" value={form.ownerName} onChange={(event) => setForm({ ...form, ownerName: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]" /></label><label className="block text-sm font-medium">Owner phone<input name="ownerPhone" type="tel" value={form.ownerPhone} onChange={(event) => setForm({ ...form, ownerPhone: event.target.value })} className="mt-1.5 w-full rounded-xl border border-[#E5EAF0] bg-[#F7F9FC] px-3 py-2.5 text-[#17212F]" /></label></div>
             {result.message && <p role={result.status === "error" ? "alert" : "status"} className="text-sm text-[#526174]">{result.message}</p>}
             <button type="submit" disabled={pending || !activeOrg} className="brand-button-primary w-full rounded-xl px-4 py-3 text-sm font-medium text-white disabled:opacity-60">{pending ? "Saving…" : "Save property"}</button>
           </div>

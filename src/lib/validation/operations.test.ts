@@ -36,4 +36,26 @@ describe("operational input schemas", () => {
     expect(taskInputSchema.safeParse({ ...shared, title: "Call buyer", description: "", dueAt: "2026-12-01T10:30", priority: "high" }).success).toBe(true);
     expect(dealInputSchema.safeParse({ ...shared, leadId: "30000000-0000-4000-8000-000000000002", propertyId: "30000000-0000-4000-8000-000000000003", clientName: "Buyer One", amount: "750000", notes: "" }).success).toBe(true);
   });
+
+  it("keeps optional deal terms empty and rejects invalid dates", () => {
+    const deal = {
+      organizationId: "30000000-0000-4000-8000-000000000001",
+      leadId: "30000000-0000-4000-8000-000000000002",
+      propertyId: "30000000-0000-4000-8000-000000000003",
+      clientName: "Buyer One",
+      amount: "750000",
+      notes: "",
+      transactionType: "sale",
+      monthlyRent: "",
+      closingDate: "",
+      leaseStart: "",
+    };
+
+    expect(dealInputSchema.parse(deal)).toMatchObject({
+      monthlyRent: undefined,
+      closingDate: undefined,
+      leaseStart: undefined,
+    });
+    expect(dealInputSchema.safeParse({ ...deal, closingDate: "not-a-date" }).success).toBe(false);
+  });
 });

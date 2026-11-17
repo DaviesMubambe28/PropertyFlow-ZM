@@ -1,5 +1,5 @@
 begin;
-select plan(11);
+select plan(21);
 
 select has_table('public', 'properties', 'properties table exists');
 select has_table('public', 'contacts', 'contacts table exists');
@@ -7,6 +7,14 @@ select has_table('public', 'leads', 'leads table exists');
 select has_table('public', 'viewings', 'viewings table exists');
 select has_table('public', 'tasks', 'tasks table exists');
 select has_table('public', 'deals', 'deals table exists');
+select has_table('public', 'lead_interactions', 'lead interaction history table exists');
+select has_column('public', 'properties', 'owner_name', 'properties record the owner');
+select has_column('public', 'properties', 'assigned_to', 'properties can be assigned to an agent');
+select has_column('public', 'contacts', 'whatsapp', 'contacts record WhatsApp details');
+select has_column('public', 'viewings', 'feedback', 'viewings record customer feedback');
+select has_column('public', 'tasks', 'contact_id', 'tasks can link to a customer');
+select has_column('public', 'deals', 'transaction_type', 'deals distinguish sales from rentals');
+select has_column('public', 'deals', 'closing_date', 'deals record completion dates');
 
 insert into auth.users (
   instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
@@ -19,12 +27,27 @@ set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"20000000-0000-0000-0000-000000000001","email":"ops-a@test.local","role":"authenticated"}', true);
 select public.bootstrap_organization('Operations A', 'office-a@test.local', 'Ops A');
 select lives_ok(
-  $$insert into public.properties (organization_id, title, type, listing_type, price, location, description, created_by)
-    select id, 'Kabulonga Home', 'house', 'sale', 750000, 'Lusaka', 'Family home', auth.uid()
+  $$insert into public.properties (id, organization_id, title, type, listing_type, price, location, description, created_by)
+    select '50000000-0000-0000-0000-000000000001', id, 'Kabulonga Home', 'house', 'sale', 750000, 'Lusaka', 'Family home', auth.uid()
     from public.organizations limit 1$$,
   'an active member can create an operational record'
 );
 select is((select count(*)::integer from public.properties), 1, 'member can read own agency records');
+insert into public.contacts (id, organization_id, name, email, phone, created_by)
+select '50000000-0000-0000-0000-000000000002', id, 'Buyer One', 'buyer@test.local', '+260', auth.uid() from public.organizations limit 1;
+insert into public.leads (id, organization_id, contact_id, property_id, title, assigned_to)
+select '50000000-0000-0000-0000-000000000003', id, '50000000-0000-0000-0000-000000000002', '50000000-0000-0000-0000-000000000001', 'Buyer enquiry', auth.uid() from public.organizations limit 1;
+insert into public.deals (id, organization_id, lead_id, property_id, client_name, amount, assigned_to, transaction_type)
+select '50000000-0000-0000-0000-000000000004', id, '50000000-0000-0000-0000-000000000003', '50000000-0000-0000-0000-000000000001', 'Buyer One', 700000, auth.uid(), 'sale' from public.organizations limit 1;
+select lives_ok(
+  $$update public.deals set status = 'completed' where id = '50000000-0000-0000-0000-000000000004'$$,
+  'a deal can be completed'
+);
+select is(
+  (select status from public.properties where id = '50000000-0000-0000-0000-000000000001'),
+  'sold',
+  'completing a sale marks the property sold'
+);
 
 reset role;
 set local role authenticated;

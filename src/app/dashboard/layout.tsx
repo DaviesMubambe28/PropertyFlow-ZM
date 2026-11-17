@@ -18,6 +18,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     viewings: identity.data?.viewings.map((item) => `${item.id}:${item.status}`),
     tasks: identity.data?.tasks.map((item) => `${item.id}:${item.status}`),
     deals: identity.data?.deals.map((item) => `${item.id}:${item.status}`),
+    interactions: identity.data?.leadInteractions.map((item) => item.id),
   });
   return <AppProvider key={workspaceVersion} identity={identity}>{children}</AppProvider>;
 }

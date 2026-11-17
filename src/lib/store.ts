@@ -128,7 +128,7 @@ export function createSeedState(): AppState {
       bedrooms: 4,
       bathrooms: 3,
       area: 275,
-      status: "active",
+      status: "available",
       imageUrl:
         "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
       description: "Modern four-bedroom family residence with a landscaped garden.",
@@ -146,7 +146,7 @@ export function createSeedState(): AppState {
       bedrooms: 0,
       bathrooms: 2,
       area: 180,
-      status: "active",
+      status: "available",
       imageUrl:
         "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
       description: "Open-plan office with covered parking and reception area.",
@@ -164,7 +164,7 @@ export function createSeedState(): AppState {
       bedrooms: 2,
       bathrooms: 2,
       area: 120,
-      status: "active",
+      status: "available",
       imageUrl:
         "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
       description: "Two-bedroom apartment with balcony and secure access.",
@@ -182,6 +182,7 @@ export function createSeedState(): AppState {
     viewings: [],
     tasks: [],
     deals: [],
+    leadInteractions: [],
     subscriptionPlans: defaultPlans,
     currentUserId: "user-sarah",
     activeOrgId: "org-lusaka-heights",
@@ -198,6 +199,7 @@ export function createEmptyState(): AppState {
     viewings: [],
     tasks: [],
     deals: [],
+    leadInteractions: [],
     subscriptionPlans: [],
     currentUserId: null,
     activeOrgId: null,

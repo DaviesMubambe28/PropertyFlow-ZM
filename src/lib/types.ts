@@ -1,10 +1,10 @@
 export type OrgType = "agency" | "independent_agent" | "landlord";
 export type UserRole = "super_admin" | "owner" | "agent" | "staff" | "landlord";
 export type SubscriptionStatus = "active" | "trial" | "pending" | "expired" | "suspended";
-export type LeadStage = "new" | "contacted" | "qualified" | "viewing_scheduled" | "negotiation" | "won" | "lost";
+export type LeadStage = "new" | "contacted" | "interested" | "viewing_scheduled" | "negotiation" | "converted" | "lost";
 export type TaskStatus = "open" | "in_progress" | "done";
 export type TaskPriority = "low" | "medium" | "high";
-export type ListingStatus = "active" | "draft" | "archived";
+export type ListingStatus = "available" | "reserved" | "under_offer" | "sold" | "rented" | "unavailable" | "draft";
 
 export interface User {
   id: string;
@@ -40,6 +40,7 @@ export interface Property {
   listingType: "sale" | "rent";
   price: number;
   location: string;
+  province?: string;
   bedrooms: number;
   bathrooms: number;
   area: number;
@@ -47,6 +48,9 @@ export interface Property {
   imageUrl: string;
   description: string;
   featured: boolean;
+  ownerName?: string;
+  ownerPhone?: string;
+  assignedTo?: string;
   createdAt: string;
 }
 
@@ -56,10 +60,13 @@ export interface Contact {
   name: string;
   email: string;
   phone: string;
+  whatsapp?: string;
   category: string;
   leadSource: string;
   budget: string;
   notes: string;
+  preferredLocation?: string;
+  preferences?: string;
   createdAt: string;
 }
 
@@ -84,8 +91,10 @@ export interface Viewing {
   propertyId: string;
   date: string;
   agentId: string;
-  status: "scheduled" | "completed" | "cancelled";
+  status: "scheduled" | "completed" | "cancelled" | "missed";
   notes: string;
+  feedback?: string;
+  outcome?: "" | "offer" | "another_viewing" | "discontinued";
 }
 
 export interface TaskItem {
@@ -97,6 +106,8 @@ export interface TaskItem {
   dueDate: string;
   priority: TaskPriority;
   status: TaskStatus;
+  contactId?: string;
+  propertyId?: string;
   createdAt: string;
 }
 
@@ -107,11 +118,25 @@ export interface Deal {
   propertyId: string;
   clientName: string;
   amount: number;
-  status: "open" | "closed";
+  status: "open" | "completed" | "cancelled";
   assignedTo: string;
   notes: string;
   createdAt: string;
   closedAt?: string;
+  transactionType?: "sale" | "rental";
+  closingDate?: string;
+  leaseStart?: string;
+  monthlyRent?: number;
+}
+
+export interface LeadInteraction {
+  id: string;
+  orgId: string;
+  leadId: string;
+  interactionType: "note" | "call" | "whatsapp" | "email" | "meeting" | "status_change";
+  summary: string;
+  createdBy: string;
+  createdAt: string;
 }
 
 export interface SubscriptionPlan {
@@ -133,6 +158,7 @@ export interface AppState {
   viewings: Viewing[];
   tasks: TaskItem[];
   deals: Deal[];
+  leadInteractions: LeadInteraction[];
   subscriptionPlans: SubscriptionPlan[];
   currentUserId: string | null;
   activeOrgId: string | null;
