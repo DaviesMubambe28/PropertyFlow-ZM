@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Settings,
   UserCog,
+  Users,
 } from "lucide-react";
 import { useAppContext } from "@/components/app-provider";
 import { signOut } from "@/actions/auth";
@@ -26,6 +27,7 @@ const navItems = [
   { href: "/dashboard/reports", label: "Reports", icon: BarChart3 },
   { href: "/dashboard/subscriptions", label: "Subscriptions", icon: Briefcase },
   { href: "/dashboard/settings/agency", label: "Agency settings", icon: Settings },
+  { href: "/dashboard/settings/team", label: "Team", icon: Users },
   { href: "/dashboard/admin", label: "Admin", icon: ShieldCheck },
 ];
 
@@ -40,7 +42,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     : [];
   const visibleNavItems = navItems.filter((item) => {
     if (item.href === "/dashboard/admin") return currentUser?.role === "super_admin";
-    if (item.href === "/dashboard/settings/agency") return currentUser?.role === "owner";
+    if (item.href === "/dashboard/settings/agency" || item.href === "/dashboard/settings/team") return currentUser?.role === "owner";
     if (item.href === "/dashboard/pipeline" || item.href === "/dashboard/reports") {
       return currentUser?.role !== "landlord";
     }

@@ -1,0 +1,50 @@
+"use client";
+
+import { useActionState } from "react";
+import Link from "next/link";
+import { inviteAgent, revokeInvitation, setMembershipStatus } from "@/actions/team";
+
+type Member = { userId: string; fullName: string; role: string; status: string };
+type Invitation = { id: string; email: string; status: string; expiresAt: string };
+
+export function TeamManager({ organizationId, members, invitations }: { organizationId: string; members: Member[]; invitations: Invitation[] }) {
+  const [state, action, pending] = useActionState(inviteAgent, { status: "idle" as const });
+  return <div className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+    <section className="rounded-[24px] border border-[#E5EAF0] bg-white p-5 shadow-sm sm:p-6">
+      <h2 className="text-xl font-semibold">Invite an agent</h2>
+      <p className="mt-2 text-sm leading-6 text-[#667085]">The invitation is limited to the entered email and expires after seven days.</p>
+      <form action={action} className="mt-5 space-y-4">
+        <input type="hidden" name="organizationId" value={organizationId} />
+        <label className="block text-sm font-medium">Agent email<input name="email" type="email" autoComplete="email" required className="mt-1.5 w-full rounded-xl border border-[#D8E0E8] bg-[#F9FBFC] px-3.5 py-3" /></label>
+        {state.message && <p role={state.status === "error" ? "alert" : "status"} className="text-sm text-[#526174]">{state.message}</p>}
+        {state.invitePath && <Link href={state.invitePath} className="block break-all rounded-xl bg-[#F1FAFA] p-3 text-sm font-medium text-[#087F8C]">Open shareable invitation: {state.invitePath}</Link>}
+        <button disabled={pending} className="brand-button-primary min-h-11 w-full rounded-xl px-4 py-3 text-sm font-semibold text-white disabled:opacity-60">{pending ? "Creating…" : "Create invitation"}</button>
+      </form>
+      <div className="mt-7 border-t border-[#E5EAF0] pt-5">
+        <h3 className="font-semibold">Pending invitations</h3>
+        <div className="mt-3 space-y-2">
+          {invitations.map((invitation) => <div key={invitation.id} className="rounded-xl border border-[#E5EAF0] p-3 text-sm">
+            <p className="break-all font-medium">{invitation.email}</p>
+            <p className="mt-1 text-xs text-[#667085]">Expires {new Date(invitation.expiresAt).toLocaleDateString("en-ZM")}</p>
+            <div className="mt-3 flex gap-3"><Link href={`/invitations/${invitation.id}`} className="text-xs font-semibold text-[#087F8C]">Open link</Link><form action={revokeInvitation}><input type="hidden" name="invitationId" value={invitation.id} /><button className="text-xs font-semibold text-[#B42318]">Revoke</button></form></div>
+          </div>)}
+          {invitations.length === 0 && <p className="text-sm text-[#667085]">No pending invitations.</p>}
+        </div>
+      </div>
+    </section>
+
+    <section className="rounded-[24px] border border-[#E5EAF0] bg-white p-5 shadow-sm sm:p-6">
+      <h2 className="text-xl font-semibold">Team members</h2>
+      <div className="mt-5 divide-y divide-[#E5EAF0]">
+        {members.map((member) => <div key={member.userId} className="flex flex-wrap items-center justify-between gap-3 py-4">
+          <div><p className="font-medium">{member.fullName}</p><p className="mt-1 text-xs uppercase tracking-wide text-[#667085]">{member.role} · {member.status}</p></div>
+          {member.role === "agent" && <form action={setMembershipStatus}>
+            <input type="hidden" name="organizationId" value={organizationId} /><input type="hidden" name="userId" value={member.userId} />
+            <input type="hidden" name="status" value={member.status === "active" ? "deactivated" : "active"} />
+            <button className="rounded-lg border border-[#D8E0E8] px-3 py-2 text-xs font-semibold text-[#526174]">{member.status === "active" ? "Deactivate" : "Reactivate"}</button>
+          </form>}
+        </div>)}
+      </div>
+    </section>
+  </div>;
+}

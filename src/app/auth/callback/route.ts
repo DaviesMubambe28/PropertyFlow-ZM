@@ -18,7 +18,7 @@ export async function GET(request: Request) {
   const { data, error: userError } = await supabase.auth.getUser();
   if (userError || !data.user) return errorRedirect(requestUrl, "verification_failed");
   const nextPath = getSafeCallbackPath(requestUrl.searchParams.get("next"));
-  if (nextPath === "/reset-password") {
+  if (nextPath === "/reset-password" || nextPath.startsWith("/invitations/")) {
     return NextResponse.redirect(new URL(nextPath, requestUrl.origin));
   }
   const bootstrapInput = getAdministratorBootstrapInput(data.user.user_metadata);
