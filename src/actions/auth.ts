@@ -1,13 +1,16 @@
 "use server";
 
 import { getPublicEnvironment } from "@/lib/env/public";
+import { safeReturnPath } from "@/lib/auth/redirects";
 import { createClient } from "@/lib/supabase/server";
-import { administratorRegistrationSchema } from "@/lib/validation/identity";
+import { administratorRegistrationSchema, signInSchema } from "@/lib/validation/identity";
+import { redirect } from "next/navigation";
 
 export type AuthActionState = {
   status: "idle" | "error" | "success";
   message?: string;
   fields?: Record<string, string[] | undefined>;
+  redirectTo?: string;
 };
 export const initialAuthActionState: AuthActionState = { status: "idle" };
 const registrationSuccess: AuthActionState = {
@@ -52,4 +55,24 @@ export async function registerAdministrator(_state: AuthActionState, formData: F
     if (bootstrapError) return { status: "error", message: "Your account was created, but the agency workspace could not be opened." };
   }
   return registrationSuccess;
+}
+
+export async function signIn(_state: AuthActionState, formData: FormData): Promise<AuthActionState> {
+  const parsed = signInSchema.safeParse({ email: formData.get("email"), password: formData.get("password") });
+  if (!parsed.success) return {
+    status: "error",
+    message: "Review the highlighted fields and try again.",
+    fields: parsed.error.flatten().fieldErrors,
+  };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword(parsed.data);
+  if (error) return { status: "error", message: "The email or password is incorrect." };
+  return { status: "success", redirectTo: safeReturnPath(String(formData.get("next") ?? "")) };
+}
+
+export async function signOut() {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  redirect("/");
 }

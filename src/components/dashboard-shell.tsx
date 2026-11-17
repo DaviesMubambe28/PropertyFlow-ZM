@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   BarChart3,
   Building2,
@@ -14,6 +14,7 @@ import {
   UserCog,
 } from "lucide-react";
 import { useAppContext } from "@/components/app-provider";
+import { signOut } from "@/actions/auth";
 import { getUserOrganizations } from "@/lib/tenant";
 
 const navItems = [
@@ -28,8 +29,7 @@ const navItems = [
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const { currentUser, activeOrg, signOut, state, switchOrganization } = useAppContext();
+  const { currentUser, activeOrg, state, switchOrganization } = useAppContext();
 
   const userOrganizations = currentUser
     ? currentUser.role === "super_admin"
@@ -124,17 +124,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        <button
-          type="button"
-          onClick={() => {
-            signOut();
-            router.push("/");
-          }}
-          className="mt-auto flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10"
-        >
-          <LogOut className="h-4 w-4" />
-          Sign out
-        </button>
+        <form action={signOut} className="mt-auto">
+          <button type="submit" className="flex w-full items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10">
+            <LogOut className="h-4 w-4" />
+            Sign out
+          </button>
+        </form>
       </aside>
 
       <main className="min-w-0 lg:ml-72">

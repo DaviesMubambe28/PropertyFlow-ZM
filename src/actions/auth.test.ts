@@ -1,10 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({ createClient: vi.fn(), rpc: vi.fn(), signUp: vi.fn() }));
-mocks.createClient.mockImplementation(async () => ({ auth: { signUp: mocks.signUp }, rpc: mocks.rpc }));
+const mocks = vi.hoisted(() => ({
+  createClient: vi.fn(), rpc: vi.fn(), signInWithPassword: vi.fn(), signOut: vi.fn(), signUp: vi.fn(),
+}));
+mocks.createClient.mockImplementation(async () => ({
+  auth: { signInWithPassword: mocks.signInWithPassword, signOut: mocks.signOut, signUp: mocks.signUp }, rpc: mocks.rpc,
+}));
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/supabase/server", () => ({ createClient: mocks.createClient }));
-import { initialAuthActionState, registerAdministrator } from "./auth";
+import { initialAuthActionState, registerAdministrator, signIn } from "./auth";
 
 function form(overrides: Record<string, string> = {}) {
   const data = new FormData();
@@ -42,5 +46,31 @@ describe("registerAdministrator", () => {
     const result = await registerAdministrator(initialAuthActionState, form());
     expect(JSON.stringify(result)).not.toContain("sensitive detail");
     expect(result.status).toBe("error");
+  });
+});
+
+describe("signIn", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  function loginForm(next = "/dashboard") {
+    const data = new FormData();
+    data.set("email", " USER@EXAMPLE.TEST ");
+    data.set("password", "SecurePass123!");
+    data.set("next", next);
+    return data;
+  }
+
+  it("creates a cookie session and returns a safe destination", async () => {
+    mocks.signInWithPassword.mockResolvedValue({ error: null });
+    const result = await signIn(initialAuthActionState, loginForm("/dashboard/properties"));
+    expect(mocks.signInWithPassword).toHaveBeenCalledWith({ email: "user@example.test", password: "SecurePass123!" });
+    expect(result).toEqual({ status: "success", redirectTo: "/dashboard/properties" });
+  });
+
+  it("uses a generic authentication failure and rejects external return paths", async () => {
+    mocks.signInWithPassword.mockResolvedValue({ error: { message: "user not found" } });
+    const result = await signIn(initialAuthActionState, loginForm("https://attacker.test"));
+    expect(result).toEqual({ status: "error", message: "The email or password is incorrect." });
+    expect(JSON.stringify(result)).not.toContain("user not found");
   });
 });

@@ -21,3 +21,8 @@ export const administratorRegistrationSchema = z.object({
     context.addIssue({ code: "custom", message: "Passwords do not match.", path: ["confirmPassword"] });
   }
 });
+
+export const signInSchema = z.object({
+  email: normalizedEmail,
+  password: z.string().min(1, "Enter your password.").max(72),
+});
