@@ -18,6 +18,8 @@ type OrganizationRow = {
   name: string;
   email: string;
   phone: string | null;
+  location?: string | null;
+  logo_url?: string | null;
   timezone: string;
   currency: string;
   created_at: string;
@@ -99,6 +101,8 @@ export function mapWorkspaceIdentity(user: User, rows: MembershipRow[]): Authent
       type: "agency",
       contactEmail: organization.email,
       phone: organization.phone ?? "",
+      location: organization.location ?? "",
+      logoUrl: organization.logo_url ?? "",
       timezone: organization.timezone,
       currency: organization.currency,
       subscriptionPlanId: "agency-team",
@@ -113,7 +117,7 @@ export function mapWorkspaceIdentity(user: User, rows: MembershipRow[]): Authent
 export async function loadWorkspaceIdentity(supabase: SupabaseServerClient, user: User) {
   const { data, error } = await supabase
     .from("organization_memberships")
-    .select("organization_id, role, organizations!inner(id, name, email, phone, timezone, currency, created_at)")
+    .select("organization_id, role, organizations!inner(id, name, email, phone, location, logo_url, timezone, currency, created_at)")
     .eq("user_id", user.id)
     .eq("status", "active")
     .order("created_at");

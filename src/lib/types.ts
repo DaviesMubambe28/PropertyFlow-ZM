@@ -21,6 +21,8 @@ export interface Organization {
   type: OrgType;
   contactEmail: string;
   phone: string;
+  location?: string;
+  logoUrl?: string;
   timezone: string;
   currency: string;
   subscriptionPlanId: string;
