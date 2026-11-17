@@ -43,3 +43,44 @@ export const leadStageInputSchema = z.object({
   leadId: z.uuid(),
   stage: z.enum(["new", "contacted", "qualified", "viewing_scheduled", "negotiation", "won", "lost"]),
 });
+
+const dateTime = z.string().refine((value) => !Number.isNaN(Date.parse(value)), "Enter a valid date and time.")
+  .transform((value) => new Date(value).toISOString());
+
+export const viewingInputSchema = z.object({
+  organizationId,
+  leadId: z.uuid(),
+  propertyId: z.uuid(),
+  scheduledAt: dateTime,
+  notes: z.string().trim().max(5000),
+});
+
+export const taskInputSchema = z.object({
+  organizationId,
+  title: shortText(2, 200, "Enter a task title."),
+  description: z.string().trim().max(5000),
+  dueAt: dateTime,
+  priority: z.enum(["low", "medium", "high"]),
+});
+
+export const dealInputSchema = z.object({
+  organizationId,
+  leadId: z.uuid(),
+  propertyId: z.uuid(),
+  clientName: shortText(2, 160, "Enter the client name."),
+  amount: z.coerce.number().nonnegative().max(999999999999),
+  notes: z.string().trim().max(5000),
+});
+
+export const recordStatusSchema = z.object({
+  recordId: z.uuid(),
+  kind: z.enum(["task", "deal"]),
+  status: z.enum(["open", "in_progress", "done", "closed"]),
+}).superRefine((value, context) => {
+  if (value.kind === "deal" && !["open", "closed"].includes(value.status)) {
+    context.addIssue({ code: "custom", path: ["status"], message: "Invalid deal status." });
+  }
+  if (value.kind === "task" && !["open", "in_progress", "done"].includes(value.status)) {
+    context.addIssue({ code: "custom", path: ["status"], message: "Invalid task status." });
+  }
+});

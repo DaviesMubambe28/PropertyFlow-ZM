@@ -14,6 +14,7 @@ import {
   Settings,
   UserCog,
   Users,
+  CalendarCheck,
 } from "lucide-react";
 import { useAppContext } from "@/components/app-provider";
 import { signOut } from "@/actions/auth";
@@ -24,6 +25,7 @@ const navItems = [
   { href: "/dashboard/properties", label: "Properties", icon: Building2 },
   { href: "/dashboard/contacts", label: "Contacts", icon: ContactRound },
   { href: "/dashboard/pipeline", label: "Pipeline", icon: FolderKanban },
+  { href: "/dashboard/activities", label: "Activities", icon: CalendarCheck },
   { href: "/dashboard/reports", label: "Reports", icon: BarChart3 },
   { href: "/dashboard/subscriptions", label: "Subscriptions", icon: Briefcase },
   { href: "/dashboard/settings/agency", label: "Agency settings", icon: Settings },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { contactInputSchema, leadInputSchema, propertyInputSchema } from "./operations";
+import { contactInputSchema, dealInputSchema, leadInputSchema, propertyInputSchema, taskInputSchema, viewingInputSchema } from "./operations";
 
 describe("operational input schemas", () => {
   it("normalizes a valid property payload", () => {
@@ -28,5 +28,12 @@ describe("operational input schemas", () => {
       organizationId: "30000000-0000-4000-8000-000000000001", contactId: "not-a-uuid",
       propertyId: "", title: "New enquiry", value: "500000", notes: "",
     }).success).toBe(false);
+  });
+
+  it("validates linked viewing, task, and deal inputs", () => {
+    const shared = { organizationId: "30000000-0000-4000-8000-000000000001" };
+    expect(viewingInputSchema.safeParse({ ...shared, leadId: "30000000-0000-4000-8000-000000000002", propertyId: "30000000-0000-4000-8000-000000000003", scheduledAt: "2026-12-01T10:30", notes: "" }).success).toBe(true);
+    expect(taskInputSchema.safeParse({ ...shared, title: "Call buyer", description: "", dueAt: "2026-12-01T10:30", priority: "high" }).success).toBe(true);
+    expect(dealInputSchema.safeParse({ ...shared, leadId: "30000000-0000-4000-8000-000000000002", propertyId: "30000000-0000-4000-8000-000000000003", clientName: "Buyer One", amount: "750000", notes: "" }).success).toBe(true);
   });
 });

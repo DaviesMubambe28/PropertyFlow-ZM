@@ -4,9 +4,13 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import {
   contactInputSchema,
+  dealInputSchema,
   leadInputSchema,
   leadStageInputSchema,
   propertyInputSchema,
+  recordStatusSchema,
+  taskInputSchema,
+  viewingInputSchema,
 } from "@/lib/validation/operations";
 
 export type OperationState = {
@@ -78,5 +82,66 @@ export async function updateLeadStage(formData: FormData) {
   const { supabase, user } = await authenticatedClient();
   if (!user) return;
   await supabase.from("leads").update({ stage: parsed.data.stage }).eq("id", parsed.data.leadId);
+  revalidatePath("/dashboard");
+}
+
+export async function createViewing(_state: OperationState, formData: FormData): Promise<OperationState> {
+  const parsed = viewingInputSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return invalid(parsed.error.flatten().fieldErrors);
+  const { supabase, user } = await authenticatedClient();
+  if (!user) return { status: "error", message: "Sign in again before scheduling the viewing." };
+  const { error } = await supabase.from("viewings").insert({
+    organization_id: parsed.data.organizationId, lead_id: parsed.data.leadId,
+    property_id: parsed.data.propertyId, scheduled_at: parsed.data.scheduledAt,
+    agent_id: user.id, notes: parsed.data.notes,
+  });
+  if (error) return { status: "error", message: "The viewing could not be scheduled. Check the linked lead and property." };
+  revalidatePath("/dashboard");
+  return { status: "success", message: "Viewing scheduled." };
+}
+
+export async function createTask(_state: OperationState, formData: FormData): Promise<OperationState> {
+  const parsed = taskInputSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return invalid(parsed.error.flatten().fieldErrors);
+  const { supabase, user } = await authenticatedClient();
+  if (!user) return { status: "error", message: "Sign in again before creating the task." };
+  const { error } = await supabase.from("tasks").insert({
+    organization_id: parsed.data.organizationId, title: parsed.data.title,
+    description: parsed.data.description, due_at: parsed.data.dueAt,
+    priority: parsed.data.priority, assignee_id: user.id, created_by: user.id,
+  });
+  if (error) return { status: "error", message: "The task could not be saved. Please try again." };
+  revalidatePath("/dashboard");
+  return { status: "success", message: "Task created." };
+}
+
+export async function createDeal(_state: OperationState, formData: FormData): Promise<OperationState> {
+  const parsed = dealInputSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return invalid(parsed.error.flatten().fieldErrors);
+  const { supabase, user } = await authenticatedClient();
+  if (!user) return { status: "error", message: "Sign in again before creating the deal." };
+  const { error } = await supabase.from("deals").insert({
+    organization_id: parsed.data.organizationId, lead_id: parsed.data.leadId,
+    property_id: parsed.data.propertyId, client_name: parsed.data.clientName,
+    amount: parsed.data.amount, assigned_to: user.id, notes: parsed.data.notes,
+  });
+  if (error) return { status: "error", message: "The deal could not be saved. Check the linked lead and property." };
+  revalidatePath("/dashboard");
+  return { status: "success", message: "Deal created." };
+}
+
+export async function updateOperationalStatus(formData: FormData) {
+  const parsed = recordStatusSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return;
+  const { supabase, user } = await authenticatedClient();
+  if (!user) return;
+  if (parsed.data.kind === "task") {
+    await supabase.from("tasks").update({ status: parsed.data.status }).eq("id", parsed.data.recordId);
+  } else {
+    await supabase.from("deals").update({
+      status: parsed.data.status,
+      closed_at: parsed.data.status === "closed" ? new Date().toISOString() : null,
+    }).eq("id", parsed.data.recordId);
+  }
   revalidatePath("/dashboard");
 }
