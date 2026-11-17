@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PropertyFlow ZM
 
-## Getting Started
+PropertyFlow ZM is a multi-tenant property operations system for Zambian real-estate agencies. It gives agency owners and agents one authenticated workspace for properties, landlords, customers, leads, interactions, viewings, follow-up tasks, sales and rental transactions, team invitations, and operational reports.
 
-First, run the development server:
+## What is included
+
+- Email/password registration, login, password recovery, and protected dashboard routes
+- Agency onboarding, settings, active memberships, roles, and secure agent invitations
+- Tenant-isolated PostgreSQL data with Supabase Row Level Security
+- Property inventory with owner details, assignment, availability, and sale/rental status
+- Customer records, lead pipeline, and customer interaction history
+- Viewing scheduling, outcomes, and feedback
+- Follow-up tasks linked to customers and properties
+- Sales and rental transactions that automatically mark completed properties sold or rented
+- Agency and per-agent operational reporting
+- Server-side validation, secure response headers, and automated application/database tests
+
+The MVP deliberately does not include a public marketplace, customer accounts, payment collection, government verification, legal document transfer, or automated WhatsApp/AI workflows.
+
+## Requirements
+
+- Node.js 22 or newer
+- npm
+- Docker, when using Supabase locally
+- A Supabase project for a hosted deployment
+
+## Local setup
 
 ```bash
+npm ci
+cp .env.example .env.local
+npx supabase start
+npx supabase db reset
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+After `npx supabase start`, copy the local publishable/anon key and service-role key into `.env.local`. Open `http://localhost:3000`. Local authentication emails can be viewed in Inbucket at `http://127.0.0.1:54324`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Required environment variables:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```dotenv
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
 
-## Learn More
+`SUPABASE_SERVICE_ROLE_KEY` is server-only. Never expose it through a `NEXT_PUBLIC_` variable or commit it to source control.
 
-To learn more about Next.js, take a look at the following resources:
+## Hosted deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Create a Supabase project and link the repository with `npx supabase link --project-ref <project-ref>`.
+2. Apply all migrations with `npx supabase db push`.
+3. In Supabase Auth, set the Site URL to the production application URL and allow `/auth/callback` and `/reset-password` redirects.
+4. Configure an SMTP provider in Supabase Auth so invitations and password recovery emails reach real users.
+5. Add the four environment variables above to the hosting provider, using the hosted Supabase URL and keys.
+6. Build with `npm run build`, then deploy the Next.js application.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The application needs a user-owned hosted Supabase project and SMTP configuration for real production accounts and email delivery. The repository contains no external account credentials.
 
-## Deploy on Vercel
+## Quality checks
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run test:run
+npm run lint
+npx tsc --noEmit
+npx supabase test db
+npm run build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Database migrations and pgTAP tests are in `supabase/migrations` and `supabase/tests`. The security model is deny-by-default: authenticated users can only access records belonging to organizations where they have an active membership.
