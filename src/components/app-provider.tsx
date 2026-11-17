@@ -39,6 +39,7 @@ interface AppContextValue {
 export type AuthenticatedIdentity = {
   user: User;
   organizations: AppState["organizations"];
+  data?: Pick<AppState, "properties" | "contacts" | "leads" | "viewings" | "tasks" | "deals">;
 };
 
 const AppContext = createContext<AppContextValue | undefined>(undefined);
@@ -51,6 +52,7 @@ export function AppProvider({ children, identity }: { children: ReactNode; ident
       ...initialState,
       organizations: identity.organizations,
       users: [identity.user],
+      ...identity.data,
       currentUserId: identity.user.id,
       activeOrgId: identity.user.orgId,
     };
