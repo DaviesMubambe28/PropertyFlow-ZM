@@ -16,8 +16,6 @@ import type {
   Deal,
   Lead,
   LeadStage,
-  Organization,
-  OrgType,
   Property,
   TaskItem,
   User,
@@ -28,9 +26,6 @@ interface AppContextValue {
   state: AppState;
   currentUser: User | null;
   activeOrg: ReturnType<typeof getActiveOrganization>;
-  signIn: (email: string, password: string) => string | null;
-  registerUser: (fullName: string, email: string, password: string, orgName: string, orgType: OrgType) => string | null;
-  signOut: () => void;
   switchOrganization: (orgId: string) => void;
   createProperty: (input: Omit<Property, "id" | "orgId" | "createdAt">) => Property | null;
   createContact: (input: Omit<Contact, "id" | "orgId" | "createdAt">) => Contact | null;
@@ -52,85 +47,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const currentUser = useMemo(() => getCurrentUser(state), [state]);
   const activeOrg = useMemo(() => getActiveOrganization(state), [state]);
-
-  const signIn = (email: string, password: string) => {
-    const normalizedEmail = email.trim().toLowerCase();
-    const foundUser = state.users.find(
-      (user) => user.email.toLowerCase() === normalizedEmail && user.password === password,
-    );
-
-    if (!foundUser) {
-      return "The email or password did not match a local demo account.";
-    }
-
-    setState((previous) => ({
-      ...previous,
-      currentUserId: foundUser.id,
-      activeOrgId: foundUser.orgId,
-    }));
-    return null;
-  };
-
-  const registerUser = (fullName: string, email: string, password: string, orgName: string, orgType: OrgType) => {
-    const normalizedEmail = email.trim().toLowerCase();
-    const duplicate = state.users.some((user) => user.email.toLowerCase() === normalizedEmail);
-
-    if (duplicate) {
-      return "An account with that email already exists.";
-    }
-
-    const orgId = generateId("org");
-    const userId = generateId("user");
-    const now = new Date().toISOString();
-
-    const plan = orgType === "agency"
-      ? { id: "agency-team", listingLimit: 200, seatLimit: 8 }
-      : orgType === "landlord"
-        ? { id: "landlord-basic", listingLimit: 0, seatLimit: 4 }
-        : { id: "agent-solo", listingLimit: 25, seatLimit: 1 };
-    const org: Organization = {
-      id: orgId,
-      name: orgName.trim() || `${fullName.trim()}'s workspace`,
-      type: orgType,
-      contactEmail: normalizedEmail,
-      phone: "",
-      timezone: "Africa/Lusaka",
-      currency: "ZMW",
-      subscriptionPlanId: plan.id,
-      subscriptionStatus: orgType === "landlord" ? "pending" : "trial",
-      createdAt: now,
-      listingLimit: plan.listingLimit,
-      seatLimit: plan.seatLimit,
-    };
-
-    const user: User = {
-      id: userId,
-      fullName,
-      email: normalizedEmail,
-      password,
-      role: orgType === "agency" ? "owner" : orgType === "landlord" ? "landlord" : "agent",
-      createdAt: now,
-      orgId,
-    };
-
-    setState((previous) => ({
-      ...previous,
-      organizations: [...previous.organizations, org],
-      users: [...previous.users, user],
-      currentUserId: user.id,
-      activeOrgId: org.id,
-    }));
-
-    return null;
-  };
-
-  const signOut = () => {
-    setState((previous) => ({
-      ...previous,
-      currentUserId: null,
-      activeOrgId: previous.organizations[0]?.id ?? null,
-    }));
-  };
 
   const switchOrganization = (orgId: string) => {
     setState((previous) => ({
@@ -283,9 +199,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         state,
         currentUser,
         activeOrg,
-        signIn,
-        registerUser,
-        signOut,
         switchOrganization,
         createProperty,
         createContact,

@@ -1,14 +1,7 @@
-import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
-import { AuthForm } from "@/components/auth-form";
-import { AppProvider } from "@/components/app-provider";
+import { describe, expect, it } from "vitest";
 import { createEmptyState, createSeedState } from "@/lib/store";
 import { formatCurrency, getCurrentUser } from "@/lib/tenant";
 import { propertySchema } from "@/lib/validation";
-
-vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: vi.fn() }),
-}));
 
 describe("shared property validation", () => {
   it("accepts valid property payloads", () => {
@@ -66,16 +59,3 @@ describe("session helpers", () => {
   });
 });
 
-describe("auth form", () => {
-  it("renders the login form", () => {
-    render(
-      <AppProvider>
-        <AuthForm mode="login" />
-      </AppProvider>,
-    );
-
-    expect(screen.getByRole("button", { name: /sign in/i })).toBeInTheDocument();
-    expect(screen.getByLabelText("Email address")).toHaveValue("");
-    expect(screen.getByLabelText("Password")).toHaveValue("");
-  });
-});
