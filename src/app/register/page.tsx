@@ -1,13 +1,13 @@
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, Building2, ContactRound, Home } from "lucide-react";
+import { ArrowRight, BadgeCheck, Building2, ShieldCheck, UsersRound } from "lucide-react";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { AuthForm } from "@/components/auth-form";
+import { AdministratorRegistrationForm } from "@/components/administrator-registration-form";
 
 const audiences = [
-  { icon: Building2, title: "Agency", detail: "A team workspace" },
-  { icon: ContactRound, title: "Independent agent", detail: "A focused solo workspace" },
-  { icon: Home, title: "Landlord", detail: "Property operations preview" },
+  { icon: Building2, title: "One agency workspace", detail: "Keep the team and portfolio together" },
+  { icon: UsersRound, title: "Role-based access", detail: "Invite agents after verification" },
+  { icon: ShieldCheck, title: "Secure by default", detail: "Verified email and isolated agency data" },
 ];
 
 export default function RegisterPage() {
@@ -20,7 +20,7 @@ export default function RegisterPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#087F8C]">A workspace for your work</p>
             <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-tight text-[#0B192A] sm:text-4xl">Start with the way you manage property.</h1>
             <p className="mt-4 text-sm leading-6 text-[#667085]">
-              Choose an account type, add your account details and review your workspace before creating a local demo account.
+              Create the secure workspace your agency will use to manage listings, leads, and team activity.
             </p>
             <div className="mt-7 space-y-3">
               {audiences.map(({ icon: Icon, title, detail }) => (
@@ -37,13 +37,13 @@ export default function RegisterPage() {
             </div>
             <div className="mt-6 flex items-start gap-3 rounded-xl border border-[#E8D9B7] bg-[#FFF9ED] p-3.5 text-xs leading-5 text-[#76500A]">
               <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-              <p>Prototype only. No account verification, secure server-side authentication or shared database is connected. Avoid real customer data and reused passwords.</p>
+              <p>Your account remains inactive until you confirm the verification link sent to your email address.</p>
             </div>
             <Link href="/features" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#087F8C] hover:text-[#066875]">
               See available capabilities <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </section>
-          <AuthForm mode="register" />
+          <AdministratorRegistrationForm />
         </div>
       </main>
       <SiteFooter />
