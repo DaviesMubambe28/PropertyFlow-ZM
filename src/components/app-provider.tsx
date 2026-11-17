@@ -36,10 +36,25 @@ interface AppContextValue {
   createDeal: (input: Omit<Deal, "id" | "orgId" | "createdAt">) => Deal | null;
 }
 
+export type AuthenticatedIdentity = {
+  user: User;
+  organizations: AppState["organizations"];
+};
+
 const AppContext = createContext<AppContextValue | undefined>(undefined);
 
-export function AppProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<AppState>(() => loadAppState());
+export function AppProvider({ children, identity }: { children: ReactNode; identity?: AuthenticatedIdentity }) {
+  const [state, setState] = useState<AppState>(() => {
+    const initialState = loadAppState();
+    if (!identity) return initialState;
+    return {
+      ...initialState,
+      organizations: identity.organizations,
+      users: [identity.user],
+      currentUserId: identity.user.id,
+      activeOrgId: identity.user.orgId,
+    };
+  });
 
   useEffect(() => {
     saveAppState(state);
