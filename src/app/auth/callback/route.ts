@@ -17,9 +17,13 @@ export async function GET(request: Request) {
   if (exchangeError) return errorRedirect(requestUrl, "verification_failed");
   const { data, error: userError } = await supabase.auth.getUser();
   if (userError || !data.user) return errorRedirect(requestUrl, "verification_failed");
+  const nextPath = getSafeCallbackPath(requestUrl.searchParams.get("next"));
+  if (nextPath === "/reset-password") {
+    return NextResponse.redirect(new URL(nextPath, requestUrl.origin));
+  }
   const bootstrapInput = getAdministratorBootstrapInput(data.user.user_metadata);
   if (!bootstrapInput) return errorRedirect(requestUrl, "registration_incomplete");
   const { error: bootstrapError } = await supabase.rpc("bootstrap_organization", bootstrapInput);
   if (bootstrapError) return errorRedirect(requestUrl, "workspace_setup_failed");
-  return NextResponse.redirect(new URL(getSafeCallbackPath(requestUrl.searchParams.get("next")), requestUrl.origin));
+  return NextResponse.redirect(new URL(nextPath, requestUrl.origin));
 }

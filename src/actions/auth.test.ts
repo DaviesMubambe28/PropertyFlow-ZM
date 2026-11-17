@@ -1,14 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
-  createClient: vi.fn(), rpc: vi.fn(), signInWithPassword: vi.fn(), signOut: vi.fn(), signUp: vi.fn(),
+  createClient: vi.fn(), resetPasswordForEmail: vi.fn(), rpc: vi.fn(), signInWithPassword: vi.fn(),
+  signOut: vi.fn(), signUp: vi.fn(), updateUser: vi.fn(),
 }));
 mocks.createClient.mockImplementation(async () => ({
-  auth: { signInWithPassword: mocks.signInWithPassword, signOut: mocks.signOut, signUp: mocks.signUp }, rpc: mocks.rpc,
+  auth: {
+    resetPasswordForEmail: mocks.resetPasswordForEmail, signInWithPassword: mocks.signInWithPassword,
+    signOut: mocks.signOut, signUp: mocks.signUp, updateUser: mocks.updateUser,
+  }, rpc: mocks.rpc,
 }));
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/supabase/server", () => ({ createClient: mocks.createClient }));
-import { initialAuthActionState, registerAdministrator, signIn } from "./auth";
+import {
+  initialAuthActionState, registerAdministrator, requestPasswordReset, signIn, updatePassword,
+} from "./auth";
 
 function form(overrides: Record<string, string> = {}) {
   const data = new FormData();
@@ -72,5 +78,32 @@ describe("signIn", () => {
     const result = await signIn(initialAuthActionState, loginForm("https://attacker.test"));
     expect(result).toEqual({ status: "error", message: "The email or password is incorrect." });
     expect(JSON.stringify(result)).not.toContain("user not found");
+  });
+});
+
+describe("password recovery", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://app.propertyflow.test");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://project.supabase.co");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "sb_publishable_test");
+  });
+
+  it("returns the same safe response when the provider rejects a recovery request", async () => {
+    mocks.resetPasswordForEmail.mockResolvedValue({ error: { message: "user missing" } });
+    const data = new FormData(); data.set("email", "user@example.test");
+    const result = await requestPasswordReset(initialAuthActionState, data);
+    expect(result.status).toBe("success");
+    expect(JSON.stringify(result)).not.toContain("user missing");
+  });
+
+  it("updates a compliant password and closes the recovery session", async () => {
+    mocks.updateUser.mockResolvedValue({ error: null });
+    mocks.signOut.mockResolvedValue({ error: null });
+    const data = new FormData(); data.set("password", "NewSecure123!"); data.set("confirmPassword", "NewSecure123!");
+    const result = await updatePassword(initialAuthActionState, data);
+    expect(mocks.updateUser).toHaveBeenCalledWith({ password: "NewSecure123!" });
+    expect(mocks.signOut).toHaveBeenCalled();
+    expect(result.status).toBe("success");
   });
 });

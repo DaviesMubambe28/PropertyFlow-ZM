@@ -3,7 +3,12 @@
 import { getPublicEnvironment } from "@/lib/env/public";
 import { safeReturnPath } from "@/lib/auth/redirects";
 import { createClient } from "@/lib/supabase/server";
-import { administratorRegistrationSchema, signInSchema } from "@/lib/validation/identity";
+import {
+  administratorRegistrationSchema,
+  passwordResetSchema,
+  recoveryRequestSchema,
+  signInSchema,
+} from "@/lib/validation/identity";
 import { redirect } from "next/navigation";
 
 export type AuthActionState = {
@@ -75,4 +80,35 @@ export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect("/");
+}
+
+const recoveryConfirmation: AuthActionState = {
+  status: "success",
+  message: "If an account exists for that email, a password reset link is on its way.",
+};
+
+export async function requestPasswordReset(_state: AuthActionState, formData: FormData): Promise<AuthActionState> {
+  const parsed = recoveryRequestSchema.safeParse({ email: formData.get("email") });
+  if (!parsed.success) return {
+    status: "error", message: "Enter a valid email address.", fields: parsed.error.flatten().fieldErrors,
+  };
+  const callbackUrl = new URL("/auth/callback", getPublicEnvironment().NEXT_PUBLIC_APP_URL);
+  callbackUrl.searchParams.set("next", "/reset-password");
+  const supabase = await createClient();
+  await supabase.auth.resetPasswordForEmail(parsed.data.email, { redirectTo: callbackUrl.toString() });
+  return recoveryConfirmation;
+}
+
+export async function updatePassword(_state: AuthActionState, formData: FormData): Promise<AuthActionState> {
+  const parsed = passwordResetSchema.safeParse({
+    password: formData.get("password"), confirmPassword: formData.get("confirmPassword"),
+  });
+  if (!parsed.success) return {
+    status: "error", message: "Review the highlighted fields and try again.", fields: parsed.error.flatten().fieldErrors,
+  };
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
+  if (error) return { status: "error", message: "This reset link is invalid or expired. Request a new one." };
+  await supabase.auth.signOut();
+  return { status: "success", message: "Your password has been updated. Sign in with your new password." };
 }

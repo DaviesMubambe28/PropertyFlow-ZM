@@ -26,3 +26,14 @@ export const signInSchema = z.object({
   email: normalizedEmail,
   password: z.string().min(1, "Enter your password.").max(72),
 });
+
+export const recoveryRequestSchema = z.object({ email: normalizedEmail });
+
+export const passwordResetSchema = z.object({
+  password: strongPassword,
+  confirmPassword: z.string(),
+}).superRefine((value, context) => {
+  if (value.password !== value.confirmPassword) {
+    context.addIssue({ code: "custom", message: "Passwords do not match.", path: ["confirmPassword"] });
+  }
+});
