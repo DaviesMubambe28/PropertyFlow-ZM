@@ -36,7 +36,7 @@ const available = [
   },
   {
     title: "Workspace overview and reports",
-    description: "Review summaries calculated from the current browser’s workspace records. These are not shared or production analytics.",
+    description: "Review summaries calculated from the agency’s shared property, lead, and deal records.",
     icon: BarChart3,
     tag: "Local prototype data",
     points: ["Property record counts", "Lead and deal summaries", "Workspace subscription examples"],
@@ -65,7 +65,7 @@ export default function FeaturesPage() {
             </p>
             <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#E5EAF0] bg-white px-3 py-1.5 text-xs font-medium text-[#667085]">
               <span className="h-2 w-2 rounded-full bg-[#C77D0A]" />
-              Secure shared identity — operational modules remain browser-local
+              Secure shared identity and tenant-isolated operational workspace
             </div>
           </div>
         </section>
@@ -74,7 +74,7 @@ export default function FeaturesPage() {
           <div className="mb-8 flex items-end justify-between gap-5">
             <div>
               <h2 className="text-2xl font-semibold tracking-tight text-[#0B192A] sm:text-3xl">Available in the prototype</h2>
-              <p className="mt-2 text-sm text-[#667085]">Account access is server-backed; the operational screens below still use local browser data.</p>
+              <p className="mt-2 text-sm text-[#667085]">Account and operational records are server-backed and isolated by active agency membership.</p>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">

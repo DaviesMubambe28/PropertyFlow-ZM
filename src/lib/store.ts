@@ -41,10 +41,6 @@ const defaultPlans: SubscriptionPlan[] = [
   },
 ];
 
-export function generateId(prefix: string) {
-  return `${prefix}-${globalThis.crypto?.randomUUID?.() ?? Date.now().toString(16)}`;
-}
-
 export function createSeedState(): AppState {
   const now = "2025-01-01T00:00:00.000Z";
 
@@ -236,10 +232,8 @@ export function loadAppState(): AppState {
   }
 }
 
-export function saveAppState(state: AppState) {
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }
+export function clearAppState() {
+  if (typeof window !== "undefined") window.localStorage.removeItem(STORAGE_KEY);
 }
 
 export function getPlanById(plans: SubscriptionPlan[], planId: string) {

@@ -13,7 +13,7 @@ export default function PrivacyPage() {
             PropertyFlow ZM uses Supabase for account authentication, email verification, password recovery, agency identity and membership access. Authentication sessions are held in secure HTTP-only cookies rather than browser local storage.
           </p>
           <p>
-            Agency identity records are protected by server-side authorization and PostgreSQL row-level security. Property, contact, lead, deal and subscription screens still use browser-local prototype records, so do not enter real customer, tenant or commercially sensitive information in those modules.
+            Agency identity, property, contact, lead, viewing, task and deal records are protected by server-side authorization and PostgreSQL row-level security. Access is limited to active members of the relevant agency.
           </p>
           <p>
             Development mode may populate the browser with synthetic users, organisations, property listings and plan examples. Those records are illustrative only. Production builds start without those seeded records.
@@ -22,7 +22,7 @@ export default function PrivacyPage() {
             Property demo images are loaded directly from Unsplash. Visiting a page that displays these images causes the browser to request image files from Unsplash; its handling of those requests is governed by its own policies.
           </p>
           <p>
-            Browser-local operational records can remain on the device until cleared from the browser’s site data. This page is a development-stage disclosure, not a final legal privacy policy.
+            Legacy browser-local workspace state is cleared when an authenticated workspace loads. This page is a development-stage disclosure and must be reviewed before a production launch.
           </p>
         </div>
       </main>

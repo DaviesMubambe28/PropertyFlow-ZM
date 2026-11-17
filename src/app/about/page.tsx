@@ -24,7 +24,7 @@ export default function AboutPage() {
               PropertyFlow ZM is being shaped as a practical workspace for real estate agencies, independent agents and property managers in Zambia. Its purpose is to bring property records, client context and sales follow-up into a clearer working flow.
             </p>
             <p className="mt-5 max-w-3xl text-sm leading-6 text-[#526174]">
-              Account and agency access now use a secure shared identity service. Property and CRM modules still use browser-local demo data and should not hold real customer or tenant information.
+              Account, agency, property, CRM, viewing, task, and deal workflows now use a secure shared service with tenant-isolated access.
             </p>
           </div>
         </section>
@@ -96,7 +96,7 @@ export default function AboutPage() {
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#A7DADC]">Explore the prototype</p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight">See the workflows taking shape.</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-300">Use example business data only; operational workspace records still run locally in your browser.</p>
+              <p className="mt-2 text-sm leading-6 text-slate-300">Explore the shared workspace; payment and public enquiry integrations remain launch dependencies.</p>
             </div>
             <Link href="/features" className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0B192A] hover:bg-[#F1F5F8]">
               View capabilities <ArrowRight className="h-4 w-4" aria-hidden="true" />

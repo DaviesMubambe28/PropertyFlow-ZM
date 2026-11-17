@@ -172,7 +172,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             })}
           </nav>
           <p className="mt-3 text-[11px] leading-4 text-[#667085]">
-            Secure account session · Operational demo records remain in this browser
+            Secure account session · Shared agency workspace protected by row-level access controls
           </p>
         </header>
 

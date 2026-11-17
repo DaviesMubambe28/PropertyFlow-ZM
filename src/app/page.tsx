@@ -43,7 +43,7 @@ const steps = [
 const faqs = [
   {
     question: "Is PropertyFlow ZM connected to a live database?",
-    answer: "Account and agency access use a shared Supabase identity service. Property, CRM and subscription records remain browser-local prototype data while those modules are migrated.",
+    answer: "Yes. Account, agency, property, CRM, viewing, task, and deal records use a shared tenant-isolated Supabase service. Billing remains a separate launch dependency.",
   },
   {
     question: "Are the properties shown real listings?",
@@ -85,7 +85,7 @@ export default function HomePage() {
                 </Link>
               </div>
               <p className="mt-5 max-w-lg text-xs leading-5 text-[#667085]">
-                Secure account access is connected. Property and CRM records stay in this browser; customer enquiries and payments are not connected.
+                Secure account and agency operations are connected. Public customer enquiries and payments are not connected yet.
               </p>
             </div>
 
