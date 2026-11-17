@@ -45,7 +45,7 @@ const available = [
 
 const planned = [
   { title: "Viewings and appointments", description: "The data model has viewing records, but a complete scheduling and calendar workflow is not yet available.", icon: CalendarDays },
-  { title: "Team collaboration", description: "The current prototype does not provide verified membership, invitations or team permission management.", icon: Users },
+  { title: "Team invitations", description: "Verified agency membership is connected; invitation and team-management screens are still being completed.", icon: Users },
   { title: "Rental and tenant management", description: "Tenancy records, rent collection and maintenance workflows are not implemented.", icon: Building2 },
 ];
 
@@ -65,7 +65,7 @@ export default function FeaturesPage() {
             </p>
             <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#E5EAF0] bg-white px-3 py-1.5 text-xs font-medium text-[#667085]">
               <span className="h-2 w-2 rounded-full bg-[#C77D0A]" />
-              Browser-local prototype — no shared database or live integrations
+              Secure shared identity — operational modules remain browser-local
             </div>
           </div>
         </section>
@@ -74,7 +74,7 @@ export default function FeaturesPage() {
           <div className="mb-8 flex items-end justify-between gap-5">
             <div>
               <h2 className="text-2xl font-semibold tracking-tight text-[#0B192A] sm:text-3xl">Available in the prototype</h2>
-              <p className="mt-2 text-sm text-[#667085]">These screens operate on local browser data, not a production service.</p>
+              <p className="mt-2 text-sm text-[#667085]">Account access is server-backed; the operational screens below still use local browser data.</p>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">

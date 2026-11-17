@@ -43,7 +43,7 @@ const steps = [
 const faqs = [
   {
     question: "Is PropertyFlow ZM connected to a live database?",
-    answer: "Not yet. This version is a frontend prototype. Accounts and workspace records are stored in the browser running the app, not in a shared production database.",
+    answer: "Account and agency access use a shared Supabase identity service. Property, CRM and subscription records remain browser-local prototype data while those modules are migrated.",
   },
   {
     question: "Are the properties shown real listings?",
@@ -85,7 +85,7 @@ export default function HomePage() {
                 </Link>
               </div>
               <p className="mt-5 max-w-lg text-xs leading-5 text-[#667085]">
-                Prototype preview: records stay in this browser. No live database, customer enquiries or payment processing is connected.
+                Secure account access is connected. Property and CRM records stay in this browser; customer enquiries and payments are not connected.
               </p>
             </div>
 

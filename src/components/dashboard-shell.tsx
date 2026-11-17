@@ -165,7 +165,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             })}
           </nav>
           <p className="mt-3 text-[11px] leading-4 text-[#667085]">
-            Demo workspace · Records are stored unencrypted in this browser only
+            Secure account session · Operational demo records remain in this browser
           </p>
         </header>
 

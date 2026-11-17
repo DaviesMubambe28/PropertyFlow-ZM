@@ -16,10 +16,10 @@ export default function TermsPage() {
             Property records, names, account examples, prices and plan limits shown in development are synthetic examples. Availability, ownership, pricing and transaction details have not been verified and must not be relied on as real offers or business records.
           </p>
           <p>
-            Account actions and workspace changes are prototype-only and stored locally in the browser. The application does not currently provide email verification, shared team accounts, production security controls, contact submission, subscription changes or real payment processing.
+            Account registration, verification, sign-in and recovery use server-backed authentication. Property and CRM workspace changes remain browser-local prototype data. Contact submission, subscription changes and payment processing are not connected.
           </p>
           <p>
-            Do not use the prototype to store personal, confidential, customer or tenant information, or credentials used for another service. These notices describe the current demo and are not a binding customer agreement.
+            Use a unique account password and do not store personal, confidential, customer or tenant information in prototype business modules. These notices describe the current development service and are not a final customer agreement.
           </p>
         </div>
       </main>

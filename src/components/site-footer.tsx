@@ -46,7 +46,7 @@ export function SiteFooter() {
               A clearer way for Zambian property businesses to organise listings, client follow-ups and deal workflows.
             </p>
             <p className="mt-4 text-xs leading-5 text-[#667085]">
-              Prototype notice: account and workspace data are stored unencrypted in this browser only. This is not a live listing or payment service.
+              Account access uses secure server sessions. Property and CRM records remain browser-local prototype data; this is not a live listing or payment service.
             </p>
           </div>
 
