@@ -1,28 +1,40 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
+export const metadata: Metadata = {
+  title: "Workspace plans | PropertyFlow ZM",
+  description: "Explore proposed workspace plans for Zambian independent agents and agencies.",
+};
+
 const plans = [
   {
-    name: "Agent Solo",
-    price: 249,
-    description: "Perfect for independent agents and smaller communities.",
-    features: ["One workspace example", "Property records", "Contacts and notes", "Lead pipeline"],
+    name: "Starter",
+    price: 150,
+    description: "For independent agents organising listings and follow-ups.",
+    features: ["Property records", "Contacts and notes", "Lead pipeline"],
+    href: "/register",
+    cta: "Create a workspace",
     highlight: false,
   },
   {
-    name: "Agency Team",
-    price: 799,
-    description: "For agencies managing multiple property campaigns and staff.",
-    features: ["Property records", "Contacts and notes", "Lead pipeline", "Local record summaries"],
+    name: "Business",
+    price: 350,
+    description: "For growing agencies coordinating shared property and client records.",
+    features: ["Team invitations", "Viewings and follow-ups", "Operational reporting"],
+    href: "/contact",
+    cta: "Request a demo",
     highlight: true,
   },
   {
-    name: "Agency Business",
-    price: 1499,
-    description: "Scale with deeper controls, more seats, and listing volume.",
-    features: ["Property records", "Contacts and notes", "Lead pipeline", "Local record summaries"],
+    name: "Enterprise",
+    price: null,
+    description: "For established agencies evaluating the needs of a larger team.",
+    features: ["Agency workspace", "Team access", "Deal and activity reporting"],
+    href: "/enterprise",
+    cta: "Explore enterprise",
     highlight: false,
   },
 ];
@@ -33,10 +45,10 @@ export default function PricingPage() {
       <SiteHeader />
       <main className="mx-auto max-w-7xl px-6 py-20">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-[#667085]">Plan examples</p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[#0B192A]">A starting point for workspace plans</h1>
+          <p className="text-sm font-medium uppercase tracking-[0.2em] text-[#667085]">Proposed plans</p>
+          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[#0B192A]">A workspace for every stage of agency growth</h1>
           <p className="mt-4 text-sm leading-6 text-[#667085]">
-            These values come from the prototype’s local seed data. No subscription is created and billing is not connected.
+            Prices are indicative. You can create a workspace or discuss your requirements with our team.
           </p>
         </div>
 
@@ -47,10 +59,10 @@ export default function PricingPage() {
                 {plan.name}
               </p>
               <div className="mt-6 flex items-end gap-2">
-                <span className="text-4xl font-semibold tabular-nums">K{plan.price.toLocaleString("en-ZM")}</span>
-                <span className={`text-sm ${plan.highlight ? "text-slate-300" : "text-[#667085]"}`}>
+                <span className="text-4xl font-semibold tabular-nums">{plan.price === null ? "Contact us" : `K${plan.price.toLocaleString("en-ZM")}`}</span>
+                {plan.price !== null && <span className={`text-sm ${plan.highlight ? "text-slate-300" : "text-[#667085]"}`}>
                   / month
-                </span>
+                </span>}
               </div>
               <p className={`mt-4 text-sm ${plan.highlight ? "text-slate-300" : "text-[#667085]"}`}>{plan.description}</p>
 
@@ -65,15 +77,12 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              <Link href="/register" className={`mt-8 inline-flex rounded-full px-5 py-3 font-medium ${plan.highlight ? "bg-white text-[#17212F]" : "bg-[#142A43] text-white"}`}>
-                Try the prototype
+              <Link href={plan.href} className={`mt-8 inline-flex rounded-full px-5 py-3 font-medium ${plan.highlight ? "bg-white text-[#17212F]" : "bg-[#142A43] text-white"}`}>
+                {plan.cta}
               </Link>
             </div>
           ))}
         </div>
-        <p className="mx-auto mt-8 max-w-3xl text-center text-xs leading-5 text-[#667085]">
-          The landlord plan and billing are not active features. The displayed plan names, capacity limits and prices are illustrative configuration from the development prototype, not an offer to purchase.
-        </p>
       </main>
       <SiteFooter />
     </div>

@@ -7,6 +7,7 @@ const linkGroups = [
     links: [
       { label: "Features", href: "/features" },
       { label: "Pricing", href: "/pricing" },
+      { label: "Enterprise", href: "/enterprise" },
       { label: "Property listings", href: "/properties" },
       { label: "Sign in", href: "/login" },
     ],
@@ -23,7 +24,7 @@ const linkGroups = [
     title: "Company & support",
     links: [
       { label: "About", href: "/about" },
-      { label: "Contact", href: "/contact" },
+      { label: "Request a demo", href: "/contact" },
       { label: "Privacy policy", href: "/privacy" },
       { label: "Terms of service", href: "/terms" },
     ],
@@ -44,9 +45,6 @@ export function SiteFooter() {
             </Link>
             <p className="mt-4 text-sm leading-6 text-[#667085]">
               A clearer way for Zambian property businesses to organise listings, client follow-ups and deal workflows.
-            </p>
-            <p className="mt-4 text-xs leading-5 text-[#667085]">
-              Account, agency, property, CRM, task, viewing, and deal records use the shared secure workspace. Payments and public enquiries are not connected.
             </p>
           </div>
 

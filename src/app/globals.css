@@ -109,3 +109,21 @@ a:focus-visible {
   text-transform: uppercase;
   color: var(--brand-muted);
 }
+
+:focus-visible {
+  outline: 3px solid #087f8c;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-scroll-behavior] {
+    scroll-behavior: auto;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    transition: none;
+  }
+}

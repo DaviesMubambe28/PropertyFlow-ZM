@@ -44,3 +44,12 @@ export function formatCurrency(value: number, currency = "ZMW") {
 export function toRelativeLink(path: string) {
   return path.startsWith("/") ? path : `/${path}`;
 }
+
+export function whatsappContactLink(value: string | undefined) {
+  const formatted = value?.trim().replace(/[ ()-]/g, "") ?? "";
+  const international = /^0[1-9]\d{8}$/.test(formatted)
+    ? `260${formatted.slice(1)}`
+    : formatted.replace(/^(?:\+|00)/, "");
+  if (!/^[1-9]\d{7,14}$/.test(international)) return null;
+  return `https://wa.me/${international}`;
+}

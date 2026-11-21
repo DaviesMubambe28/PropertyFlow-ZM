@@ -1,5 +1,6 @@
 "use server";
 
+import type { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -9,6 +10,7 @@ import {
   leadInteractionSchema,
   leadStageInputSchema,
   propertyInputSchema,
+  propertyUpdateSchema,
   recordStatusSchema,
   taskInputSchema,
   viewingInputSchema,
@@ -38,17 +40,42 @@ export async function createProperty(_state: OperationState, formData: FormData)
   const { supabase, user } = await authenticatedClient();
   if (!user) return { status: "error", message: "Sign in again before saving the property." };
   const { error } = await supabase.from("properties").insert({
-    organization_id: parsed.data.organizationId, title: parsed.data.title, type: parsed.data.type,
-    listing_type: parsed.data.listingType, price: parsed.data.price, location: parsed.data.location,
-    province: parsed.data.province,
-    bedrooms: parsed.data.bedrooms, bathrooms: parsed.data.bathrooms, area: parsed.data.area,
-    description: parsed.data.description, image_url: parsed.data.imageUrl || null, status: parsed.data.status,
-    owner_name: parsed.data.ownerName, owner_phone: parsed.data.ownerPhone,
-    assigned_to: user.id, created_by: user.id,
+    ...propertyFields(parsed.data),
+    organization_id: parsed.data.organizationId, assigned_to: user.id, created_by: user.id,
   });
   if (error) return { status: "error", message: "The property could not be saved. Please try again." };
   revalidatePath("/dashboard");
   return { status: "success", message: "Property saved." };
+}
+
+function propertyFields(property: z.infer<typeof propertyInputSchema>) {
+  return {
+    title: property.title, type: property.type, listing_type: property.listingType,
+    price: property.price, location: property.location, province: property.province,
+    bedrooms: property.bedrooms, bathrooms: property.bathrooms, area: property.area,
+    description: property.description, image_url: property.imageUrl || null, status: property.status,
+    owner_name: property.ownerName, owner_phone: property.ownerPhone,
+  };
+}
+
+export async function updateProperty(_state: OperationState, formData: FormData): Promise<OperationState> {
+  const parsed = propertyUpdateSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return invalid(parsed.error.flatten().fieldErrors);
+  const { supabase, user } = await authenticatedClient();
+  if (!user) return { status: "error", message: "Sign in again before updating the property." };
+
+  const { data, error } = await supabase.from("properties")
+    .update(propertyFields(parsed.data))
+    .eq("organization_id", parsed.data.organizationId)
+    .eq("id", parsed.data.propertyId)
+    .eq("updated_at", parsed.data.updatedAt)
+    .select("id")
+    .maybeSingle();
+
+  if (error) return { status: "error", message: "The property could not be updated. Please try again." };
+  if (!data) return { status: "error", message: "The property changed or is no longer accessible. Refresh and try again." };
+  revalidatePath("/dashboard");
+  return { status: "success", message: "Property updated." };
 }
 
 export async function createContact(_state: OperationState, formData: FormData): Promise<OperationState> {

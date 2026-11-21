@@ -52,6 +52,7 @@ export interface Property {
   ownerPhone?: string;
   assignedTo?: string;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface Contact {

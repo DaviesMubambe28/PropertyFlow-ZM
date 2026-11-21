@@ -23,6 +23,11 @@ export const propertyInputSchema = z.object({
   ownerPhone: z.string().trim().max(40).default(""),
 });
 
+export const propertyUpdateSchema = propertyInputSchema.extend({
+  propertyId: z.uuid(),
+  updatedAt: z.iso.datetime({ offset: true }),
+});
+
 export const contactInputSchema = z.object({
   organizationId,
   name: shortText(2, 160, "Enter the contact name."),

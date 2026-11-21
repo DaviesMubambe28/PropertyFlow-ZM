@@ -13,3 +13,9 @@
 - Currency: ZMW
 - Billing mode: simulated only
 - External notifications: disabled until provider approval
+
+## Public demo requests
+
+Apply `20261121120000_demo_requests.sql` to the intended Supabase environment before enabling demo intake. The application uses the existing server-only service-role key for the submission and staff inbox. Existing workspace roles do not grant access to sales enquiries.
+
+Use your server-side Supabase admin process to set boolean `propertyflow_sales_staff: true` in the Auth app metadata of each approved platform sales account. Sales staff sign in at `/login?next=%2Fstaff%2Fdemo-requests`. Review the inbox as part of the usual sales workflow. Set the metadata flag to false to revoke access. Enquiry assignment, notification delivery and automatic retention are pending. Establish a retention period and review the privacy disclosure before using the form in production.

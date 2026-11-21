@@ -49,6 +49,7 @@ export function mapOperationalData(rows: OperationalRows): NonNullable<Authentic
       ownerPhone: String(row.owner_phone ?? ""), assignedTo: row.assigned_to ? String(row.assigned_to) : undefined,
       status: row.status as AppState["properties"][number]["status"], imageUrl: String(row.image_url ?? ""),
       description: String(row.description), featured: Boolean(row.featured), createdAt: String(row.created_at),
+      updatedAt: typeof row.updated_at === "string" ? row.updated_at : undefined,
     })),
     contacts: rows.contacts.map((row) => ({
       id: String(row.id), orgId: String(row.organization_id), name: String(row.name), email: String(row.email),

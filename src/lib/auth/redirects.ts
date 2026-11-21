@@ -6,5 +6,5 @@ export function safeReturnPath(value: string | null, fallback = "/dashboard") {
 }
 
 export function isProtectedPath(pathname: string) {
-  return pathname === "/dashboard" || pathname.startsWith("/dashboard/");
+  return pathname === "/dashboard" || pathname.startsWith("/dashboard/") || pathname.startsWith("/staff/");
 }

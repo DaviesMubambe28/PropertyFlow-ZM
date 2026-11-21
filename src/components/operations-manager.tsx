@@ -23,7 +23,7 @@ export function OperationsManager() {
   const deals = state.deals.filter((item) => item.orgId === orgId);
 
   return <div className="space-y-6">
-    <section className="grid gap-5 xl:grid-cols-[0.8fr_1.2fr]">
+    <section id="viewings" className="grid scroll-mt-24 gap-5 xl:grid-cols-[0.8fr_1.2fr]">
       <form action={viewingAction} className="rounded-[24px] border border-[#E5EAF0] bg-white p-5 shadow-sm">
         <h2 className="text-xl font-semibold">Schedule viewing</h2><input type="hidden" name="organizationId" value={orgId} />
         <div className="mt-4 space-y-3">
@@ -45,7 +45,7 @@ export function OperationsManager() {
       </div>
     </section>
 
-    <section className="grid gap-5 xl:grid-cols-[0.8fr_1.2fr]">
+    <section id="tasks" className="grid scroll-mt-24 gap-5 xl:grid-cols-[0.8fr_1.2fr]">
       <form action={taskAction} className="rounded-[24px] border border-[#E5EAF0] bg-white p-5 shadow-sm"><h2 className="text-xl font-semibold">Create task</h2><input type="hidden" name="organizationId" value={orgId} /><div className="mt-4 space-y-3">
         <label className="block text-sm font-medium">Title<input name="title" className={input} required /></label><label className="block text-sm font-medium">Due date<input name="dueAt" type="datetime-local" className={input} required /></label>
         <label className="block text-sm font-medium">Priority<select name="priority" className={input}><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></label>
@@ -57,7 +57,7 @@ export function OperationsManager() {
       <div className="rounded-[24px] border border-[#E5EAF0] bg-white p-5 shadow-sm"><h2 className="text-xl font-semibold">Tasks</h2><div className="mt-4 divide-y divide-[#E5EAF0]">{tasks.map((item) => <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 py-3"><div><p className="font-medium">{item.title}</p><p className="text-xs text-[#667085]">Due {new Date(item.dueDate).toLocaleString("en-ZM")} · {item.priority}</p></div><form action={updateOperationalStatus}><input type="hidden" name="recordId" value={item.id} /><input type="hidden" name="kind" value="task" /><select name="status" defaultValue={item.status} onChange={(event) => event.currentTarget.form?.requestSubmit()} aria-label={`Status for ${item.title}`} className="rounded-lg border border-[#D8E0E8] px-2 py-1.5 text-sm"><option value="open">Open</option><option value="in_progress">In progress</option><option value="done">Done</option></select></form></div>)}{!tasks.length && <p className="py-3 text-sm text-[#667085]">No tasks yet.</p>}</div></div>
     </section>
 
-    <section className="grid gap-5 xl:grid-cols-[0.8fr_1.2fr]">
+    <section id="deals" className="grid scroll-mt-24 gap-5 xl:grid-cols-[0.8fr_1.2fr]">
       <form action={dealAction} className="rounded-[24px] border border-[#E5EAF0] bg-white p-5 shadow-sm"><h2 className="text-xl font-semibold">Create deal</h2><input type="hidden" name="organizationId" value={orgId} /><div className="mt-4 space-y-3">
         <label className="block text-sm font-medium">Lead<select name="leadId" className={input} required><option value="">Choose lead</option>{leads.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}</select></label><label className="block text-sm font-medium">Property<select name="propertyId" className={input} required><option value="">Choose property</option>{properties.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}</select></label>
         <label className="block text-sm font-medium">Transaction type<select name="transactionType" className={input}><option value="sale">Sale</option><option value="rental">Rental</option></select></label>
