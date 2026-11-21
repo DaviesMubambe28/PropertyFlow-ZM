@@ -12,7 +12,8 @@ PropertyFlow ZM is a multi-tenant property operations system for Zambian real-es
 - Viewing scheduling, outcomes, and feedback
 - Follow-up tasks linked to customers and properties
 - Sales and rental transactions that automatically mark completed properties sold or rented
-- Agency and per-agent operational reporting
+- Agency and per-agent operational reporting with completed-sale date filters
+- Enterprise product preview, demo requests, and a private staff follow-up inbox
 - Server-side validation, secure response headers, and automated application/database tests
 
 The MVP deliberately does not include a public marketplace, customer accounts, payment collection, government verification, legal document transfer, or automated WhatsApp/AI workflows.
@@ -30,16 +31,15 @@ The MVP deliberately does not include a public marketplace, customer accounts, p
 npm ci
 cp .env.example .env.local
 npx supabase start
-npx supabase db reset
 npm run dev
 ```
 
-After `npx supabase start`, copy the local publishable/anon key and service-role key into `.env.local`. Open `http://localhost:3000`. Local authentication emails can be viewed in Inbucket at `http://127.0.0.1:54324`.
+After `npx supabase start`, copy the local publishable/anon key and service-role key into `.env.local`. Open the exact origin configured in `NEXT_PUBLIC_APP_URL`. Local authentication emails can be viewed in Mailpit at `http://127.0.0.1:54324`.
 
 Required environment variables:
 
 ```dotenv
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_APP_URL=http://127.0.0.1:3000
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
@@ -52,7 +52,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 1. Create a Supabase project and link the repository with `npx supabase link --project-ref <project-ref>`.
 2. Apply all migrations with `npx supabase db push`.
 3. In Supabase Auth, set the Site URL to the production application URL and allow `/auth/callback` and `/reset-password` redirects.
-4. Configure an SMTP provider in Supabase Auth so invitations and password recovery emails reach real users.
+4. Configure SMTP in Supabase Auth. See the [deployment guide](docs/DEPLOYMENT_GUIDE.md) for callback and demo inbox setup.
 5. Add the four environment variables above to the hosting provider, using the hosted Supabase URL and keys.
 6. Build with `npm run build`, then deploy the Next.js application.
 

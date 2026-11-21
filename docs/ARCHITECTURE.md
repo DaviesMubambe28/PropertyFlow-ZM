@@ -1,17 +1,15 @@
 # Architecture
 
-## Frontend
-- Next.js App Router
-- React and TypeScript
-- Tailwind design system
-- Responsive marketing and dashboard layouts
+## Public website
 
-## State model
-- Organisation-aware data layer stored in browser localStorage for the demo environment
-- Top-level workspace state includes organisations, users, properties, CRM records and subscription plans
-- Active workspace and active user are derived from current session state
+Next.js App Router serves the marketing and evaluation pages. React client components handle interactive product previews and example property filters. The public listing catalogue is a static set of labelled example records with local images.
 
-## Security posture
-- In the demo environment, workspace selection and access checks are enforced in app logic
-- Real production deployment should move to Supabase Auth + Postgres RLS and server-side checks
-- Keep credentials out of public client bundles
+## Agency workspace
+
+Supabase Auth owns accounts and sessions. The dashboard verifies the session and resolves active memberships on the server. Next.js loads agency identity and operational data from PostgreSQL. React uses those results for the workspace UI. Server actions validate and persist edits, and refresh the workspace layout so record views reflect committed data.
+
+## Platform sales inbox
+
+A public Next.js server action validates demo requests and calls a service-role-only function. PostgreSQL applies volume limits and stores contacts and requirements. A server-rendered staff inbox verifies a trusted Auth flag before accessing the database. Review actions persist status, assignment and history in one transaction.
+
+See the [security model](SECURITY_MODEL.md) for permission boundaries and the [transformation report](ENTERPRISE_TRANSFORMATION.md) for evidence and remaining work.

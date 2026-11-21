@@ -1,9 +1,3 @@
 # Test report
 
-## Automated checks
-- Lint: executed as part of development verification
-- TypeScript build: run with `npm run build`
-- Unit tests: run with `npx vitest run`
-
-## Current status
-The demo implementation passes the focused validation and production build checks for the current local app. Live external provider integrations remain out of scope for the demo environment.
+The [enterprise transformation report](ENTERPRISE_TRANSFORMATION.md#test-evidence) records the baseline, final results and browser evidence. Run `npm run test:run` for application checks, `npx supabase test db` for local PostgreSQL and permission checks, and `npm run test:browser` for synthetic browser journeys configured through the [deployment guide](DEPLOYMENT_GUIDE.md#browser-test).
