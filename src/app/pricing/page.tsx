@@ -1,3 +1,4 @@
+import { EditorialIntro } from "@/components/editorial-intro";
 import type { Metadata } from "next";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -8,9 +9,11 @@ export const metadata: Metadata = { title: "Agency workspace pricing", alternate
 export default function PricingPage() {
   return <>
     <SiteHeader />
-    <main className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-20">
-      <h1 className="mb-4 text-4xl font-semibold tracking-[-.05em] sm:text-5xl">Plans for your agency workspace</h1>
-      <EvaluationPricing />
+    <main>
+      <EditorialIntro label="Pricing" title="Plans for your agency workspace" image="apartment">
+        <p className="mt-4 max-w-sm leading-7 text-muted-ink">Find a workspace for your portfolio, enquiries and team.</p>
+      </EditorialIntro>
+      <div className="mx-auto max-w-7xl px-5 pb-14 sm:px-8 sm:pb-20"><EvaluationPricing /></div>
     </main>
     <SiteFooter />
   </>;

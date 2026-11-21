@@ -34,19 +34,22 @@ export default async function DemoRequestsPage({ searchParams }: PageProps<"/sta
   return <>
     <SiteHeader />
     <main className="mx-auto max-w-4xl px-5 py-12">
-      <h1 className="text-3xl font-semibold tracking-tight">Enterprise demo requests</h1>
+      <header className="rounded-[1.65rem] border border-line bg-sage p-6 sm:p-9">
+        <p className="text-sm font-semibold text-pine">Staff inbox</p>
+        <h1 className="mt-2 text-3xl font-semibold tracking-[-.045em] sm:text-4xl">Enterprise demo requests</h1>
+      </header>
       {error && <p role="alert" className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4">Requests could not be loaded. Refresh to try again.</p>}
-      {data?.length === 0 && <p className="mt-6 text-slate-600">No requests on this page.</p>}
+      {data?.length === 0 && <p className="mt-6 text-muted-ink">No requests on this page.</p>}
       <div className="mt-6 space-y-5">
         {data?.slice(0, 20).map((request) => (
-          <article key={request.id} className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7">
-            <p className="text-xs font-medium text-slate-600">{dateFormat.format(new Date(request.created_at))} · {request.team_size} team members</p>
+          <article key={request.id} className="rounded-2xl border border-line bg-white p-5 sm:p-7">
+            <p className="text-xs font-medium text-muted-ink">{dateFormat.format(new Date(request.created_at))} · {request.team_size} team members</p>
             <h2 className="mt-2 break-words text-xl font-semibold">{request.company}</h2>
             <p className="mt-1 break-words text-sm">{request.full_name} · {request.email}{request.phone && ` · ${request.phone}`}</p>
-            <p className="mt-1 text-sm text-slate-600">{request.assigned_to === staff.id ? "Assigned to you" : request.assigned_to ? "Assigned to staff" : "Unassigned"}</p>
+            <p className="mt-1 text-sm text-muted-ink">{request.assigned_to === staff.id ? "Assigned to you" : request.assigned_to ? "Assigned to staff" : "Unassigned"}</p>
             {request.requirements && <p className="mt-4 whitespace-pre-wrap break-words text-sm">{request.requirements}</p>}
             <DemoReviewForm id={request.id} status={request.status} />
-            {request.enterprise_demo_history.length > 0 && <details className="mt-5 border-t border-slate-200 pt-4 text-sm">
+            {request.enterprise_demo_history.length > 0 && <details className="mt-5 border-t border-line pt-4 text-sm">
               <summary className="cursor-pointer font-medium">Follow-up history</summary>
               <ol className="mt-3 space-y-3">
                 {request.enterprise_demo_history.map((entry: { id: number; note: string; status: string; created_at: string }) =>
@@ -57,7 +60,7 @@ export default async function DemoRequestsPage({ searchParams }: PageProps<"/sta
           </article>
         ))}
       </div>
-      <nav aria-label="Demo request pages" className="mt-6 flex gap-5 text-sm font-semibold text-teal-800">
+      <nav aria-label="Demo request pages" className="mt-6 flex gap-5 text-sm font-semibold text-pine">
         {number > 1 && <Link href={`?page=${number - 1}`}>Previous page</Link>}
         {data && data.length > 20 && <Link href={`?page=${number + 1}`}>Next page</Link>}
       </nav>

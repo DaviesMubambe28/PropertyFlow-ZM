@@ -39,5 +39,5 @@ export function InvitationVerification({ invitationPath }: { invitationPath: str
         <p role="alert" className="text-sm leading-6 text-red-800">This email link is invalid or expired. Sign in with your invited email address or ask your administrator for a new invitation.</p>
         <Link className="brand-button-primary inline-flex min-h-11 items-center rounded-lg px-4 text-sm font-semibold" href={`/login?next=${encodeURIComponent(invitationPath)}`}>Sign in</Link>
       </div>
-    : <p role="status" className="mt-4 text-sm text-slate-600">Checking your invitation…</p>;
+    : <p role="status" className="mt-4 text-sm text-muted-ink">Checking your invitation…</p>;
 }

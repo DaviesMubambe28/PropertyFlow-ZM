@@ -5,7 +5,7 @@ import { updateOrganizationProfile } from "@/actions/organizations";
 import { initialOrganizationState } from "@/lib/action-state";
 import type { Organization } from "@/lib/types";
 
-const inputClassName = "mt-1.5 w-full rounded-xl border border-[#D8E0E8] bg-[#F9FBFC] px-3.5 py-3 text-sm outline-none focus:border-[#087F8C] focus:ring-2 focus:ring-[#087F8C]/15";
+const inputClassName = "mt-1.5 w-full rounded-xl border border-line bg-field px-3.5 py-3 text-sm outline-none focus:border-pine focus:ring-2 focus:ring-pine/15";
 
 export function AgencySettingsForm({ organization }: { organization: Organization }) {
   const [state, action, pending] = useActionState(updateOrganizationProfile, initialOrganizationState);
@@ -17,7 +17,7 @@ export function AgencySettingsForm({ organization }: { organization: Organizatio
       <label className="text-sm font-medium">Phone<input name="phone" type="tel" autoComplete="organization tel" defaultValue={organization.phone} className={inputClassName} /></label>
       <label className="text-sm font-medium">Location<input name="location" autoComplete="organization address-level2" defaultValue={organization.location} className={inputClassName} /></label>
     </div>
-    <label className="block text-sm font-medium">Logo URL <span className="font-normal text-[#667085]">(HTTPS only)</span><input name="logoUrl" type="url" defaultValue={organization.logoUrl} className={inputClassName} /></label>
+    <label className="block text-sm font-medium">Logo URL <span className="font-normal text-muted-ink">(HTTPS only)</span><input name="logoUrl" type="url" defaultValue={organization.logoUrl} className={inputClassName} /></label>
     <div className="grid gap-5 sm:grid-cols-2">
       <label className="text-sm font-medium">Timezone<select name="timezone" defaultValue={organization.timezone} className={inputClassName}><option value="Africa/Lusaka">Africa/Lusaka</option></select></label>
       <label className="text-sm font-medium">Currency<select name="currency" defaultValue={organization.currency} className={inputClassName}><option value="ZMW">ZMW — Zambian Kwacha</option></select></label>

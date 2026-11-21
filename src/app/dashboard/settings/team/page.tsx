@@ -22,5 +22,5 @@ export default async function TeamSettingsPage() {
   });
   const invitations = (invitationResult.data ?? []).map((row) => ({ id: row.id, email: row.email, status: row.status, expiresAt: row.expires_at }));
 
-  return <DashboardShell><div className="space-y-5"><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#087F8C]">Agency administration</p><h2 className="mt-2 text-2xl font-semibold">Team access</h2></div><TeamManager organizationId={ownMembership.organization_id} members={members} invitations={invitations} /></div></DashboardShell>;
+  return <DashboardShell><div className="space-y-5"><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-pine">Agency administration</p><h2 className="mt-2 text-2xl font-semibold">Team access</h2></div><TeamManager organizationId={ownMembership.organization_id} members={members} invitations={invitations} /></div></DashboardShell>;
 }

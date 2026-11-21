@@ -60,10 +60,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   if (!currentUser || !activeOrg) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F7F9FC] px-6">
-        <div className="max-w-md rounded-3xl border border-[#E5EAF0] bg-white p-8 text-center shadow-sm">
-          <h1 className="text-2xl font-semibold text-[#17212F]">Access restricted</h1>
-          <p className="mt-3 text-[#667085]">Sign in to access your workspace.</p>
+      <div className="flex min-h-screen items-center justify-center bg-canvas px-6">
+        <div className="max-w-md rounded-3xl border border-line bg-white p-8 text-center shadow-sm">
+          <h1 className="text-2xl font-semibold text-ink">Access restricted</h1>
+          <p className="mt-3 text-muted-ink">Sign in to access your workspace.</p>
           <Link href="/login" className="brand-button-primary mt-6 inline-flex rounded-full px-4 py-2 text-sm font-medium text-white">
             Continue to sign in
           </Link>
@@ -73,45 +73,45 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F9FC]">
-      <aside className="fixed inset-y-0 left-0 hidden w-72 flex-col border-r border-[#E5EAF0] overflow-y-auto bg-[#071B30] p-6 text-white lg:flex">
-        <Link href="/" className="flex items-center gap-3 text-white">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#142A43] text-white ring-1 ring-white/10">
+    <div className="min-h-screen bg-canvas">
+      <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col overflow-y-auto border-r border-line bg-soft p-5 text-ink lg:flex">
+        <Link href="/" className="flex items-center gap-3 text-ink">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-pine text-white ring-1 ring-white/10">
             <Building2 className="h-4 w-4" />
           </span>
           <span className="text-lg font-semibold">PropertyFlow ZM</span>
         </Link>
 
-        <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-sm">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-slate-300">Active organisation</p>
+        <div className="mt-8 rounded-2xl border border-line bg-white p-3 backdrop-blur-sm">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-muted-ink">Active organisation</p>
           <div className="mt-2 flex items-center justify-between">
             <div>
-              <p className="font-medium text-white">{activeOrg.name}</p>
-              <p className="text-xs text-slate-300">{activeOrg.type}</p>
+              <p className="break-words font-semibold text-ink">{activeOrg.name}</p>
+              <p className="text-xs text-muted-ink">{activeOrg.type}</p>
             </div>
-            <UserCog className="h-4 w-4 text-slate-300" />
+            <UserCog className="h-4 w-4 text-muted-ink" />
           </div>
           {userOrganizations.length > 1 ? (
             <select
               aria-label="Switch organization"
-              className="mt-3 w-full rounded-lg border border-white/10 bg-[#142A43] px-2 py-2 text-sm text-white"
+              className="mt-3 w-full rounded-lg border border-line bg-white px-2 py-2 text-sm text-ink"
               value={activeOrg.id}
               onChange={(event) => switchOrganization(event.target.value)}
             >
               {userOrganizations.map((organization) => (
-                <option key={organization.id} value={organization.id} className="bg-[#142A43] text-white">
+                <option key={organization.id} value={organization.id} className="bg-white text-ink">
                   {organization.name}
                 </option>
               ))}
             </select>
           ) : (
-            <p className="mt-3 rounded-lg border border-white/10 bg-[#142A43]/70 px-2 py-2 text-xs text-slate-200">
+            <p className="mt-3 rounded-lg border bg-soft px-2 py-2 text-xs text-muted-ink">
               {currentUser.role === "super_admin" ? "All workspaces" : "Your workspace"}
             </p>
           )}
         </div>
 
-        <nav aria-label="Workspace navigation" className="mt-8 space-y-2">
+        <nav aria-label="Workspace navigation" className="mt-6 space-y-1">
           {visibleNavItems.map((item) => {
             const ItemIcon = item.icon;
             const isActive = pathname === item.href;
@@ -122,7 +122,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
                 className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium ${
-                  isActive ? "bg-[#142A43] text-white ring-1 ring-white/10" : "text-slate-200 hover:bg-white/5 hover:text-white"
+                  isActive ? "bg-pine text-white" : "text-muted-ink hover:bg-sage hover:text-forest"
                 }`}
               >
                 <ItemIcon className="h-4 w-4" />
@@ -132,24 +132,24 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        <form action={signOut} className="mt-auto">
-          <button type="submit" className="flex w-full items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10">
+        <form action={signOut} className="mt-auto pt-5">
+          <button type="submit" className="flex w-full items-center gap-2 rounded-xl border border-line bg-white px-3 py-2 text-sm text-muted-ink transition hover:bg-sage">
             <LogOut className="h-4 w-4" />
             Sign out
           </button>
         </form>
       </aside>
 
-      <main className="min-w-0 lg:ml-72">
-        <header className="sticky top-0 z-30 border-b border-[#E5EAF0] bg-white/95 px-5 py-4 backdrop-blur-xl sm:px-6 sm:py-5">
+      <main className="min-w-0 lg:ml-64">
+        <header className="sticky top-0 z-30 border-b border-line bg-white/95 px-5 py-4 backdrop-blur-xl sm:px-6 sm:py-5">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#667085]">
+              <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-ink">
                 {activeNavItem?.label ?? "Workspace"} <span className="px-1 text-[#C2CBD4]">/</span> {currentUser.role.replace("_", " ")}
               </p>
-              <h1 className="mt-1 text-xl font-semibold text-[#17212F] sm:text-2xl">{activeOrg.name}</h1>
+              <h1 className="mt-1 text-xl font-semibold text-ink sm:text-2xl">{activeOrg.name}</h1>
             </div>
-            <div className="max-w-[45%] truncate rounded-full bg-[#0B192A] px-3 py-2 text-xs font-medium text-white shadow-sm sm:max-w-none sm:text-sm">
+            <div className="max-w-[45%] truncate rounded-full bg-forest px-3 py-2 text-xs font-medium text-white shadow-sm sm:max-w-none sm:text-sm">
               {currentUser.fullName}
             </div>
           </div>
@@ -163,7 +163,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   aria-current={isActive ? "page" : undefined}
                   className={`inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg px-3 text-xs font-medium ${
-                    isActive ? "bg-[#142A43] text-white" : "text-[#526174] hover:bg-[#F1F5F8]"
+                    isActive ? "bg-pine text-white" : "text-muted-ink hover:bg-soft"
                   }`}
                 >
                   <ItemIcon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -173,11 +173,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             })}
           </nav>
           <form action={signOut} className="mt-1 lg:hidden">
-            <button className="inline-flex min-h-11 items-center gap-2 px-2 text-sm font-medium text-slate-700"><LogOut size={15} aria-hidden="true" /> Sign out</button>
+            <button className="inline-flex min-h-11 items-center gap-2 px-2 text-sm font-medium text-ink"><LogOut size={15} aria-hidden="true" /> Sign out</button>
           </form>
         </header>
 
-        <div className="min-w-0 p-4 sm:p-6">{children}</div>
+        <div className="mx-auto min-w-0 max-w-[96rem] p-4 sm:p-7 xl:p-9">{children}</div>
       </main>
     </div>
   );

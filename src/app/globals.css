@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --brand-navy: #142a43;
-  --brand-dark-navy: #0b192a;
-  --brand-teal: #087f8c;
-  --brand-teal-hover: #066875;
-  --brand-background: #f7f9fc;
+  --brand-navy: #174b3e;
+  --brand-dark-navy: #192f28;
+  --brand-teal: #174b3e;
+  --brand-teal-hover: #103529;
+  --brand-background: #faf9f5;
   --brand-surface: #ffffff;
-  --brand-text: #17212f;
-  --brand-muted: #667085;
-  --brand-border: #e5eaf0;
+  --brand-text: #192f28;
+  --brand-muted: #465951;
+  --brand-border: #dce4dc;
   --brand-success: #16803c;
   --brand-warning: #c77d0a;
   --brand-error: #c33434;
@@ -21,6 +21,16 @@
 }
 
 @theme inline {
+  --color-canvas: var(--brand-background);
+  --color-field: #f7f8f3;
+  --color-soft: #f0f3ed;
+  --color-sage: #e2efe2;
+  --color-mint: #c4e1cc;
+  --color-line: var(--brand-border);
+  --color-ink: var(--brand-text);
+  --color-muted-ink: var(--brand-muted);
+  --color-forest: var(--brand-dark-navy);
+  --color-pine: var(--brand-navy);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -68,18 +78,17 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 a:focus-visible {
-  outline: 2px solid #087f85;
+  outline: 2px solid #23775e;
   outline-offset: 2px;
 }
 
 .brand-button-primary {
-  background: linear-gradient(180deg, var(--brand-teal) 0%, var(--brand-teal-hover) 100%);
+  background: var(--brand-teal);
   color: white;
-  box-shadow: 0 12px 24px rgba(8, 127, 140, 0.18);
 }
 
 .brand-button-primary:hover {
-  background: linear-gradient(180deg, var(--brand-teal-hover) 0%, var(--brand-teal-hover) 100%);
+  background: var(--brand-teal-hover);
 }
 
 .brand-button-secondary {
@@ -90,7 +99,7 @@ a:focus-visible {
 
 .brand-button-secondary:hover {
   border-color: rgba(20, 42, 67, 0.18);
-  background: #f3f7fb;
+  background: #f0f3ed;
 }
 
 .brand-shell {
@@ -119,6 +128,6 @@ a:focus-visible {
 }
 
 :where(a, button, input, select, textarea, summary):focus-visible {
-  outline: 2px solid #087f85;
+  outline: 2px solid #23775e;
   outline-offset: 3px;
 }

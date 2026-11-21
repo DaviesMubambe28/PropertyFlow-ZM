@@ -46,32 +46,32 @@ export default function DashboardOverviewPage() {
   return (
     <DashboardShell>
       <div className="space-y-6">
-        <section className="rounded-2xl bg-[#071B30] px-5 py-6 text-white sm:px-8 sm:py-8">
+        <section className="rounded-[1.65rem] border border-line bg-sage px-5 py-6 text-forest sm:px-8 sm:py-8">
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">{currentUser?.role === "agent" ? "Your workspace overview" : "Agency overview"}</h2>
-          <p className="mt-2 text-sm text-slate-300">Review inventory, deal progress and work coming due.</p>
+          <p className="mt-2 text-sm text-muted-ink">Review inventory, deal progress and work coming due.</p>
           <nav className="mt-5 flex flex-wrap gap-2" aria-label="Quick actions">
-            {links.map(({ label, href, icon: Icon }) => <Link key={label} href={href} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/25 px-3 text-xs font-semibold hover:bg-white/10"><Icon size={16} aria-hidden="true" />{label}</Link>)}
+            {links.map(({ label, href, icon: Icon }) => <Link key={label} href={href} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-pine/30 px-3 text-xs font-semibold hover:bg-white"><Icon size={16} aria-hidden="true" />{label}</Link>)}
           </nav>
         </section>
         <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-          {metrics.map(({ label, value, icon: Icon, href }) => <Link key={label} href={href} className="rounded-xl border border-slate-200 bg-white p-3 hover:border-teal-600 sm:p-5">
-            <div className="flex items-start justify-between gap-1"><p className="text-sm font-medium text-slate-600">{label}</p><Icon size={17} className="shrink-0 text-teal-800" aria-hidden="true" /></div>
+          {metrics.map(({ label, value, icon: Icon, href }) => <Link key={label} href={href} className="rounded-xl border border-line bg-white p-3 hover:border-teal-600 sm:p-5">
+            <div className="flex items-start justify-between gap-1"><p className="text-sm font-medium text-muted-ink">{label}</p><Icon size={17} className="shrink-0 text-pine" aria-hidden="true" /></div>
             <p className="mt-3 text-3xl font-semibold tabular-nums">{value}</p>
           </Link>)}
         </div>
         <div className="grid gap-4 xl:grid-cols-[1.15fr_1fr]">
-          <section className="rounded-xl border border-slate-200 bg-white p-5">
-            <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="text-lg font-semibold">Pending work</h2><Link href="/dashboard/activities?status=open#follow-ups" className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-800">Activities <ArrowRight size={14} aria-hidden="true" /></Link></div>
-            {work.length === 0 ? <p className="mt-4 text-sm text-slate-600">No scheduled viewings or open follow-ups.</p> : <ul className="mt-3 divide-y divide-slate-200">
-              {work.slice(0, 6).map((item) => <li key={item.key} className="py-3"><p className="text-sm font-medium">{item.title}</p><p className="mt-1 text-xs text-slate-600">{item.type} · <time dateTime={item.at}>{dateFormat.format(new Date(item.at))}</time></p></li>)}
+          <section className="rounded-xl border border-line bg-white p-5">
+            <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="text-lg font-semibold">Pending work</h2><Link href="/dashboard/activities?status=open#follow-ups" className="inline-flex items-center gap-1.5 text-sm font-semibold text-pine">Activities <ArrowRight size={14} aria-hidden="true" /></Link></div>
+            {work.length === 0 ? <p className="mt-4 text-sm text-muted-ink">No scheduled viewings or open follow-ups.</p> : <ul className="mt-3 divide-y divide-line">
+              {work.slice(0, 6).map((item) => <li key={item.key} className="py-3"><p className="text-sm font-medium">{item.title}</p><p className="mt-1 text-xs text-muted-ink">{item.type} · <time dateTime={item.at}>{dateFormat.format(new Date(item.at))}</time></p></li>)}
             </ul>}
           </section>
-          <section className="rounded-xl border border-slate-200 bg-white p-5">
-            <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="text-lg font-semibold">Active lead stages</h2><Link href="/dashboard/pipeline?status=active" className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-800">Pipeline <ArrowRight size={14} aria-hidden="true" /></Link></div>
+          <section className="rounded-xl border border-line bg-white p-5">
+            <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="text-lg font-semibold">Active lead stages</h2><Link href="/dashboard/pipeline?status=active" className="inline-flex items-center gap-1.5 text-sm font-semibold text-pine">Pipeline <ArrowRight size={14} aria-hidden="true" /></Link></div>
             <ul className="mt-4 space-y-3">
               {pipeline.map(({ title, key }) => {
                 const count = leads.filter((lead) => lead.stage === key).length;
-                return <li key={key} className="grid grid-cols-[8rem_1fr_1.25rem] items-center gap-2 text-xs text-slate-700 sm:text-sm">{title}<div className="h-2 rounded-full bg-slate-100" aria-hidden="true"><div className="h-full rounded-full bg-teal-700" style={{ width: `${leads.length ? count / leads.length * 100 : 0}%` }} /></div><span className="text-right tabular-nums">{count}</span></li>;
+                return <li key={key} className="grid grid-cols-[8rem_1fr_1.25rem] items-center gap-2 text-xs text-ink sm:text-sm">{title}<div className="h-2 rounded-full bg-soft" aria-hidden="true"><div className="h-full rounded-full bg-teal-700" style={{ width: `${leads.length ? count / leads.length * 100 : 0}%` }} /></div><span className="text-right tabular-nums">{count}</span></li>;
               })}
             </ul>
           </section>

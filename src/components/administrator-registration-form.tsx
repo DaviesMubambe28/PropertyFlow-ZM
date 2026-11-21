@@ -6,7 +6,7 @@ import { ArrowRight, Eye, EyeOff, LoaderCircle } from "lucide-react";
 import { registerAdministrator } from "@/actions/auth";
 import { initialAuthActionState } from "@/lib/action-state";
 
-const inputClassName = "w-full rounded-xl border border-[#D8E0E8] bg-[#F9FBFC] px-3.5 py-3 text-sm text-[#17212F] outline-none transition placeholder:text-[#8A96A5] focus:border-[#087F8C] focus:ring-2 focus:ring-[#087F8C]/15";
+const inputClassName = "w-full rounded-xl border border-line bg-field px-3.5 py-3 text-sm text-ink outline-none transition placeholder:text-[#8A96A5] focus:border-pine focus:ring-2 focus:ring-pine/15";
 
 function FieldError({ id, errors }: { id: string; errors?: string[] }) {
   if (!errors?.length) return null;
@@ -19,20 +19,20 @@ export function AdministratorRegistrationForm() {
 
   if (state.status === "success") return (
     <section className="rounded-[24px] border border-[#C6E7E4] bg-white p-6 shadow-[0_20px_50px_rgba(11,25,42,0.07)] sm:p-8">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#087F8C]">One final step</p>
-      <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[#0B192A]">Verify your email</h2>
-      <p className="mt-3 text-sm leading-6 text-[#526174]">{state.message}</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-pine">One final step</p>
+      <h2 className="mt-3 text-2xl font-semibold tracking-tight text-forest">Verify your email</h2>
+      <p className="mt-3 text-sm leading-6 text-muted-ink">{state.message}</p>
       <p className="mt-4 rounded-xl bg-[#F1FAFA] p-4 text-sm leading-6 text-[#315E62]">The verification link creates your agency workspace and signs you in securely. Check your spam folder if it does not arrive shortly.</p>
-      <Link href="/login" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#087F8C]">Return to sign in <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
+      <Link href="/login" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-pine">Return to sign in <ArrowRight className="h-4 w-4" aria-hidden="true" /></Link>
     </section>
   );
 
   const field = (name: string) => state.fields?.[name];
   return (
-    <section className="rounded-[24px] border border-[#E5EAF0] bg-white p-5 shadow-[0_20px_50px_rgba(11,25,42,0.07)] sm:p-8">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#087F8C]">Administrator registration</p>
-      <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#0B192A] sm:text-3xl">Create your agency workspace</h2>
-      <p className="mt-2 text-sm leading-6 text-[#667085]">You will be the first administrator. Verify your email before inviting the rest of your team.</p>
+    <section className="rounded-[24px] border border-line bg-white p-5 shadow-[0_20px_50px_rgba(11,25,42,0.07)] sm:p-8">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-pine">Administrator registration</p>
+      <h2 className="mt-2 text-2xl font-semibold tracking-tight text-forest sm:text-3xl">Create your agency workspace</h2>
+      <p className="mt-2 text-sm leading-6 text-muted-ink">You will be the first administrator. Verify your email before inviting the rest of your team.</p>
       <form action={formAction} className="mt-6 space-y-4" noValidate>
         <div>
           <label htmlFor="fullName" className="mb-1.5 block text-sm font-medium">Full name</label>
@@ -69,8 +69,8 @@ export function AdministratorRegistrationForm() {
           </div>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-xs leading-5 text-[#667085]">Use 8–72 characters with uppercase, lowercase, and a number.</p>
-          <button type="button" onClick={() => setShowPasswords((visible) => !visible)} className="inline-flex min-h-9 items-center gap-2 rounded-lg px-2 text-xs font-semibold text-[#087F8C]" aria-pressed={showPasswords}>
+          <p className="text-xs leading-5 text-muted-ink">Use 8–72 characters with uppercase, lowercase, and a number.</p>
+          <button type="button" onClick={() => setShowPasswords((visible) => !visible)} className="inline-flex min-h-9 items-center gap-2 rounded-lg px-2 text-xs font-semibold text-pine" aria-pressed={showPasswords}>
             {showPasswords ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
             {showPasswords ? "Hide passwords" : "Show passwords"}
           </button>
@@ -81,7 +81,7 @@ export function AdministratorRegistrationForm() {
           {pending ? "Creating workspace…" : "Create secure workspace"}
         </button>
       </form>
-      <p className="mt-5 text-center text-xs leading-5 text-[#667085]">By continuing, you agree to the <Link href="/terms" className="font-medium text-[#087F8C]">Terms</Link> and <Link href="/privacy" className="font-medium text-[#087F8C]">Privacy Policy</Link>.</p>
+      <p className="mt-5 text-center text-xs leading-5 text-muted-ink">By continuing, you agree to the <Link href="/terms" className="font-medium text-pine">Terms</Link> and <Link href="/privacy" className="font-medium text-pine">Privacy Policy</Link>.</p>
     </section>
   );
 }

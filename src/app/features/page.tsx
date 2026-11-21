@@ -1,3 +1,4 @@
+import { EditorialIntro } from "@/components/editorial-intro";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -47,43 +48,37 @@ const planned = [
 
 export default function FeaturesPage() {
   return (
-    <div className="min-h-screen bg-white text-[#17212F]">
+    <div className="min-h-screen bg-canvas text-ink">
       <SiteHeader />
       <main>
-        <section className="bg-[#F7F9FC]">
-          <div className="mx-auto max-w-7xl px-5 py-16 sm:px-6 lg:py-20">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#087F8C]">Platform capabilities</p>
-            <h1 className="mt-3 max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-[#0B192A] sm:text-5xl">
-              The building blocks for clearer property operations.
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-[#667085] sm:text-lg sm:leading-8">
+        <EditorialIntro label="Platform capabilities" title="The building blocks for clearer property operations." image="office">
+            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-ink sm:text-lg sm:leading-8">
               Manage inventory, enquiries, viewings and transactions in your agency workspace.
             </p>
-          </div>
-        </section>
+        </EditorialIntro>
 
         <section className="mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:py-18">
           <div className="mb-8 flex items-end justify-between gap-5">
             <div>
-              <h2 className="text-2xl font-semibold tracking-tight text-[#0B192A] sm:text-3xl">Workspace capabilities</h2>
-              <p className="mt-2 text-sm text-[#667085]">Account and operational records are server-backed and isolated by active agency membership.</p>
+              <h2 className="text-2xl font-semibold tracking-tight text-forest sm:text-3xl">Workspace capabilities</h2>
+              <p className="mt-2 text-sm text-muted-ink">Account and operational records are server-backed and isolated by active agency membership.</p>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {available.map((feature) => {
               const Icon = feature.icon;
               return (
-                <article key={feature.title} className="rounded-2xl border border-[#E5EAF0] bg-white p-5 sm:p-6">
+                <article key={feature.title} className="rounded-2xl border border-line bg-white p-5 sm:p-6">
                   <div>
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EAF6F7] text-[#087F8C]">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sage text-pine">
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </span>
-                    <h3 className="mt-4 text-lg font-semibold text-[#17212F]">{feature.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-[#667085]">{feature.description}</p>
+                    <h3 className="mt-4 text-lg font-semibold text-ink">{feature.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-muted-ink">{feature.description}</p>
                     <ul className="mt-4 space-y-2">
                       {feature.points.map((point) => (
-                        <li key={point} className="flex items-start gap-2 text-sm text-[#526174]">
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#087F8C]" aria-hidden="true" />
+                        <li key={point} className="flex items-start gap-2 text-sm text-muted-ink">
+                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-pine" aria-hidden="true" />
                           {point}
                         </li>
                       ))}
@@ -95,24 +90,24 @@ export default function FeaturesPage() {
           </div>
         </section>
 
-        <section className="border-y border-[#E5EAF0] bg-[#F7F9FC]">
+        <section className="border-y border-line bg-canvas">
           <div className="mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:py-16">
             <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#667085]">In development</p>
-              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[#0B192A] sm:text-3xl">Not every workflow is ready yet.</h2>
-              <p className="mt-3 text-sm leading-6 text-[#667085]">The current workspace supports rental deals and landlord contact records. Tenancy administration is a future capability.</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-ink">In development</p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-forest sm:text-3xl">Not every workflow is ready yet.</h2>
+              <p className="mt-3 text-sm leading-6 text-muted-ink">The current workspace supports rental deals and landlord contact records. Tenancy administration is a future capability.</p>
             </div>
             <div className="mt-7 grid gap-4 md:grid-cols-3">
               {planned.map((feature) => {
                 const Icon = feature.icon;
                 return (
-                  <article key={feature.title} className="rounded-2xl border border-[#E5EAF0] bg-white p-5">
+                  <article key={feature.title} className="rounded-2xl border border-line bg-white p-5">
                     <div className="flex items-center justify-between gap-3">
-                      <Icon className="h-5 w-5 text-[#667085]" aria-hidden="true" />
-                      <span className="rounded-full border border-[#E5EAF0] px-2.5 py-1 text-[10px] font-medium text-[#667085]">Not available</span>
+                      <Icon className="h-5 w-5 text-muted-ink" aria-hidden="true" />
+                      <span className="rounded-full border border-line px-2.5 py-1 text-[10px] font-medium text-muted-ink">Not available</span>
                     </div>
-                    <h3 className="mt-4 font-semibold text-[#17212F]">{feature.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-[#667085]">{feature.description}</p>
+                    <h3 className="mt-4 font-semibold text-ink">{feature.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-muted-ink">{feature.description}</p>
                   </article>
                 );
               })}
@@ -121,13 +116,13 @@ export default function FeaturesPage() {
         </section>
 
         <section className="mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:py-16">
-          <div className="flex flex-col gap-5 rounded-[24px] bg-[#0B192A] p-6 text-white sm:p-8 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-5 rounded-[24px] bg-forest p-6 text-white sm:p-8 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#A7DADC]">Take a closer look</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-mint">Take a closer look</p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight">Explore the current workspace screens.</h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Sign-up and stored records are demonstrations only; avoid entering sensitive or production customer data.</p>
             </div>
-            <Link href="/register" className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0B192A] hover:bg-[#F1F5F8]">
+            <Link href="/register" className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-forest hover:bg-soft">
               Create a workspace <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
