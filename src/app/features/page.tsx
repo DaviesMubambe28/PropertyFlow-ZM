@@ -15,23 +15,23 @@ import { SiteHeader } from "@/components/site-header";
 const available = [
   {
     title: "Property and listing management",
-    description: "Create property records with listing type, price, location, photos, description and availability status. Public discovery only shows active records.",
+    description: "Create property records with listing type, price, location, photos, description and availability status. Agency administrators can publish available listings to the public directory.",
     icon: Building2,
-    tag: "Prototype UI available",
+    tag: "Workspace feature",
     points: ["Sale and rent record types", "Status and property details", "Workspace portfolio view"],
   },
   {
     title: "Contacts and client notes",
     description: "Keep buyer, seller and other contact details in a workspace list, with notes, lead source and stated budget.",
     icon: ContactRound,
-    tag: "Prototype UI available",
+    tag: "Workspace feature",
     points: ["Contact profile basics", "Client notes and source", "Budget field for follow-up context"],
   },
   {
     title: "Lead management and pipeline",
     description: "Create leads and move them through a defined set of sales stages so the next step is easier to see.",
     icon: CircleDashed,
-    tag: "Prototype UI available",
+    tag: "Workspace feature",
     points: ["New through negotiation", "Won and lost stages", "Estimated lead value"],
   },
   {
@@ -39,7 +39,7 @@ const available = [
     description: "Review summaries calculated from the agency’s shared property, lead, and deal records.",
     icon: BarChart3,
     tag: "Local prototype data",
-    points: ["Property record counts", "Lead and deal summaries", "Workspace subscription examples"],
+    points: ["Property record counts", "Lead and deal summaries", "Reporting by date range"],
   },
 ];
 
@@ -61,7 +61,7 @@ export default function FeaturesPage() {
               The building blocks for clearer property operations.
             </h1>
             <p className="mt-5 mx-auto max-w-2xl text-base leading-7 text-quiet sm:text-lg sm:leading-8">
-              Explore the workflows represented in PropertyFlow ZM today. Available prototype screens and planned capabilities are intentionally distinguished.
+              See how your team can manage properties, keep up with clients and track deals in one workspace.
             </p>
             <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-line bg-white px-3 py-1.5 text-xs font-medium text-quiet">
               <span className="h-2 w-2 rounded-full bg-[#C77D0A]" />
@@ -134,7 +134,7 @@ export default function FeaturesPage() {
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-100">Take a closer look</p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight">Explore the current workspace screens.</h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Sign-up and stored records are demonstrations only; avoid entering sensitive or production customer data.</p>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">See how property records, enquiries and transactions connect in an agency workspace.</p>
             </div>
             <Link href="/register" className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-deep hover:bg-tint">
               Try the prototype <ArrowRight className="h-4 w-4" aria-hidden="true" />

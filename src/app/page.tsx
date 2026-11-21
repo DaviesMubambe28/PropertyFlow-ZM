@@ -84,7 +84,7 @@ export default function HomePage() {
         <section id="product-tour" className="site-width scroll-mt-6 pb-15">
           <div className="mx-auto mb-7 max-w-lg text-center">
             <h2 className="text-3xl font-bold tracking-tight text-brand">See the workspace in action.</h2>
-            <p className="mt-3 text-sm leading-6 text-ink">Explore a sample agency’s portfolio, pipeline, activities, and reports.</p>
+            <p className="mt-3 text-sm leading-6 text-ink">Explore a sample agency, from the first enquiry to reporting on its deals.</p>
           </div>
           <ProductTour />
         </section>

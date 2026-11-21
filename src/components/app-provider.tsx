@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { clearAppState, createSeedState, loadAppState } from "@/lib/store";
+import { clearAppState, createEmptyState, loadAppState } from "@/lib/store";
 import { getActiveOrganization, getCurrentUser } from "@/lib/tenant";
 import type {
   AppState,
@@ -31,18 +31,21 @@ export type AuthenticatedIdentity = {
 const AppContext = createContext<AppContextValue | undefined>(undefined);
 
 export function AppProvider({ children, identity }: { children: ReactNode; identity?: AuthenticatedIdentity }) {
-  const [state, setState] = useState<AppState>(() => {
-    const initialState = identity ? createSeedState() : loadAppState();
+  const [initialState] = useState<AppState>(() => identity ? createEmptyState() : loadAppState());
+  const [requestedOrgId, setRequestedOrgId] = useState<string | null>(null);
+  const state = useMemo(() => {
     if (!identity) return initialState;
+    const activeOrgId = identity.organizations.some(({ id }) => id === requestedOrgId)
+      ? requestedOrgId : identity.user.orgId;
     return {
       ...initialState,
       organizations: identity.organizations,
       users: [identity.user],
       ...identity.data,
       currentUserId: identity.user.id,
-      activeOrgId: identity.user.orgId,
+      activeOrgId,
     };
-  });
+  }, [identity, initialState, requestedOrgId]);
 
   useEffect(() => {
     if (identity) clearAppState();
@@ -51,12 +54,7 @@ export function AppProvider({ children, identity }: { children: ReactNode; ident
   const currentUser = useMemo(() => getCurrentUser(state), [state]);
   const activeOrg = useMemo(() => getActiveOrganization(state), [state]);
 
-  const switchOrganization = (orgId: string) => {
-    setState((previous) => ({
-      ...previous,
-      activeOrgId: orgId,
-    }));
-  };
+  const switchOrganization = (orgId: string) => setRequestedOrgId(orgId);
 
   return (
     <AppContext.Provider

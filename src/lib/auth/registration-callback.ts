@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { safeReturnPath } from "@/lib/auth/redirects";
 
 const registrationMetadataSchema = z.object({
   full_name: z.string().trim().min(2).max(120),
@@ -7,8 +8,7 @@ const registrationMetadataSchema = z.object({
 });
 
 export function getSafeCallbackPath(value: string | null) {
-  if (!value || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) return "/dashboard";
-  return value;
+  return safeReturnPath(value);
 }
 
 export function getAdministratorBootstrapInput(metadata: unknown) {

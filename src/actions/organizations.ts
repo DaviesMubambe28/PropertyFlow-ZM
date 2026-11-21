@@ -9,7 +9,6 @@ export type OrganizationActionState = {
   message?: string;
   fields?: Record<string, string[] | undefined>;
 };
-export const initialOrganizationState: OrganizationActionState = { status: "idle" };
 
 export async function updateOrganizationProfile(_state: OrganizationActionState, formData: FormData): Promise<OrganizationActionState> {
   const parsed = organizationProfileSchema.safeParse(Object.fromEntries(formData));

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { getPublicEnvironment } from "@/lib/env/public";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
-import { invitationAcceptanceSchema, invitationInputSchema, membershipStatusSchema } from "@/lib/validation/team";
+import { invitationAcceptanceSchema, invitationInputSchema, membershipRoleSchema, membershipStatusSchema } from "@/lib/validation/team";
 
 export type TeamActionState = {
   status: "idle" | "error" | "success";
@@ -44,6 +44,22 @@ export async function setMembershipStatus(formData: FormData) {
   await supabase.from("organization_memberships").update({ status: parsed.data.status })
     .eq("organization_id", parsed.data.organizationId).eq("user_id", parsed.data.userId).eq("role", "agent");
   revalidatePath("/dashboard/settings/team");
+}
+
+export async function setMembershipRole(_previous: string, formData: FormData) {
+  const parsed = membershipRoleSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return "Choose a valid team member and role.";
+  const { organizationId, userId, role } = parsed.data;
+  const supabase = await createClient();
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return "Sign in again to manage staff roles.";
+  if (auth.user.id === userId) return "Ask another administrator to change your role.";
+
+  const { data, error } = await supabase.from("organization_memberships").update({ role })
+    .eq("organization_id", organizationId).eq("user_id", userId).eq("status", "active").select("user_id").maybeSingle();
+  if (error || !data) return "The role could not be changed. Check administrator access and the member’s status.";
+  revalidatePath("/dashboard/settings/team");
+  return "Member role updated.";
 }
 
 export async function revokeInvitation(formData: FormData) {

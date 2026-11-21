@@ -1,52 +1,67 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Building2 } from "lucide-react";
 import { Suspense, useActionState, useState } from "react";
+import { PublicationControls } from "@/components/publication-controls";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { useAppContext } from "@/components/app-provider";
 import type { Property } from "@/lib/types";
 import { formatCurrency } from "@/lib/tenant";
-import { createProperty, initialOperationState, updateProperty } from "@/actions/operations";
+import { createProperty, updateProperty } from "@/actions/operations";
+import { initialOperationState } from "@/lib/action-state";
 
 export default function PropertiesPage() {
   return <Suspense fallback={<DashboardShell><p role="status">Loading portfolio…</p></DashboardShell>}><PropertyPortfolio /></Suspense>;
 }
 
 function PropertyPortfolio() {
-  const { state, activeOrg } = useAppContext();
+  const { state, activeOrg, currentUser } = useAppContext();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState(searchParams.get("status") === "available" ? "available" : "");
+  const [sort, setSort] = useState("newest");
   const [editing, setEditing] = useState<Property | null>(null);
   const orgProperties = state.properties.filter((property) => property.orgId === activeOrg?.id);
 
   const currentEdit = editing?.orgId === activeOrg?.id ? editing : null;
   const query = search.trim().toLowerCase();
   const visibleProperties = orgProperties.filter((property) =>
-    (!status || property.status === status) &&
+    (status ? property.status === status : property.status !== "archived") &&
     [property.title, property.location, property.province].some((field) => (field ?? "").toLowerCase().includes(query)),
-  );
+  ).sort((a, b) => {
+    if (sort === "price-asc") return a.price - b.price;
+    if (sort === "price-desc") return b.price - a.price;
+    if (sort === "title") return a.title.localeCompare(b.title);
+    return b.createdAt.localeCompare(a.createdAt);
+  });
 
   return (
     <DashboardShell>
       <div className="grid min-w-0 gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <div className="min-w-0 scroll-mt-24 rounded-lg border border-line bg-white p-6 shadow-sm">
           <h2 className="text-2xl font-semibold text-ink">Property portfolio</h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
             <label className="grid gap-1 text-sm font-medium">Search properties
               <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} className="rounded-lg border border-slate-300 p-2" placeholder="Title, location or province" />
             </label>
             <label className="grid gap-1 text-sm font-medium">Status
               <select value={status} onChange={(event) => setStatus(event.target.value)} className="rounded-lg border border-slate-300 p-2">
-                <option value="">All statuses</option><option value="available">Available</option><option value="reserved">Reserved</option><option value="under_offer">Under offer</option><option value="sold">Sold</option><option value="rented">Rented</option><option value="unavailable">Unavailable</option><option value="draft">Draft</option>
+                <option value="">Current records</option><option value="available">Available</option><option value="reserved">Reserved</option><option value="under_offer">Under offer</option><option value="sold">Sold</option><option value="rented">Rented</option><option value="unavailable">Unavailable</option><option value="draft">Draft</option><option value="archived">Archived</option>
+              </select>
+            </label>
+            <label className="grid gap-1 text-sm font-medium">Sort by
+              <select value={sort} onChange={(event) => setSort(event.target.value)} className="rounded-lg border border-slate-300 p-2">
+                <option value="newest">Newest first</option><option value="price-asc">Price, low to high</option>
+                <option value="price-desc">Price, high to low</option><option value="title">Property title</option>
               </select>
             </label>
           </div>
           <div className="mt-6 space-y-4">
             {visibleProperties.map((property, index) => (
-              <div key={property.id} className="flex gap-4 rounded-lg border border-line bg-canvas p-3">
+              <div key={property.id} id={`property-${property.id}`} className="scroll-mt-48 flex gap-4 rounded-lg border border-line bg-canvas p-3">
                 {property.imageUrl ? (
                   <Image src={property.imageUrl} alt="" width={96} height={80} loading={index === 0 ? "eager" : "lazy"} unoptimized className="h-20 w-24 rounded-xl object-cover" />
                 ) : (
@@ -64,6 +79,8 @@ function PropertyPortfolio() {
                       Edit <span className="sr-only">{property.title}</span>
                     </a>
                   )}
+                  <Link href={`/dashboard/properties/${property.id}/files`} className="ml-2 inline-flex min-h-11 items-center text-sm font-semibold text-brand underline">Private files</Link>
+                  {currentUser?.role === "owner" && property.updatedAt && <PublicationControls id={property.id} available={property.status === "available"} version={property.updatedAt} />}
                 </div>
               </div>
             ))}
@@ -119,7 +136,7 @@ function PropertyForm({ organizationId, property, cancel }: { organizationId: st
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm font-medium">Province<input name="province" value={form.province} onChange={(event) => setForm({ ...form, province: event.target.value })} className="mt-1.5 w-full rounded-xl border border-line bg-canvas px-3 py-2.5 text-ink" /></label>
-          <label className="block text-sm font-medium">Availability<select name="status" value={form.status} onChange={(event) => setForm({ ...form, status: event.target.value })} className="mt-1.5 w-full rounded-xl border border-line bg-canvas px-3 py-2.5 text-ink"><option value="available">Available</option><option value="reserved">Reserved</option><option value="under_offer">Under offer</option><option value="sold">Sold</option><option value="rented">Rented</option><option value="unavailable">Unavailable</option><option value="draft">Draft</option></select></label>
+          <label className="block text-sm font-medium">Availability<select name="status" value={form.status} onChange={(event) => setForm({ ...form, status: event.target.value })} className="mt-1.5 w-full rounded-xl border border-line bg-canvas px-3 py-2.5 text-ink"><option value="available">Available</option><option value="reserved">Reserved</option><option value="under_offer">Under offer</option><option value="sold">Sold</option><option value="rented">Rented</option><option value="unavailable">Unavailable</option><option value="draft">Draft</option><option value="archived">Archived</option></select></label>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-sm font-medium">Price (ZMW)<input name="price" type="number" min="0" step="0.01" value={form.price} onChange={(event) => setForm({ ...form, price: event.target.value })} className="mt-1.5 w-full rounded-xl border border-line bg-canvas px-3 py-2.5 text-ink" required /></label>

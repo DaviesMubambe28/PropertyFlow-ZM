@@ -49,6 +49,7 @@ export function mapOperationalData(rows: OperationalRows): NonNullable<Authentic
       ownerPhone: String(row.owner_phone ?? ""), assignedTo: row.assigned_to ? String(row.assigned_to) : undefined,
       status: row.status as AppState["properties"][number]["status"], imageUrl: String(row.image_url ?? ""),
       description: String(row.description), featured: Boolean(row.featured), createdAt: String(row.created_at),
+      branchId: typeof row.branch_id === "string" ? row.branch_id : undefined,
       updatedAt: typeof row.updated_at === "string" ? row.updated_at : undefined,
     })),
     contacts: rows.contacts.map((row) => ({
@@ -67,6 +68,7 @@ export function mapOperationalData(rows: OperationalRows): NonNullable<Authentic
       id: String(row.id), orgId: String(row.organization_id), leadId: String(row.lead_id),
       propertyId: String(row.property_id), date: String(row.scheduled_at), agentId: String(row.agent_id),
       status: row.status as AppState["viewings"][number]["status"], notes: String(row.notes),
+      updatedAt: typeof row.updated_at === "string" ? row.updated_at : undefined,
       feedback: String(row.feedback ?? ""), outcome: row.outcome as AppState["viewings"][number]["outcome"],
     })),
     tasks: rows.tasks.map((row) => ({

@@ -38,6 +38,22 @@ export default function DashboardOverviewPage() {
             </ul>
           </details>
         )}
+        {currentUser?.role === "agent" && (
+          <section className="rounded-lg border border-line bg-white p-5" aria-labelledby="assigned-work-title">
+            <h2 id="assigned-work-title" className="text-lg font-semibold text-deep">Your assigned work</h2>
+            <div className="mt-3 flex flex-wrap gap-4 text-sm">
+              <Link className="font-semibold text-brand underline" href="/dashboard/pipeline">
+                {state.leads.filter((lead) => lead.orgId === activeOrg?.id && lead.assignedTo === currentUser.id && !["converted", "lost"].includes(lead.stage)).length} active leads
+              </Link>
+              <Link className="font-semibold text-brand underline" href="/dashboard/activities#viewings">
+                {scheduledViewings.filter((viewing) => viewing.agentId === currentUser.id).length} scheduled viewings
+              </Link>
+              <Link className="font-semibold text-brand underline" href="/dashboard/activities#tasks">
+                {pendingTasks.filter((task) => task.assigneeId === currentUser.id).length} pending tasks
+              </Link>
+            </div>
+          </section>
+        )}
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {cards.map((card) => {
             const Icon = card.icon;

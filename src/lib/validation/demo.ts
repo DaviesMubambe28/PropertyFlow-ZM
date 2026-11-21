@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const demoTeamSizes = ["1", "2–10", "11–50", "51+"] as const;
-export const demoStatuses = ["new", "contacted", "qualified", "closed"] as const;
+export const demoStatuses = ["new", "contacted", "qualified", "demo_requested", "evaluation", "pilot", "won", "lost", "closed"] as const;
 
 export const demoRequestSchema = z.object({
   name: z.string().trim().min(2).max(120),

@@ -10,10 +10,10 @@ export default function TermsPage() {
         <h1 className="mt-3 text-4xl font-black tracking-tight text-brand sm:text-5xl">Terms of use</h1>
         <div className="mt-7 max-w-3xl space-y-6 border-t border-line pt-7 text-sm leading-7 text-quiet sm:text-base">
           <p>
-            This website and application are provided as a frontend demonstration. They are not a production property-management service or a substitute for professional, legal or financial advice.
+            PropertyFlow ZM is an agency workspace under development. Information on this site does not replace professional, legal or financial advice.
           </p>
           <p>
-            Property records, names, account examples, prices and plan limits shown in development are synthetic examples. Availability, ownership, pricing and transaction details have not been verified and must not be relied on as real offers or business records.
+            Sample workspace records are illustrative. The public directory displays listings selected by participating agencies. Confirm availability, ownership and pricing with the responsible agency before making decisions.
           </p>
           <p>
             Account registration, verification, sign-in, recovery, agency administration, properties and CRM workflows use the shared service. Public contact submission, subscription changes and payment processing are not connected.

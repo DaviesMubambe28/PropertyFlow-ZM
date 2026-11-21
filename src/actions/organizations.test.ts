@@ -8,7 +8,8 @@ vi.mock("server-only", () => ({}));
 vi.mock("@/lib/supabase/server", () => ({ createClient: mocks.createClient }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
 
-import { initialOrganizationState, updateOrganizationProfile } from "./organizations";
+import { updateOrganizationProfile } from "./organizations";
+import { initialOrganizationState } from "@/lib/action-state";
 
 describe("updateOrganizationProfile", () => {
   beforeEach(() => {

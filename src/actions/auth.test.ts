@@ -12,9 +12,8 @@ mocks.createClient.mockImplementation(async () => ({
 }));
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/supabase/server", () => ({ createClient: mocks.createClient }));
-import {
-  initialAuthActionState, registerAdministrator, requestPasswordReset, signIn, updatePassword,
-} from "./auth";
+import { registerAdministrator, requestPasswordReset, signIn, updatePassword } from "./auth";
+import { initialAuthActionState } from "@/lib/action-state";
 
 function form(overrides: Record<string, string> = {}) {
   const data = new FormData();

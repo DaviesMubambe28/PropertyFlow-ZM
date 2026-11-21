@@ -52,7 +52,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 1. Create a Supabase project and link the repository with `npx supabase link --project-ref <project-ref>`.
 2. Apply all migrations with `npx supabase db push`.
 3. In Supabase Auth, set the Site URL to the production application URL and allow `/auth/callback` and `/reset-password` redirects.
-4. Configure an SMTP provider in Supabase Auth so invitations and password recovery emails reach real users.
+4. Configure an SMTP provider in Supabase Auth and install the [invitation email template](supabase/templates/invite.html).
 5. Add the four environment variables above to the hosting provider, using the hosted Supabase URL and keys.
 6. Build with `npm run build`, then deploy the Next.js application.
 
@@ -68,4 +68,4 @@ npx supabase test db
 npm run build
 ```
 
-Database migrations and pgTAP tests are in `supabase/migrations` and `supabase/tests`. The security model is deny-by-default: authenticated users can only access records belonging to organizations where they have an active membership.
+Database migrations and pgTAP tests are in `supabase/migrations` and `supabase/tests`. Private operational records require active agency membership and, for branch-scoped records, branch access. The public directory serves explicitly published listing snapshots. See the [enterprise workflow report](docs/ENTERPRISE_AGENCY_WORKFLOWS.md) for the local verification and release status.

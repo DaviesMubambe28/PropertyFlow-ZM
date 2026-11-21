@@ -11,7 +11,7 @@ export function DemoRequestUpdate({ id, status }: { id: string; status: string }
       <input type="hidden" name="id" value={id} />
       <label className="text-sm font-medium">Status
         <select name="status" defaultValue={status} className="ml-3 rounded-lg border border-slate-300 p-2 capitalize">
-          {demoStatuses.map((option) => <option key={option}>{option}</option>)}
+          {demoStatuses.map((option) => <option key={option} value={option}>{option.replaceAll("_", " ")}</option>)}
         </select>
       </label>
       <label className="text-sm font-medium">Follow-up note

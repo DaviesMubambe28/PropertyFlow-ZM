@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({ request: vi.fn(), update: vi.fn() }));
 vi.mock("@/actions/auth", () => ({
-  initialAuthActionState: { status: "idle" }, requestPasswordReset: mocks.request, updatePassword: mocks.update,
+  requestPasswordReset: mocks.request, updatePassword: mocks.update,
 }));
 import { ForgotPasswordForm, ResetPasswordForm } from "./recovery-forms";
 

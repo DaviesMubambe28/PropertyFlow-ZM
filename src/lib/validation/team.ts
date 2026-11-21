@@ -11,4 +11,10 @@ export const membershipStatusSchema = z.object({
   status: z.enum(["active", "deactivated"]),
 });
 
+export const membershipRoleSchema = z.object({
+  organizationId: z.uuid(),
+  userId: z.uuid(),
+  role: z.enum(["admin", "agent"]),
+});
+
 export const invitationAcceptanceSchema = z.object({ invitationId: z.uuid() });

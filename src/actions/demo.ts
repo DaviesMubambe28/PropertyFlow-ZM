@@ -8,7 +8,7 @@ import { demoRequestSchema, demoUpdateSchema } from "@/lib/validation/demo";
 export async function submitDemoRequest(_previous: string | null, formData: FormData) {
   const parsed = demoRequestSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return "Check your contact details and try again.";
-  if (formData.get("website")) return "received";
+  if (formData.get("website")) return "We couldn’t save your request. Please try again.";
 
   try {
     const { data, error } = await createAdminClient().rpc("submit_demo_request", {

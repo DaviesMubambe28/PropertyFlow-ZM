@@ -17,7 +17,6 @@ export type AuthActionState = {
   fields?: Record<string, string[] | undefined>;
   redirectTo?: string;
 };
-export const initialAuthActionState: AuthActionState = { status: "idle" };
 const registrationSuccess: AuthActionState = {
   status: "success",
   message: "Check your email to verify your account and open your agency workspace.",

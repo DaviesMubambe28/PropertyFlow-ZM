@@ -18,7 +18,7 @@ export const propertyInputSchema = z.object({
   area: z.coerce.number().nonnegative().max(9999999999),
   description: z.string().trim().max(5000),
   imageUrl: z.union([z.url("Enter a valid image URL."), z.literal("")]),
-  status: z.enum(["available", "reserved", "under_offer", "sold", "rented", "unavailable", "draft"]).default("available"),
+  status: z.enum(["available", "reserved", "under_offer", "sold", "rented", "unavailable", "draft", "archived"]).default("available"),
   ownerName: z.string().trim().max(160).default(""),
   ownerPhone: z.string().trim().max(40).default(""),
 });
@@ -56,7 +56,9 @@ export const leadStageInputSchema = z.object({
   stage: z.enum(["new", "contacted", "interested", "viewing_scheduled", "negotiation", "converted", "lost"]),
 });
 
-const dateTime = z.string().refine((value) => !Number.isNaN(Date.parse(value)), "Enter a valid date and time.")
+const dateTime = z.string()
+  .transform((value) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?$/.test(value) ? `${value}${value.length === 16 ? ":00" : ""}+02:00` : value)
+  .pipe(z.iso.datetime({ offset: true, error: "Enter a valid date and time." }))
   .transform((value) => new Date(value).toISOString());
 
 export const viewingInputSchema = z.object({
@@ -69,6 +71,7 @@ export const viewingInputSchema = z.object({
 
 export const viewingOutcomeSchema = z.object({
   viewingId: z.uuid(),
+  scheduledAt: dateTime.optional(),
   status: z.enum(["scheduled", "completed", "cancelled", "missed"]),
   feedback: z.string().trim().max(5000),
   outcome: z.enum(["", "offer", "another_viewing", "discontinued"]),

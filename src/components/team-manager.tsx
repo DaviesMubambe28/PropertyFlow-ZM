@@ -2,12 +2,12 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
-import { inviteAgent, revokeInvitation, setMembershipStatus } from "@/actions/team";
+import { inviteAgent, revokeInvitation, setMembershipRole, setMembershipStatus } from "@/actions/team";
 
 type Member = { userId: string; fullName: string; role: string; status: string };
 type Invitation = { id: string; email: string; status: string; expiresAt: string };
 
-export function TeamManager({ organizationId, members, invitations }: { organizationId: string; members: Member[]; invitations: Invitation[] }) {
+export function TeamManager({ organizationId, members, invitations, currentUserId }: { currentUserId: string; organizationId: string; members: Member[]; invitations: Invitation[] }) {
   const [state, action, pending] = useActionState(inviteAgent, { status: "idle" as const });
   return <div className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
     <section className="rounded-lg border border-line bg-white p-5 shadow-sm sm:p-6">
@@ -38,13 +38,32 @@ export function TeamManager({ organizationId, members, invitations }: { organiza
       <div className="mt-5 divide-y divide-line">
         {members.map((member) => <div key={member.userId} className="flex flex-wrap items-center justify-between gap-3 py-4">
           <div><p className="font-medium">{member.fullName}</p><p className="mt-1 text-xs uppercase tracking-wide text-quiet">{member.role} · {member.status}</p></div>
+          <div className="flex flex-wrap gap-2">
+          {member.status === "active" && member.userId !== currentUserId && <RoleEditor organizationId={organizationId} member={member} />}
           {member.role === "agent" && <form action={setMembershipStatus}>
             <input type="hidden" name="organizationId" value={organizationId} /><input type="hidden" name="userId" value={member.userId} />
             <input type="hidden" name="status" value={member.status === "active" ? "deactivated" : "active"} />
             <button className="rounded-lg border border-line px-3 py-2 text-xs font-semibold text-quiet">{member.status === "active" ? "Deactivate" : "Reactivate"}</button>
           </form>}
+          </div>
         </div>)}
       </div>
     </section>
   </div>;
+}
+
+
+function RoleEditor({ organizationId, member }: { organizationId: string; member: Member }) {
+  const [result, action, pending] = useActionState(setMembershipRole, "");
+  return (
+    <form action={action} className="flex flex-wrap items-center gap-2">
+      <input type="hidden" name="organizationId" value={organizationId} />
+      <input type="hidden" name="userId" value={member.userId} />
+      <select name="role" defaultValue={member.role} aria-label={`Role for ${member.fullName}`} className="rounded-lg border border-line p-2 text-xs">
+        <option value="agent">Agent</option><option value="admin">Administrator</option>
+      </select>
+      <button className="rounded-lg border border-line px-3 py-2 text-xs font-semibold" disabled={pending}>{pending ? "Saving…" : "Save role"}</button>
+      {result && <p role="status" className="w-full text-xs text-quiet">{result}</p>}
+    </form>
+  );
 }

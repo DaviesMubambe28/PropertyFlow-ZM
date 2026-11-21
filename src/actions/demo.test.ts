@@ -42,7 +42,7 @@ describe("demo requests", () => {
     expect(await submitDemoRequest(null, form)).toMatch(/Check your contact details/);
     const automated = request();
     automated.set("website", "automated");
-    await submitDemoRequest(null, automated);
+    expect(await submitDemoRequest(null, automated)).not.toBe("received");
     expect(mocks.rpc).not.toHaveBeenCalled();
   });
 

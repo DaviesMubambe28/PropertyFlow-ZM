@@ -1,10 +1,16 @@
-import { Suspense } from "react";
-import { PropertyDetailClient } from "@/components/property-detail-client";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { z } from "zod";
+import { PropertyDetail } from "@/components/property-detail";
+import { getPublicProperty } from "@/lib/public-listing-data";
 
-export default function PropertyDetailPage({ params }: PageProps<"/properties/[id]">) {
-  return (
-    <Suspense fallback={<div className="min-h-screen bg-canvas" aria-label="Loading property details" />}>
-      {params.then(({ id }) => <PropertyDetailClient id={id} />)}
-    </Suspense>
-  );
+export const metadata: Metadata = { title: "Property details | PropertyFlow ZM" };
+export const instant = false;
+
+export default async function PropertyDetailPage({ params }: PageProps<"/properties/[id]">) {
+  const { id } = await params;
+  if (!z.uuid().safeParse(id).success) notFound();
+  const property = await getPublicProperty(id);
+  if (!property) notFound();
+  return <PropertyDetail property={property} />;
 }

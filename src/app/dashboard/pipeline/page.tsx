@@ -4,12 +4,15 @@ import { useActionState, useState } from "react";
 import Link from "next/link";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { useAppContext } from "@/components/app-provider";
-import { addLeadInteraction, createLead, initialOperationState, updateLeadStage } from "@/actions/operations";
+import { addLeadInteraction, createLead, updateLeadStage } from "@/actions/operations";
+import { initialOperationState } from "@/lib/action-state";
 
 const stages = ["new", "contacted", "interested", "viewing_scheduled", "negotiation", "converted", "lost"];
 
 export default function PipelinePage() {
   const { state, activeOrg } = useAppContext();
+  const [view, setView] = useState("board");
+  const [query, setQuery] = useState("");
   const [result, formAction, pending] = useActionState(createLead, initialOperationState);
   const [interactionState, interactionAction, interactionPending] = useActionState(addLeadInteraction, initialOperationState);
   const [form, setForm] = useState({ title: "", contactId: "", propertyId: "", value: "", notes: "" });
@@ -17,6 +20,8 @@ export default function PipelinePage() {
   const orgLeads = state.leads.filter((lead) => lead.orgId === activeOrg?.id);
   const orgContacts = state.contacts.filter((contact) => contact.orgId === activeOrg?.id);
   const orgProperties = state.properties.filter((property) => property.orgId === activeOrg?.id && property.status === "available");
+
+  const visibleLeads = orgLeads.filter((lead) => lead.title.toLowerCase().includes(query.trim().toLowerCase()));
 
   return (
     <DashboardShell>
@@ -62,25 +67,45 @@ export default function PipelinePage() {
         </form>
 
         <div className="rounded-lg border border-line bg-white p-6 shadow-sm">
-          <h2 className="text-2xl font-semibold text-deep">Kanban pipeline</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <h2 className="text-2xl font-semibold text-deep">Lead pipeline</h2>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <label className="grid gap-1 text-sm">Find a lead
+              <input type="search" className="rounded-lg border border-line p-2" value={query} onChange={(event) => setQuery(event.target.value)} />
+            </label>
+            <label className="grid gap-1 text-sm">View as
+              <select className="rounded-lg border border-line p-2" value={view} onChange={(event) => setView(event.target.value)}>
+                <option value="board">Board</option><option value="table">Table</option>
+              </select>
+            </label>
+          </div>
+          {view === "table" && (
+            <div className="mt-4 overflow-auto">
+              <table className="w-full min-w-[24rem] text-left text-sm">
+                <thead><tr className="border-b border-line"><th scope="col" className="p-2">Lead</th><th scope="col" className="p-2">Value (ZMW)</th><th scope="col" className="p-2">Stage</th></tr></thead>
+                <tbody>{visibleLeads.map((lead) => (
+                  <tr className="scroll-mt-48 border-b border-line" key={lead.id} id={`lead-${lead.id}`}>
+                    <th scope="row" className="p-2">{lead.title}</th>
+                    <td className="p-2">{lead.value.toLocaleString("en-ZM")}</td>
+                    <td className="p-2"><LeadStage leadId={lead.id} stage={lead.stage} label={lead.title} stages={stages} /></td>
+                  </tr>
+                ))}</tbody>
+              </table>
+              {visibleLeads.length === 0 && <p className="p-2 text-sm text-quiet">No matching leads.</p>}
+            </div>
+          )}
+          {view === "board" && <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {stages.map((stage) => {
-              const stageLeads = orgLeads.filter((lead) => lead.stage === stage);
+              const stageLeads = visibleLeads.filter((lead) => lead.stage === stage);
               return (
                 <div key={stage} className="rounded-lg bg-canvas p-3">
                   <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-slate-500">{stage.replace("_", " ")}</p>
                   <div className="space-y-3">
                     {stageLeads.length > 0 ? (
                       stageLeads.map((lead) => (
-                        <div key={lead.id} className="rounded-lg bg-white p-3 shadow-sm">
+                        <div key={lead.id} id={`lead-${lead.id}`} className="scroll-mt-48 rounded-lg bg-white p-3 shadow-sm">
                           <p className="font-medium text-deep">{lead.title}</p>
                           <p className="mt-1 text-sm text-quiet">K{lead.value.toLocaleString()}</p>
-                          <form action={updateLeadStage}>
-                            <input type="hidden" name="leadId" value={lead.id} />
-                            <select name="stage" defaultValue={lead.stage} onChange={(event) => event.currentTarget.form?.requestSubmit()} aria-label={`Stage for ${lead.title}`} className="mt-3 w-full rounded-lg border border-line px-2 py-1.5 text-sm">
-                              {stages.map((option) => <option key={option} value={option}>{option.replace("_", " ")}</option>)}
-                            </select>
-                          </form>
+                          <LeadStage leadId={lead.id} stage={lead.stage} label={lead.title} stages={stages} />
                         </div>
                       ))
                     ) : (
@@ -90,7 +115,7 @@ export default function PipelinePage() {
                 </div>
               );
             })}
-          </div>
+          </div>}
           <form action={interactionAction} className="mt-6 rounded-lg border border-line bg-canvas p-4">
             <h3 className="font-semibold text-deep">Record customer interaction</h3>
             <input type="hidden" name="organizationId" value={activeOrg?.id ?? ""} />
@@ -103,5 +128,20 @@ export default function PipelinePage() {
         </div>
       </div>
     </DashboardShell>
+  );
+}
+
+
+function LeadStage({ leadId, stage, label, stages }: { leadId: string; stage: string; label: string; stages: readonly string[] }) {
+  const [result, action, pending] = useActionState(updateLeadStage, initialOperationState);
+  return (
+    <form action={action} className="mt-3 space-y-2">
+      <input type="hidden" name="leadId" value={leadId} />
+      <select name="stage" defaultValue={stage} aria-label={`Stage for ${label}`} className="w-full rounded-lg border border-line px-2 py-2 text-sm capitalize">
+        {stages.map((option) => <option key={option} value={option}>{option.replaceAll("_", " ")}</option>)}
+      </select>
+      <button disabled={pending} className="rounded-lg border border-line p-2 text-xs font-semibold">{pending ? "Saving…" : "Save stage"}</button>
+      {result.message && <p role={result.status === "error" ? "alert" : "status"} className="text-xs text-quiet">{result.message}</p>}
+    </form>
   );
 }

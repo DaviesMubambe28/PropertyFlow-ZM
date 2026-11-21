@@ -1,4 +1,5 @@
 import { DashboardShell } from "@/components/dashboard-shell";
+import { WorkAssignment } from "@/components/work-assignment";
 import { TeamManager } from "@/components/team-manager";
 import { createClient } from "@/lib/supabase/server";
 
@@ -22,5 +23,5 @@ export default async function TeamSettingsPage() {
   });
   const invitations = (invitationResult.data ?? []).map((row) => ({ id: row.id, email: row.email, status: row.status, expiresAt: row.expires_at }));
 
-  return <DashboardShell><div className="space-y-5"><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">Agency administration</p><h2 className="mt-2 text-2xl font-semibold">Team access</h2></div><TeamManager organizationId={ownMembership.organization_id} members={members} invitations={invitations} /></div></DashboardShell>;
+  return <DashboardShell><div className="space-y-5"><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">Agency administration</p><h2 className="mt-2 text-2xl font-semibold">Team access</h2></div><TeamManager currentUserId={auth.user.id} organizationId={ownMembership.organization_id} members={members} invitations={invitations} /><WorkAssignment organizationId={ownMembership.organization_id} staff={members.filter((member) => member.status === "active").map((member) => ({ id: member.userId, name: member.fullName }))} /></div></DashboardShell>;
 }

@@ -16,6 +16,7 @@ import {
   Users,
   CalendarCheck,
 } from "lucide-react";
+import { WorkspaceSearch } from "@/components/workspace-search";
 import { useAppContext } from "@/components/app-provider";
 import { signOut } from "@/actions/auth";
 import { getUserOrganizations } from "@/lib/tenant";
@@ -30,6 +31,9 @@ const navItems = [
   { href: "/dashboard/subscriptions", label: "Subscriptions", icon: Briefcase },
   { href: "/dashboard/settings/agency", label: "Agency settings", icon: Settings },
   { href: "/dashboard/settings/team", label: "Team", icon: Users },
+  { href: "/dashboard/settings/branches", label: "Branches", icon: Building2 },
+  { href: "/dashboard/settings/audit", label: "Access history", icon: ShieldCheck },
+  { href: "/dashboard/settings/import", label: "Import records", icon: Briefcase },
   { href: "/dashboard/admin", label: "Admin", icon: ShieldCheck },
 ];
 
@@ -44,7 +48,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     : [];
   const visibleNavItems = navItems.filter((item) => {
     if (item.href === "/dashboard/admin") return currentUser?.role === "super_admin";
-    if (item.href === "/dashboard/settings/agency" || item.href === "/dashboard/settings/team") return currentUser?.role === "owner";
+    if (item.href === "/dashboard/settings/agency" || item.href === "/dashboard/settings/team" || item.href === "/dashboard/settings/import" || item.href === "/dashboard/settings/branches" || item.href === "/dashboard/settings/audit") return currentUser?.role === "owner";
     if (item.href === "/dashboard/pipeline" || item.href === "/dashboard/reports") {
       return currentUser?.role !== "landlord";
     }
@@ -147,12 +151,20 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-quiet">
                 {activeNavItem?.label ?? "Workspace"} <span className="px-1 text-line">/</span> {currentUser.role.replace("_", " ")}
               </p>
-              <h1 className="mt-1 text-xl font-semibold text-ink sm:text-2xl">{activeOrg.name}</h1>
+              <h1 className="mt-1 break-words text-xl font-semibold text-ink sm:text-2xl">{activeOrg.name}</h1>
             </div>
-            <div className="max-w-[45%] truncate rounded-full bg-brand px-3 py-2 text-xs font-medium text-white shadow-sm sm:max-w-none sm:text-sm">
-              {currentUser.fullName}
+            <div className="flex min-w-0 shrink-0 items-center gap-2">
+              <span className="hidden max-w-45 truncate rounded-full bg-brand px-3 py-2 text-xs font-medium text-white shadow-sm sm:inline-block sm:text-sm">
+                {currentUser.fullName}
+              </span>
+              <form action={signOut} className="lg:hidden">
+                <button type="submit" aria-label="Sign out" className="inline-flex size-11 items-center justify-center rounded-lg border border-line text-brand">
+                  <LogOut size={17} aria-hidden="true" />
+                </button>
+              </form>
             </div>
           </div>
+          <WorkspaceSearch />
           <nav aria-label="Workspace navigation" className="mt-4 flex min-w-0 max-w-full gap-1 overflow-x-auto pb-0.5 lg:hidden">
             {visibleNavItems.map((item) => {
               const ItemIcon = item.icon;

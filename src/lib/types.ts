@@ -4,7 +4,7 @@ export type SubscriptionStatus = "active" | "trial" | "pending" | "expired" | "s
 export type LeadStage = "new" | "contacted" | "interested" | "viewing_scheduled" | "negotiation" | "converted" | "lost";
 export type TaskStatus = "open" | "in_progress" | "done";
 export type TaskPriority = "low" | "medium" | "high";
-export type ListingStatus = "available" | "reserved" | "under_offer" | "sold" | "rented" | "unavailable" | "draft";
+export type ListingStatus = "available" | "reserved" | "under_offer" | "sold" | "rented" | "unavailable" | "draft" | "archived";
 
 export interface User {
   id: string;
@@ -34,6 +34,7 @@ export interface Organization {
 
 export interface Property {
   id: string;
+  branchId?: string;
   orgId: string;
   title: string;
   type: string;
@@ -87,6 +88,7 @@ export interface Lead {
 
 export interface Viewing {
   id: string;
+  updatedAt?: string;
   orgId: string;
   leadId: string;
   propertyId: string;

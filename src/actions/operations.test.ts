@@ -10,7 +10,8 @@ vi.mock("server-only", () => ({}));
 vi.mock("@/lib/supabase/server", () => ({ createClient: mocks.createClient }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
 
-import { createProperty, initialOperationState, updateProperty } from "./operations";
+import { createProperty, updateProperty } from "./operations";
+import { initialOperationState } from "@/lib/action-state";
 
 function propertyForm(overrides: Record<string, string> = {}) {
   const data = new FormData();

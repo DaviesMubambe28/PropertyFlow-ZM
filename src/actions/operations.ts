@@ -22,7 +22,6 @@ export type OperationState = {
   message?: string;
   fields?: Record<string, string[] | undefined>;
 };
-export const initialOperationState: OperationState = { status: "idle" };
 
 function invalid(fields: Record<string, string[] | undefined>): OperationState {
   return { status: "error", message: "Review the highlighted fields and try again.", fields };
@@ -109,13 +108,16 @@ export async function createLead(_state: OperationState, formData: FormData): Pr
   return { status: "success", message: "Lead saved." };
 }
 
-export async function updateLeadStage(formData: FormData) {
+export async function updateLeadStage(_state: OperationState, formData: FormData): Promise<OperationState> {
   const parsed = leadStageInputSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return;
+  if (!parsed.success) return invalid(parsed.error.flatten().fieldErrors);
   const { supabase, user } = await authenticatedClient();
-  if (!user) return;
-  await supabase.from("leads").update({ stage: parsed.data.stage }).eq("id", parsed.data.leadId);
-  revalidatePath("/dashboard");
+  if (!user) return { status: "error", message: "Sign in again to update this lead." };
+  const { data, error } = await supabase.from("leads").update({ stage: parsed.data.stage })
+    .eq("id", parsed.data.leadId).select("id").maybeSingle();
+  if (error || !data) return { status: "error", message: "The lead stage was not saved." };
+  revalidatePath("/dashboard", "layout");
+  return { status: "success", message: "Lead stage saved." };
 }
 
 export async function createViewing(_state: OperationState, formData: FormData): Promise<OperationState> {
@@ -180,29 +182,33 @@ export async function addLeadInteraction(_state: OperationState, formData: FormD
   return { status: "success", message: "Interaction recorded." };
 }
 
-export async function updateViewingOutcome(formData: FormData) {
+export async function updateViewingOutcome(_state: OperationState, formData: FormData): Promise<OperationState> {
   const parsed = viewingOutcomeSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return;
+  if (!parsed.success) return invalid(parsed.error.flatten().fieldErrors);
   const { supabase, user } = await authenticatedClient();
-  if (!user) return;
-  await supabase.from("viewings").update({
+  if (!user) return { status: "error", message: "Sign in again to update this viewing." };
+  const { data, error } = await supabase.from("viewings").update({
+    ...(parsed.data.scheduledAt && { scheduled_at: parsed.data.scheduledAt }),
     status: parsed.data.status, feedback: parsed.data.feedback, outcome: parsed.data.outcome,
-  }).eq("id", parsed.data.viewingId);
-  revalidatePath("/dashboard");
+  }).eq("id", parsed.data.viewingId).select("id").maybeSingle();
+  if (error || !data) return { status: "error", message: "The viewing could not be updated." };
+  revalidatePath("/dashboard", "layout");
+  return { status: "success", message: "Viewing updated." };
 }
 
-export async function updateOperationalStatus(formData: FormData) {
+export async function updateOperationalStatus(_state: OperationState, formData: FormData): Promise<OperationState> {
   const parsed = recordStatusSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return;
+  if (!parsed.success) return invalid(parsed.error.flatten().fieldErrors);
   const { supabase, user } = await authenticatedClient();
-  if (!user) return;
-  if (parsed.data.kind === "task") {
-    await supabase.from("tasks").update({ status: parsed.data.status }).eq("id", parsed.data.recordId);
-  } else {
-    await supabase.from("deals").update({
-      status: parsed.data.status,
-      closed_at: parsed.data.status === "completed" ? new Date().toISOString() : null,
-    }).eq("id", parsed.data.recordId);
-  }
-  revalidatePath("/dashboard");
+  if (!user) return { status: "error", message: "Sign in again to update this record." };
+
+  const { kind, status, recordId } = parsed.data;
+  const { data, error } = await supabase.from(kind === "task" ? "tasks" : "deals").update({
+    status,
+    ...(kind === "deal" && { closed_at: status === "completed" ? new Date().toISOString() : null }),
+  }).eq("id", recordId).neq("status", status).select("id").maybeSingle();
+  if (error || !data) return { status: "error", message: "No status change was saved. Refresh to check the record’s current status." };
+
+  revalidatePath("/dashboard", "layout");
+  return { status: "success", message: "Status updated." };
 }

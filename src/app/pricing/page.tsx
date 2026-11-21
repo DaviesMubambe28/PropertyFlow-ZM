@@ -83,6 +83,20 @@ export default function PricingPage() {
             </div>
           ))}
         </div>
+        <section className="mt-12 rounded-lg border border-line bg-white p-6 sm:p-8" aria-labelledby="plan-details">
+          <h2 id="plan-details" className="text-2xl font-bold text-deep">What to compare before choosing a plan</h2>
+          <dl className="mt-5 grid gap-5 sm:grid-cols-2">
+            <div>
+              <dt className="font-semibold">Users, properties and branches</dt>
+              <dd className="mt-1 text-sm leading-6 text-quiet">Tell us how many people and branches use your portfolio. We’ll confirm capacity when discussing your workspace.</dd>
+            </div>
+            <div>
+              <dt className="font-semibold">Billing, support and upgrades</dt>
+              <dd className="mt-1 text-sm leading-6 text-quiet">The monthly prices are proposed. Billing, support arrangements and upgrade terms will be confirmed before a subscription starts.</dd>
+            </div>
+          </dl>
+          <Link href="/contact" className="mt-6 inline-flex min-h-11 items-center rounded-lg px-4 text-sm font-semibold brand-button-secondary">Request an enterprise quotation</Link>
+        </section>
       </main>
       <SiteFooter />
     </div>

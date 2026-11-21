@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({ registerAdministrator: vi.fn() }));
 vi.mock("@/actions/auth", () => ({
-  initialAuthActionState: { status: "idle" }, registerAdministrator: mocks.registerAdministrator,
+  registerAdministrator: mocks.registerAdministrator,
 }));
 import { AdministratorRegistrationForm } from "./administrator-registration-form";
 

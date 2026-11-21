@@ -44,7 +44,7 @@ export default async function DemoRequestsPage({ searchParams }: { searchParams:
           <label className="grid gap-1 text-sm font-medium">Status
             <select name="status" defaultValue={status ?? ""} className="rounded-lg border border-slate-300 bg-white p-2 capitalize">
               <option value="">All statuses</option>
-              {demoStatuses.map((option) => <option key={option}>{option}</option>)}
+              {demoStatuses.map((option) => <option key={option} value={option}>{option.replaceAll("_", " ")}</option>)}
             </select>
           </label>
           <button className="brand-button-primary rounded-lg px-4 py-2 text-white">Apply filters</button>
@@ -56,7 +56,7 @@ export default async function DemoRequestsPage({ searchParams }: { searchParams:
             <article className="rounded-2xl border border-line bg-white p-5" key={request.id}>
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h2 className="text-xl font-semibold">{request.company}</h2>
-                <span className="rounded-full bg-tint px-3 py-1 text-sm capitalize text-deep">{request.status}</span>
+                <span className="rounded-full bg-tint px-3 py-1 text-sm capitalize text-deep">{request.status.replaceAll("_", " ")}</span>
               </div>
               <p className="mt-2 break-words text-sm">{request.name} · {request.email} {request.phone && `· ${request.phone}`}</p>
               <p className="mt-1 text-sm text-slate-600">Team of {request.team_size} · {dateFormat.format(new Date(request.created_at))}</p>
@@ -67,7 +67,7 @@ export default async function DemoRequestsPage({ searchParams }: { searchParams:
                   <summary className="cursor-pointer font-medium">Follow-up history</summary>
                   <ul className="mt-2 space-y-2">
                     {[...request.demo_request_activity].sort((a, b) => b.created_at.localeCompare(a.created_at)).map((item: Activity) => (
-                      <li key={item.id} className="whitespace-pre-wrap break-words">{dateFormat.format(new Date(item.created_at))} · {item.status}{item.note && ` · ${item.note}`}</li>
+                      <li key={item.id} className="whitespace-pre-wrap break-words">{dateFormat.format(new Date(item.created_at))} · {item.status.replaceAll("_", " ")}{item.note && ` · ${item.note}`}</li>
                     ))}
                   </ul>
                 </details>

@@ -4,10 +4,12 @@ import { useActionState, useState } from "react";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { useAppContext } from "@/components/app-provider";
 import { whatsappContactLink } from "@/lib/tenant";
-import { createContact, initialOperationState } from "@/actions/operations";
+import { createContact } from "@/actions/operations";
+import { initialOperationState } from "@/lib/action-state";
 
 export default function ContactsPage() {
   const { state, activeOrg } = useAppContext();
+  const [query, setQuery] = useState("");
   const [result, formAction, pending] = useActionState(createContact, initialOperationState);
   const [form, setForm] = useState({
     name: "",
@@ -23,23 +25,40 @@ export default function ContactsPage() {
   });
 
   const orgContacts = state.contacts.filter((contact) => contact.orgId === activeOrg?.id);
+  const visibleContacts = orgContacts.filter((contact) =>
+    [contact.name, contact.email, contact.phone, contact.preferredLocation].some((value) => value?.toLowerCase().includes(query.trim().toLowerCase())),
+  );
 
   return (
     <DashboardShell>
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <div className="rounded-lg border border-line bg-white p-6 shadow-sm">
           <h2 className="text-2xl font-semibold text-ink">Contacts</h2>
+          <label className="mt-4 grid gap-1 text-sm font-medium">Find a contact
+            <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} className="rounded-lg border border-line p-2" placeholder="Name, email, phone or location" />
+          </label>
           <div className="mt-6 space-y-4">
-            {orgContacts.map((contact) => {
+            {visibleContacts.map((contact) => {
               const whatsapp = whatsappContactLink(contact.whatsapp);
               return (
-              <div key={contact.id} className="rounded-lg border border-line bg-canvas p-4">
+              <div key={contact.id} id={`contact-${contact.id}`} className="scroll-mt-48 rounded-lg border border-line bg-canvas p-4">
                 <div className="flex items-center justify-between">
                   <p className="font-semibold text-ink">{contact.name}</p>
                   <span className="rounded-full bg-tint px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em] text-brand">{contact.category}</span>
                 </div>
                 <p className="mt-2 text-sm text-quiet">{contact.email} • {contact.phone}</p>
                 {contact.budget && <p className="mt-2 text-sm text-quiet">Budget: {contact.budget}</p>}
+                <details className="mt-3 rounded-lg border border-line bg-white p-3 text-sm">
+                  <summary className="cursor-pointer font-medium text-brand">Preferences and history</summary>
+                  {contact.preferredLocation && <p className="mt-2">Preferred location · {contact.preferredLocation}</p>}
+                  {contact.preferences && <p className="mt-2 whitespace-pre-wrap">{contact.preferences}</p>}
+                  {contact.notes && <p className="mt-2 whitespace-pre-wrap">{contact.notes}</p>}
+                  <ul className="mt-2 space-y-1">
+                    {state.leads.filter((lead) => lead.orgId === activeOrg?.id && lead.contactId === contact.id).map((lead) => (
+                      <li key={lead.id}><a href={`/dashboard/pipeline#lead-${lead.id}`} className="text-brand underline">{lead.title}</a></li>
+                    ))}
+                  </ul>
+                </details>
                 {whatsapp && (
                   <a href={whatsapp} target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-11 items-center rounded-lg border border-brand px-3 text-sm font-medium text-deep">
                     Open WhatsApp chat <span className="sr-only"> with {contact.name} (opens in a new tab)</span>
@@ -48,6 +67,7 @@ export default function ContactsPage() {
               </div>
               );
             })}
+            {orgContacts.length > 0 && visibleContacts.length === 0 && <p role="status" className="text-sm text-quiet">No contacts match your search.</p>}
             {orgContacts.length === 0 && <p role="status" className="rounded-xl border border-dashed border-line p-6 text-sm text-quiet">No contacts yet. Add the first buyer, seller, landlord, or tenant.</p>}
           </div>
         </div>
@@ -62,7 +82,7 @@ export default function ContactsPage() {
               <label className="block text-sm font-medium">Phone<input name="phone" type="tel" autoComplete="tel" value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} className="mt-1.5 w-full rounded-xl border border-line bg-canvas px-3 py-2.5 text-ink" required /></label>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
-              <label className="block text-sm font-medium">Category<select name="category" value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })} className="mt-1.5 w-full rounded-xl border border-line bg-canvas px-3 py-2.5 text-ink"><option value="buyer">Buyer</option><option value="seller">Seller</option><option value="landlord">Landlord</option><option value="tenant">Tenant</option></select></label>
+              <label className="block text-sm font-medium">Category<select name="category" value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })} className="mt-1.5 w-full rounded-xl border border-line bg-canvas px-3 py-2.5 text-ink"><option value="buyer">Buyer</option><option value="seller">Seller</option><option value="owner">Property owner</option><option value="landlord">Landlord</option><option value="tenant">Tenant</option></select></label>
               <label className="block text-sm font-medium">Lead source<input name="leadSource" value={form.leadSource} onChange={(event) => setForm({ ...form, leadSource: event.target.value })} className="mt-1.5 w-full rounded-xl border border-line bg-canvas px-3 py-2.5 text-ink" /></label>
             </div>
             <label className="block text-sm font-medium">Budget<input name="budget" value={form.budget} onChange={(event) => setForm({ ...form, budget: event.target.value })} className="mt-1.5 w-full rounded-xl border border-line bg-canvas px-3 py-2.5 text-ink" /></label>

@@ -16,6 +16,9 @@ export default function PrivacyPage() {
             Agency identity, property, contact, lead, viewing, task and deal records are protected by server-side authorization and PostgreSQL row-level security. Access is limited to active members of the relevant agency.
           </p>
           <p>
+            Agency administrators can publish selected property details to the public listing directory. Owner contact details, client records and internal workspace notes are excluded from the directory.
+          </p>
+          <p>
             When you request a demo, we store your contact details, company information and message so authorised sales staff can respond and keep a record of their follow-up.
           </p>
           <p>

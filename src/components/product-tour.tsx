@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, CalendarDays, ChartNoAxesCombined, UsersRound } from "lucide-react";
+import { Building2, CalendarDays, ChartNoAxesCombined, ContactRound, LayoutDashboard, Handshake, UsersRound } from "lucide-react";
 
 const screens = [
   {
@@ -12,6 +12,26 @@ const screens = [
       ["Three-bedroom house, Kabulonga", "K1,850,000", "Available"],
       ["Two-bedroom flat, Roma", "K9,500 / month", "Under offer"],
       ["Commercial plot, Ndola", "K720,000", "Available"],
+    ],
+  },
+  {
+    label: "Overview", icon: LayoutDashboard, title: "Agency overview",
+    description: "See the portfolio and the next actions waiting for your team.",
+    columns: ["Area", "Sample total", "Next step"],
+    rows: [
+      ["Available properties", "2", "Review listing details"],
+      ["Scheduled viewings", "1", "Confirm the appointment"],
+      ["Pending follow-ups", "1", "Call about Roma lease"],
+    ],
+  },
+  {
+    label: "Contacts", icon: ContactRound, title: "Customer CRM",
+    description: "Bring customer requirements and enquiry history together.",
+    columns: ["Sample contact", "Looking for", "Preferred location"],
+    rows: [
+      ["Nandi K.", "Three-bedroom house", "Kabulonga"],
+      ["Mwaka Z.", "Two-bedroom rental", "Roma"],
+      ["Chanda P.", "Commercial plot", "Ndola"],
     ],
   },
   {
@@ -35,6 +55,15 @@ const screens = [
     ],
   },
   {
+    label: "Deals", icon: Handshake, title: "Agency deals",
+    description: "Follow sale and rental transactions through to completion.",
+    columns: ["Transaction", "Amount", "Status"],
+    rows: [
+      ["Roma flat lease", "K9,500 / month", "Open"],
+      ["Ndola commercial sale", "K690,000", "Open"],
+    ],
+  },
+  {
     label: "Reports", icon: ChartNoAxesCombined, title: "Agency reporting",
     description: "Review property availability, operational activity and completed transactions from workspace records.",
     columns: ["Record", "Period", "Example total"],
@@ -49,6 +78,7 @@ const screens = [
 export function ProductTour() {
   const [selected, setSelected] = useState(0);
   const screen = screens[selected];
+  const [followUpComplete, setFollowUpComplete] = useState(false);
 
   return (
     <section aria-label="Interactive product preview" className="min-w-0 overflow-hidden rounded-lg border border-line bg-white text-deep">
@@ -56,7 +86,7 @@ export function ProductTour() {
         <span className="text-sm font-semibold">Agency workspace</span>
         <span className="rounded bg-tint px-2 py-1 text-xs font-medium text-deep">Sample data</span>
       </div>
-      <div aria-label="Choose a workflow" role="group" className="grid grid-cols-2 gap-1 border-b border-line bg-tint p-2 min-[480px]:grid-cols-4">
+      <div aria-label="Choose a workflow" role="group" className="grid grid-cols-2 gap-1 border-b border-line bg-tint p-2 sm:grid-cols-4 xl:grid-cols-7">
         {screens.map(({ label, icon: Icon }, index) => (
           <button
             key={label}
@@ -88,6 +118,18 @@ export function ProductTour() {
             </tbody>
           </table>
         </div>
+        {screen.label === "Pipeline" && (
+          <aside className="mt-5 grid gap-3 rounded-lg border border-line bg-canvas p-4 sm:grid-cols-[1fr_auto]">
+            <div>
+              <h3 className="text-sm font-semibold">Kabulonga house enquiry</h3>
+              <p className="mt-1 text-sm text-quiet">Nandi K. enquired by WhatsApp. Agent Leya added a note and scheduled a call for Tuesday.</p>
+              <p className="mt-2 text-sm font-medium" role="status">{followUpComplete ? "Sample follow-up completed" : "Next action: call to confirm viewing availability"}</p>
+            </div>
+            <button type="button" onClick={() => setFollowUpComplete(!followUpComplete)} className="brand-button-secondary min-h-11 self-center rounded-lg px-3 text-sm font-semibold">
+              {followUpComplete ? "Reset sample follow-up" : "Complete sample follow-up"}
+            </button>
+          </aside>
+        )}
       </div>
     </section>
   );

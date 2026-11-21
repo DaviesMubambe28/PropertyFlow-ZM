@@ -32,7 +32,7 @@ describe("operational input schemas", () => {
 
   it("validates linked viewing, task, and deal inputs", () => {
     const shared = { organizationId: "30000000-0000-4000-8000-000000000001" };
-    expect(viewingInputSchema.safeParse({ ...shared, leadId: "30000000-0000-4000-8000-000000000002", propertyId: "30000000-0000-4000-8000-000000000003", scheduledAt: "2026-12-01T10:30", notes: "" }).success).toBe(true);
+    expect(viewingInputSchema.parse({ ...shared, leadId: "30000000-0000-4000-8000-000000000002", propertyId: "30000000-0000-4000-8000-000000000003", scheduledAt: "2026-12-01T10:30", notes: "" }).scheduledAt).toBe("2026-12-01T08:30:00.000Z");
     expect(taskInputSchema.safeParse({ ...shared, title: "Call buyer", description: "", dueAt: "2026-12-01T10:30", priority: "high" }).success).toBe(true);
     expect(dealInputSchema.safeParse({ ...shared, leadId: "30000000-0000-4000-8000-000000000002", propertyId: "30000000-0000-4000-8000-000000000003", clientName: "Buyer One", amount: "750000", notes: "" }).success).toBe(true);
   });

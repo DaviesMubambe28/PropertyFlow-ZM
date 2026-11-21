@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({ replace: vi.fn(), signIn: vi.fn() }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ replace: mocks.replace }) }));
-vi.mock("@/actions/auth", () => ({ initialAuthActionState: { status: "idle" }, signIn: mocks.signIn }));
+vi.mock("@/actions/auth", () => ({ signIn: mocks.signIn }));
 import { LoginForm } from "./login-form";
 
 describe("LoginForm", () => {

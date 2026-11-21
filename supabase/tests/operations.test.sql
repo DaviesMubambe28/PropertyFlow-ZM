@@ -1,5 +1,5 @@
 begin;
-select plan(21);
+select plan(22);
 
 select has_table('public', 'properties', 'properties table exists');
 select has_table('public', 'contacts', 'contacts table exists');
@@ -49,6 +49,13 @@ select is(
   'completing a sale marks the property sold'
 );
 
+select throws_ok(
+  $$insert into public.deals (organization_id, lead_id, property_id, client_name, amount, assigned_to, transaction_type, status)
+    select organization_id, lead_id, property_id, client_name, amount, assigned_to, transaction_type, 'completed'
+    from public.deals where id = '50000000-0000-0000-0000-000000000004'$$,
+  '23505', 'A completed deal already exists for this property and lead', 'the same lead and property cannot complete a duplicate deal'
+);
+
 reset role;
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"20000000-0000-0000-0000-000000000002","email":"ops-b@test.local","role":"authenticated"}', true);
@@ -60,7 +67,7 @@ select lives_ok(
 );
 reset role;
 select is(
-  (select title from public.properties limit 1),
+  (select title from public.properties where id = '50000000-0000-0000-0000-000000000001'),
   'Kabulonga Home',
   'cross-agency records cannot be modified'
 );
