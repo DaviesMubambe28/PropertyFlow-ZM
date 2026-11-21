@@ -3,7 +3,8 @@
 import { useActionState, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Eye, EyeOff, LoaderCircle } from "lucide-react";
-import { initialAuthActionState, registerAdministrator } from "@/actions/auth";
+import { registerAdministrator } from "@/actions/auth";
+import { initialAuthActionState } from "@/lib/action-state";
 
 const inputClassName = "w-full rounded-xl border border-[#D8E0E8] bg-[#F9FBFC] px-3.5 py-3 text-sm text-[#17212F] outline-none transition placeholder:text-[#8A96A5] focus:border-[#087F8C] focus:ring-2 focus:ring-[#087F8C]/15";
 

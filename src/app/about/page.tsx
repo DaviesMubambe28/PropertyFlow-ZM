@@ -96,7 +96,7 @@ export default function AboutPage() {
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#A7DADC]">Explore the prototype</p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight">See the workflows taking shape.</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-300">Explore the shared workspace; payment and public enquiry integrations remain launch dependencies.</p>
+              <p className="mt-2 text-sm leading-6 text-slate-300">Explore the shared workspace or request an enterprise walkthrough.</p>
             </div>
             <Link href="/features" className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0B192A] hover:bg-[#F1F5F8]">
               View capabilities <ArrowRight className="h-4 w-4" aria-hidden="true" />

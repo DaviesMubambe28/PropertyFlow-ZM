@@ -1,5 +1,6 @@
 "use server";
 
+import type { AuthActionState } from "@/lib/action-state";
 import { getPublicEnvironment } from "@/lib/env/public";
 import { safeReturnPath } from "@/lib/auth/redirects";
 import { createClient } from "@/lib/supabase/server";
@@ -11,13 +12,6 @@ import {
 } from "@/lib/validation/identity";
 import { redirect } from "next/navigation";
 
-export type AuthActionState = {
-  status: "idle" | "error" | "success";
-  message?: string;
-  fields?: Record<string, string[] | undefined>;
-  redirectTo?: string;
-};
-export const initialAuthActionState: AuthActionState = { status: "idle" };
 const registrationSuccess: AuthActionState = {
   status: "success",
   message: "Check your email to verify your account and open your agency workspace.",

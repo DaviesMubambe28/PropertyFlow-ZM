@@ -149,6 +149,9 @@ export async function loadWorkspaceIdentity(supabase: SupabaseServerClient, user
     supabase.from("tasks").select("*").order("due_at"),
     supabase.from("deals").select("*").order("created_at", { ascending: false }),
     supabase.from("lead_interactions").select("*").order("created_at", { ascending: false }),
+    supabase.from("organization_memberships")
+      .select("user_id, organization_id, profiles!organization_memberships_user_id_fkey(full_name)")
+      .eq("status", "active"),
   ]);
   if (results.some((result) => result.error)) throw new Error("Unable to load workspace records.");
   identity.data = mapOperationalData({
@@ -159,6 +162,10 @@ export async function loadWorkspaceIdentity(supabase: SupabaseServerClient, user
     tasks: (results[4].data ?? []) as Record<string, unknown>[],
     deals: (results[5].data ?? []) as Record<string, unknown>[],
     leadInteractions: (results[6].data ?? []) as Record<string, unknown>[],
+  });
+  identity.assignees = (results[7].data ?? []).map((row) => {
+    const profile = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
+    return { id: row.user_id, organizationId: row.organization_id, name: profile?.full_name || "Team member" };
   });
   return identity;
 }

@@ -38,7 +38,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
               </ul>
               <p className="mt-7 text-xs leading-5 text-slate-400">Agency access is verified on the server before dashboard content is rendered.</p>
               <Link href="/features" className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-white hover:text-[#A7DADC]">
-                Review prototype capabilities <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                Explore platform capabilities <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
             <div aria-hidden="true" className="absolute -bottom-28 -right-20 h-64 w-64 rounded-full border border-white/10" />

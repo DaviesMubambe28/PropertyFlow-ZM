@@ -4,7 +4,8 @@ import { useActionState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { initialAuthActionState, signIn } from "@/actions/auth";
+import { signIn } from "@/actions/auth";
+import { initialAuthActionState } from "@/lib/action-state";
 
 const inputClassName = "w-full rounded-xl border border-[#D8E0E8] bg-[#F9FBFC] px-3.5 py-3 text-sm outline-none focus:border-[#087F8C] focus:ring-2 focus:ring-[#087F8C]/15";
 

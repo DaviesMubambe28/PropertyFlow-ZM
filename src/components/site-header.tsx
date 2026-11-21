@@ -6,11 +6,11 @@ import { Building2, Menu, X } from "lucide-react";
 
 const navItems = [
   { label: "Features", href: "/features" },
-  { label: "Solutions", href: "/#solutions" },
+  { label: "Enterprise", href: "/enterprise" },
+  { label: "Solutions", href: "/solutions" },
   { label: "Pricing", href: "/pricing" },
   { label: "Properties", href: "/properties" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
 ];
 
 export function SiteHeader() {
@@ -38,8 +38,8 @@ export function SiteHeader() {
           <Link href="/login" className="hidden rounded-full px-3 py-2 text-sm font-medium text-[#17212F] transition hover:bg-[#F7F9FC] sm:inline-flex">
             Sign in
           </Link>
-          <Link href="/register" className="brand-button-primary hidden rounded-full px-3.5 py-2 text-sm font-medium text-white min-[360px]:inline-flex sm:px-4">
-            Get started
+          <Link href="/contact" className="brand-button-primary hidden rounded-full px-3.5 py-2 text-sm font-medium text-white min-[410px]:inline-flex sm:px-4">
+            Request a demo
           </Link>
           <button
             type="button"
@@ -68,11 +68,11 @@ export function SiteHeader() {
               </Link>
             ))}
             <Link
-              href="/register"
-              className="brand-button-primary mt-2 inline-flex min-h-10 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold text-white min-[360px]:hidden"
+              href="/contact"
+              className="brand-button-primary mt-2 inline-flex min-h-10 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold text-white min-[410px]:hidden"
               onClick={() => setMenuOpen(false)}
             >
-              Get started
+              Request a demo
             </Link>
             <Link
               href="/login"

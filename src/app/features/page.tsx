@@ -15,37 +15,33 @@ import { SiteHeader } from "@/components/site-header";
 const available = [
   {
     title: "Property and listing management",
-    description: "Create property records with listing type, price, location, photos, description and availability status. Public discovery only shows active records.",
+    description: "Create and update private property records with price, location, a photo link, owner details and availability.",
     icon: Building2,
-    tag: "Prototype UI available",
     points: ["Sale and rent record types", "Status and property details", "Workspace portfolio view"],
   },
   {
     title: "Contacts and client notes",
     description: "Keep buyer, seller and other contact details in a workspace list, with notes, lead source and stated budget.",
     icon: ContactRound,
-    tag: "Prototype UI available",
     points: ["Contact profile basics", "Client notes and source", "Budget field for follow-up context"],
   },
   {
     title: "Lead management and pipeline",
     description: "Create leads and move them through a defined set of sales stages so the next step is easier to see.",
     icon: CircleDashed,
-    tag: "Prototype UI available",
-    points: ["New through negotiation", "Won and lost stages", "Estimated lead value"],
+    points: ["New through negotiation", "Converted and lost stages", "Administrator-controlled assignment"],
   },
   {
     title: "Workspace overview and reports",
     description: "Review summaries calculated from the agency’s shared property, lead, and deal records.",
     icon: BarChart3,
-    tag: "Local prototype data",
-    points: ["Property record counts", "Lead and deal summaries", "Workspace subscription examples"],
+    points: ["Property record counts", "Lead and deal summaries", "Completed sale value by date"],
   },
+  { title: "Viewings and follow-ups", description: "Schedule viewings and record outcomes. Track due dates for the next customer or property follow-up.", icon: CalendarDays, points: ["Viewing feedback", "Customer follow-up tasks", "Africa/Lusaka scheduling"] },
+  { title: "Team invitations", description: "Agency administrators can invite agents, deactivate access and assign leads to active staff.", icon: Users, points: ["Email-matched invitations", "Active membership checks", "Agency administrator and agent access"] },
 ];
 
 const planned = [
-  { title: "Viewings and appointments", description: "The data model has viewing records, but a complete scheduling and calendar workflow is not yet available.", icon: CalendarDays },
-  { title: "Team invitations", description: "Verified agency membership is connected; invitation and team-management screens are still being completed.", icon: Users },
   { title: "Rental and tenant management", description: "Tenancy records, rent collection and maintenance workflows are not implemented.", icon: Building2 },
 ];
 
@@ -61,19 +57,15 @@ export default function FeaturesPage() {
               The building blocks for clearer property operations.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-[#667085] sm:text-lg sm:leading-8">
-              Explore the workflows represented in PropertyFlow ZM today. Available prototype screens and planned capabilities are intentionally distinguished.
+              Manage inventory, enquiries, viewings and transactions in your agency workspace.
             </p>
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#E5EAF0] bg-white px-3 py-1.5 text-xs font-medium text-[#667085]">
-              <span className="h-2 w-2 rounded-full bg-[#C77D0A]" />
-              Secure shared identity and tenant-isolated operational workspace
-            </div>
           </div>
         </section>
 
         <section className="mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:py-18">
           <div className="mb-8 flex items-end justify-between gap-5">
             <div>
-              <h2 className="text-2xl font-semibold tracking-tight text-[#0B192A] sm:text-3xl">Available in the prototype</h2>
+              <h2 className="text-2xl font-semibold tracking-tight text-[#0B192A] sm:text-3xl">Workspace capabilities</h2>
               <p className="mt-2 text-sm text-[#667085]">Account and operational records are server-backed and isolated by active agency membership.</p>
             </div>
           </div>
@@ -81,7 +73,7 @@ export default function FeaturesPage() {
             {available.map((feature) => {
               const Icon = feature.icon;
               return (
-                <article key={feature.title} className="grid gap-5 rounded-2xl border border-[#E5EAF0] bg-white p-5 sm:grid-cols-[1fr_auto] sm:p-6">
+                <article key={feature.title} className="rounded-2xl border border-[#E5EAF0] bg-white p-5 sm:p-6">
                   <div>
                     <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EAF6F7] text-[#087F8C]">
                       <Icon className="h-5 w-5" aria-hidden="true" />
@@ -97,7 +89,6 @@ export default function FeaturesPage() {
                       ))}
                     </ul>
                   </div>
-                  <span className="h-fit whitespace-nowrap rounded-full bg-[#F1F5F8] px-2.5 py-1 text-[10px] font-medium text-[#526174]">{feature.tag}</span>
                 </article>
               );
             })}
@@ -109,7 +100,7 @@ export default function FeaturesPage() {
             <div className="max-w-2xl">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#667085]">In development</p>
               <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[#0B192A] sm:text-3xl">Not every workflow is ready yet.</h2>
-              <p className="mt-3 text-sm leading-6 text-[#667085]">These are not presented as working features in this prototype.</p>
+              <p className="mt-3 text-sm leading-6 text-[#667085]">The current workspace supports rental deals and landlord contact records. Tenancy administration is a future capability.</p>
             </div>
             <div className="mt-7 grid gap-4 md:grid-cols-3">
               {planned.map((feature) => {
@@ -137,7 +128,7 @@ export default function FeaturesPage() {
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Sign-up and stored records are demonstrations only; avoid entering sensitive or production customer data.</p>
             </div>
             <Link href="/register" className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0B192A] hover:bg-[#F1F5F8]">
-              Try the prototype <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              Create a workspace <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </section>

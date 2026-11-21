@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import { initialOrganizationState, updateOrganizationProfile } from "@/actions/organizations";
+import { updateOrganizationProfile } from "@/actions/organizations";
+import { initialOrganizationState } from "@/lib/action-state";
 import type { Organization } from "@/lib/types";
 
 const inputClassName = "mt-1.5 w-full rounded-xl border border-[#D8E0E8] bg-[#F9FBFC] px-3.5 py-3 text-sm outline-none focus:border-[#087F8C] focus:ring-2 focus:ring-[#087F8C]/15";

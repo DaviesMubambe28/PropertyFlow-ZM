@@ -6,18 +6,17 @@ import { useState } from "react";
 import { ArrowRight, BedDouble, MapPin, Maximize2, Search, SlidersHorizontal } from "lucide-react";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { useAppContext } from "@/components/app-provider";
+import { demoProperties } from "@/lib/demo-properties";
 import { formatCurrency } from "@/lib/tenant";
 
 export default function PropertiesPage() {
-  const { state } = useAppContext();
   const [query, setQuery] = useState("");
   const [listingType, setListingType] = useState("all");
   const [propertyType, setPropertyType] = useState("all");
   const [location, setLocation] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
-  const activeProperties = state.properties.filter((property) => property.status === "available");
+  const activeProperties = demoProperties.filter((property) => property.status === "available");
   const propertyTypes = [...new Set(activeProperties.map((property) => property.type))].sort();
   const normalizedQuery = query.trim().toLowerCase();
   const normalizedLocation = location.trim().toLowerCase();
@@ -118,7 +117,6 @@ export default function PropertiesPage() {
                           fill
                           sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
                           loading={index === 0 ? "eager" : "lazy"}
-                          unoptimized
                           className="object-cover transition duration-300 group-hover:scale-[1.02]"
                         />
                         <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#142A43]">

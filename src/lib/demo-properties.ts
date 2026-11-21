@@ -1,0 +1,58 @@
+import type { Property } from "@/lib/types";
+
+export const demoProperties: readonly Property[] = [
+    {
+      id: "prop-1",
+      orgId: "org-lusaka-heights",
+      title: "Mapepe Family House",
+      type: "Residential house",
+      listingType: "sale",
+      price: 780000,
+      location: "Kabulonga, Lusaka",
+      bedrooms: 4,
+      bathrooms: 3,
+      area: 275,
+      status: "available",
+      imageUrl:
+        "/demo/house.jpg",
+      description: "Modern four-bedroom family residence with a landscaped garden.",
+      featured: true,
+      createdAt: "2026-11-17T00:00:00Z",
+    },
+    {
+      id: "prop-2",
+      orgId: "org-lusaka-heights",
+      title: "Greenview Commercial Office",
+      type: "Office space",
+      listingType: "rent",
+      price: 6800,
+      location: "Leopards Hill, Lusaka",
+      bedrooms: 0,
+      bathrooms: 2,
+      area: 180,
+      status: "available",
+      imageUrl:
+        "/demo/office.jpg",
+      description: "Open-plan office with covered parking and reception area.",
+      featured: false,
+      createdAt: "2026-11-17T00:00:00Z",
+    },
+    {
+      id: "prop-3",
+      orgId: "org-mwebantu-homes",
+      title: "Lake Road Apartment",
+      type: "Apartment",
+      listingType: "rent",
+      price: 4200,
+      location: "Chilenje, Lusaka",
+      bedrooms: 2,
+      bathrooms: 2,
+      area: 120,
+      status: "available",
+      imageUrl:
+        "/demo/apartment.jpg",
+      description: "Two-bedroom apartment with balcony and secure access.",
+      featured: true,
+      createdAt: "2026-11-17T00:00:00Z",
+    },
+  ];

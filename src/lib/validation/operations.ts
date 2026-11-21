@@ -7,6 +7,7 @@ const shortText = (minimum: number, maximum: number, message: string) =>
 
 export const propertyInputSchema = z.object({
   organizationId,
+  propertyId: optionalUuid,
   title: shortText(2, 160, "Enter a property title."),
   type: shortText(2, 80, "Enter a property type."),
   listingType: z.enum(["sale", "rent"]),
@@ -51,8 +52,10 @@ export const leadStageInputSchema = z.object({
   stage: z.enum(["new", "contacted", "interested", "viewing_scheduled", "negotiation", "converted", "lost"]),
 });
 
-const dateTime = z.string().refine((value) => !Number.isNaN(Date.parse(value)), "Enter a valid date and time.")
-  .transform((value) => new Date(value).toISOString());
+const dateTime = z.string()
+  .transform((value) => value.replace(/(T\d{2}:\d{2})(?=Z$|[+-]\d{2}:\d{2}$)/, "$1:00"))
+  .pipe(z.union([z.iso.datetime({ local: true }), z.iso.datetime({ offset: true })]))
+  .transform((value) => new Date(/(?:Z|[+-]\d{2}:\d{2})$/.test(value) ? value : `${value}+02:00`).toISOString());
 
 export const viewingInputSchema = z.object({
   organizationId,
@@ -110,4 +113,10 @@ export const recordStatusSchema = z.object({
   if (value.kind === "task" && !["open", "in_progress", "done"].includes(value.status)) {
     context.addIssue({ code: "custom", path: ["status"], message: "Invalid task status." });
   }
+});
+
+export const leadAssignmentSchema = z.object({
+  organizationId,
+  leadId: z.uuid(),
+  assigneeId: z.uuid(),
 });

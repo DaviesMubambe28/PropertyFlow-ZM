@@ -37,6 +37,15 @@ describe("operational input schemas", () => {
     expect(dealInputSchema.safeParse({ ...shared, leadId: "30000000-0000-4000-8000-000000000002", propertyId: "30000000-0000-4000-8000-000000000003", clientName: "Buyer One", amount: "750000", notes: "" }).success).toBe(true);
   });
 
+  it("interprets timezone-free form dates in Lusaka and preserves explicit offsets", () => {
+    const task = {
+      organizationId: "30000000-0000-4000-8000-000000000001",
+      title: "Call buyer", description: "", priority: "high",
+    };
+    expect(taskInputSchema.parse({ ...task, dueAt: "2026-12-01T10:30" }).dueAt).toBe("2026-12-01T08:30:00.000Z");
+    expect(taskInputSchema.parse({ ...task, dueAt: "2026-12-01T10:30Z" }).dueAt).toBe("2026-12-01T10:30:00.000Z");
+  });
+
   it("keeps optional deal terms empty and rejects invalid dates", () => {
     const deal = {
       organizationId: "30000000-0000-4000-8000-000000000001",

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
-  createClient: vi.fn(), from: vi.fn(), getUser: vi.fn(), insert: vi.fn(), revalidatePath: vi.fn(), update: vi.fn(),
+  createClient: vi.fn(), from: vi.fn(), getUser: vi.fn(), insert: vi.fn(), revalidatePath: vi.fn(), update: vi.fn(), eq: vi.fn(), select: vi.fn(), maybeSingle: vi.fn(),
 }));
 mocks.from.mockImplementation(() => ({ insert: mocks.insert, update: mocks.update }));
 mocks.createClient.mockImplementation(async () => ({ auth: { getUser: mocks.getUser }, from: mocks.from }));
@@ -9,7 +9,8 @@ vi.mock("server-only", () => ({}));
 vi.mock("@/lib/supabase/server", () => ({ createClient: mocks.createClient }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
 
-import { createProperty, initialOperationState } from "./operations";
+import { createProperty } from "./operations";
+import { initialOperationState } from "@/lib/action-state";
 
 function propertyForm(overrides: Record<string, string> = {}) {
   const data = new FormData();
@@ -26,6 +27,9 @@ describe("createProperty", () => {
     vi.clearAllMocks();
     mocks.getUser.mockResolvedValue({ data: { user: { id: "user-1" } }, error: null });
     mocks.insert.mockResolvedValue({ error: null });
+    mocks.update.mockReturnValue({ eq: mocks.eq });
+    mocks.eq.mockReturnValue({ eq: mocks.eq, select: mocks.select });
+    mocks.select.mockReturnValue({ maybeSingle: mocks.maybeSingle });
   });
 
   it("rejects invalid input before opening a database client", async () => {
@@ -44,7 +48,17 @@ describe("createProperty", () => {
       status: "available", owner_name: "", owner_phone: "", assigned_to: "user-1", created_by: "user-1",
     });
     expect(result.status).toBe("success");
-    expect(mocks.revalidatePath).toHaveBeenCalledWith("/dashboard");
+    expect(mocks.revalidatePath).toHaveBeenCalledWith("/dashboard", "layout");
+  });
+
+  it("reports an invisible property as an unsuccessful edit", async () => {
+    mocks.maybeSingle.mockResolvedValue({ data: null, error: null });
+    const propertyId = "30000000-0000-4000-8000-000000000002";
+    const result = await createProperty(initialOperationState, propertyForm({ propertyId }));
+    expect(mocks.eq).toHaveBeenCalledWith("id", propertyId);
+    expect(mocks.eq).toHaveBeenCalledWith("organization_id", "30000000-0000-4000-8000-000000000001");
+    expect(result.status).toBe("error");
+    expect(mocks.revalidatePath).not.toHaveBeenCalled();
   });
 
   it("does not expose database error details", async () => {

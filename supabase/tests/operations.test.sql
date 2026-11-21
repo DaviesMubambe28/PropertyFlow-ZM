@@ -1,5 +1,5 @@
 begin;
-select plan(21);
+select plan(28);
 
 select has_table('public', 'properties', 'properties table exists');
 select has_table('public', 'contacts', 'contacts table exists');
@@ -22,6 +22,8 @@ insert into auth.users (
 ) values
   ('00000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000001', 'authenticated', 'authenticated', 'ops-a@test.local', '', now(), '{}', '{"full_name":"Ops A"}', now(), now()),
   ('00000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000002', 'authenticated', 'authenticated', 'ops-b@test.local', '', now(), '{}', '{"full_name":"Ops B"}', now(), now());
+
+insert into public.profiles (id, full_name) values ('20000000-0000-0000-0000-000000000002', 'Ops B');
 
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"20000000-0000-0000-0000-000000000001","email":"ops-a@test.local","role":"authenticated"}', true);
@@ -49,6 +51,30 @@ select is(
   'completing a sale marks the property sold'
 );
 
+insert into public.organization_memberships (organization_id, user_id, role, status)
+select id, '20000000-0000-0000-0000-000000000002', 'agent', 'active'
+from public.organizations limit 1;
+select lives_ok(
+  $$update public.leads set assigned_to = '20000000-0000-0000-0000-000000000002'$$,
+  'an administrator can assign a lead to an active agent'
+);
+select is((select assigned_to::text from public.leads limit 1), '20000000-0000-0000-0000-000000000002', 'assignment persisted');
+
+select set_config('request.jwt.claims', '{"sub":"20000000-0000-0000-0000-000000000002","email":"ops-b@test.local","role":"authenticated"}', true);
+select throws_ok(
+  $$update public.leads set assigned_to = '20000000-0000-0000-0000-000000000001'$$,
+  '42501', 'Only an active agency administrator can reassign leads', 'an agent cannot reassign a lead'
+);
+select lives_ok($$update public.leads set stage = 'contacted'$$, 'an agent can still update a lead stage');
+
+select set_config('request.jwt.claims', '{"sub":"20000000-0000-0000-0000-000000000001","email":"ops-a@test.local","role":"authenticated"}', true);
+update public.leads set assigned_to = auth.uid();
+update public.organization_memberships set status = 'deactivated' where user_id = '20000000-0000-0000-0000-000000000002';
+select throws_ok(
+  $$update public.leads set assigned_to = '20000000-0000-0000-0000-000000000002'$$,
+  '23514', 'The assignee must be an active workspace member', 'an inactive agent cannot receive an assignment'
+);
+
 reset role;
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"20000000-0000-0000-0000-000000000002","email":"ops-b@test.local","role":"authenticated"}', true);
@@ -58,11 +84,20 @@ select lives_ok(
   $$update public.properties set title = 'Stolen'$$,
   'a denied cross-agency update does not expose an authorization oracle'
 );
+select lives_ok(
+  $$delete from public.properties$$,
+  'a denied cross-agency delete leaves hidden rows untouched'
+);
 reset role;
 select is(
-  (select title from public.properties limit 1),
+  (select title from public.properties where id = '50000000-0000-0000-0000-000000000001'),
   'Kabulonga Home',
   'cross-agency records cannot be modified'
+);
+
+select is(
+  (select count(*)::integer from public.properties where id = '50000000-0000-0000-0000-000000000001'),
+  1, 'cross-agency records cannot be deleted'
 );
 
 select * from finish();

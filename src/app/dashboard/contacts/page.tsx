@@ -3,7 +3,8 @@
 import { useActionState, useState } from "react";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { useAppContext } from "@/components/app-provider";
-import { createContact, initialOperationState } from "@/actions/operations";
+import { createContact } from "@/actions/operations";
+import { initialOperationState } from "@/lib/action-state";
 
 export default function ContactsPage() {
   const { state, activeOrg } = useAppContext();

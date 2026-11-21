@@ -1,10 +1,16 @@
-import { Suspense } from "react";
-import { PropertyDetailClient } from "@/components/property-detail-client";
+import { notFound } from "next/navigation";
+import { PropertyDetail } from "@/components/property-detail";
+import { demoProperties } from "@/lib/demo-properties";
 
-export default function PropertyDetailPage({ params }: PageProps<"/properties/[id]">) {
-  return (
-    <Suspense fallback={<div className="min-h-screen bg-[#F7F9FC]" aria-label="Loading property details" />}>
-      {params.then(({ id }) => <PropertyDetailClient id={id} />)}
-    </Suspense>
-  );
+export const instant = false;
+
+export function generateStaticParams() {
+  return demoProperties.map(({ id }) => ({ id }));
+}
+
+export default async function PropertyDetailPage({ params }: PageProps<"/properties/[id]">) {
+  const { id } = await params;
+  const property = demoProperties.find((item) => item.id === id && item.status === "available");
+  if (!property) notFound();
+  return <PropertyDetail property={property} />;
 }

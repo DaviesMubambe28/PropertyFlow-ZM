@@ -1,11 +1,13 @@
 "use server";
 
+import type { OperationState } from "@/lib/action-state";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import {
   contactInputSchema,
   dealInputSchema,
   leadInputSchema,
+  leadAssignmentSchema,
   leadInteractionSchema,
   leadStageInputSchema,
   propertyInputSchema,
@@ -15,12 +17,6 @@ import {
   viewingOutcomeSchema,
 } from "@/lib/validation/operations";
 
-export type OperationState = {
-  status: "idle" | "error" | "success";
-  message?: string;
-  fields?: Record<string, string[] | undefined>;
-};
-export const initialOperationState: OperationState = { status: "idle" };
 
 function invalid(fields: Record<string, string[] | undefined>): OperationState {
   return { status: "error", message: "Review the highlighted fields and try again.", fields };
@@ -37,17 +33,26 @@ export async function createProperty(_state: OperationState, formData: FormData)
   if (!parsed.success) return invalid(parsed.error.flatten().fieldErrors);
   const { supabase, user } = await authenticatedClient();
   if (!user) return { status: "error", message: "Sign in again before saving the property." };
-  const { error } = await supabase.from("properties").insert({
-    organization_id: parsed.data.organizationId, title: parsed.data.title, type: parsed.data.type,
+  const values = {
+    title: parsed.data.title, type: parsed.data.type,
     listing_type: parsed.data.listingType, price: parsed.data.price, location: parsed.data.location,
     province: parsed.data.province,
     bedrooms: parsed.data.bedrooms, bathrooms: parsed.data.bathrooms, area: parsed.data.area,
     description: parsed.data.description, image_url: parsed.data.imageUrl || null, status: parsed.data.status,
     owner_name: parsed.data.ownerName, owner_phone: parsed.data.ownerPhone,
-    assigned_to: user.id, created_by: user.id,
+  };
+  if (parsed.data.propertyId) {
+    const { data, error } = await supabase.from("properties").update(values)
+      .eq("id", parsed.data.propertyId).eq("organization_id", parsed.data.organizationId).select("id").maybeSingle();
+    if (error || !data) return { status: "error", message: "The property could not be updated. Check your access and try again." };
+    revalidatePath("/dashboard", "layout");
+    return { status: "success", message: "Property updated." };
+  }
+  const { error } = await supabase.from("properties").insert({
+    ...values, organization_id: parsed.data.organizationId, assigned_to: user.id, created_by: user.id,
   });
   if (error) return { status: "error", message: "The property could not be saved. Please try again." };
-  revalidatePath("/dashboard");
+  revalidatePath("/dashboard", "layout");
   return { status: "success", message: "Property saved." };
 }
 
@@ -63,7 +68,7 @@ export async function createContact(_state: OperationState, formData: FormData):
     preferences: parsed.data.preferences, budget: parsed.data.budget, notes: parsed.data.notes, created_by: user.id,
   });
   if (error) return { status: "error", message: "The contact could not be saved. Please try again." };
-  revalidatePath("/dashboard");
+  revalidatePath("/dashboard", "layout");
   return { status: "success", message: "Contact saved." };
 }
 
@@ -78,7 +83,7 @@ export async function createLead(_state: OperationState, formData: FormData): Pr
     notes: parsed.data.notes, assigned_to: user.id,
   });
   if (error) return { status: "error", message: "The lead could not be saved. Check the selected records and try again." };
-  revalidatePath("/dashboard");
+  revalidatePath("/dashboard", "layout");
   return { status: "success", message: "Lead saved." };
 }
 
@@ -88,7 +93,7 @@ export async function updateLeadStage(formData: FormData) {
   const { supabase, user } = await authenticatedClient();
   if (!user) return;
   await supabase.from("leads").update({ stage: parsed.data.stage }).eq("id", parsed.data.leadId);
-  revalidatePath("/dashboard");
+  revalidatePath("/dashboard", "layout");
 }
 
 export async function createViewing(_state: OperationState, formData: FormData): Promise<OperationState> {
@@ -102,7 +107,7 @@ export async function createViewing(_state: OperationState, formData: FormData):
     agent_id: user.id, notes: parsed.data.notes,
   });
   if (error) return { status: "error", message: "The viewing could not be scheduled. Check the linked lead and property." };
-  revalidatePath("/dashboard");
+  revalidatePath("/dashboard", "layout");
   return { status: "success", message: "Viewing scheduled." };
 }
 
@@ -118,7 +123,7 @@ export async function createTask(_state: OperationState, formData: FormData): Pr
     property_id: parsed.data.propertyId ?? null, assignee_id: user.id, created_by: user.id,
   });
   if (error) return { status: "error", message: "The task could not be saved. Please try again." };
-  revalidatePath("/dashboard");
+  revalidatePath("/dashboard", "layout");
   return { status: "success", message: "Task created." };
 }
 
@@ -135,7 +140,7 @@ export async function createDeal(_state: OperationState, formData: FormData): Pr
     lease_start: parsed.data.leaseStart ?? null, monthly_rent: parsed.data.monthlyRent ?? null,
   });
   if (error) return { status: "error", message: "The deal could not be saved. Check the linked lead and property." };
-  revalidatePath("/dashboard");
+  revalidatePath("/dashboard", "layout");
   return { status: "success", message: "Deal created." };
 }
 
@@ -149,7 +154,7 @@ export async function addLeadInteraction(_state: OperationState, formData: FormD
     interaction_type: parsed.data.interactionType, summary: parsed.data.summary, created_by: user.id,
   });
   if (error) return { status: "error", message: "The interaction could not be saved." };
-  revalidatePath("/dashboard");
+  revalidatePath("/dashboard", "layout");
   return { status: "success", message: "Interaction recorded." };
 }
 
@@ -161,7 +166,7 @@ export async function updateViewingOutcome(formData: FormData) {
   await supabase.from("viewings").update({
     status: parsed.data.status, feedback: parsed.data.feedback, outcome: parsed.data.outcome,
   }).eq("id", parsed.data.viewingId);
-  revalidatePath("/dashboard");
+  revalidatePath("/dashboard", "layout");
 }
 
 export async function updateOperationalStatus(formData: FormData) {
@@ -177,5 +182,24 @@ export async function updateOperationalStatus(formData: FormData) {
       closed_at: parsed.data.status === "completed" ? new Date().toISOString() : null,
     }).eq("id", parsed.data.recordId);
   }
-  revalidatePath("/dashboard");
+  revalidatePath("/dashboard", "layout");
+}
+
+export async function assignLead(_state: OperationState, formData: FormData): Promise<OperationState> {
+  const parsed = leadAssignmentSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { status: "error", message: "Choose an active team member." };
+  const { supabase, user } = await authenticatedClient();
+  if (!user) return { status: "error", message: "Sign in again before assigning a lead." };
+
+  const { organizationId, leadId, assigneeId } = parsed.data;
+  const { data: membership } = await supabase.from("organization_memberships")
+    .select("role").eq("organization_id", organizationId).eq("user_id", user.id)
+    .eq("status", "active").maybeSingle();
+  if (membership?.role !== "admin") return { status: "error", message: "An agency administrator must assign leads." };
+
+  const { data, error } = await supabase.from("leads").update({ assigned_to: assigneeId })
+    .eq("id", leadId).eq("organization_id", organizationId).select("id").maybeSingle();
+  if (error || !data) return { status: "error", message: "The assignment could not be saved. Check that the team member is active." };
+  revalidatePath("/dashboard", "layout");
+  return { status: "success", message: "Lead assigned." };
 }

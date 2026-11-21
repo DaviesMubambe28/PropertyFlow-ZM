@@ -1,15 +1,24 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { Suspense, useActionState, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { useAppContext } from "@/components/app-provider";
-import { addLeadInteraction, createLead, initialOperationState, updateLeadStage } from "@/actions/operations";
+import { addLeadInteraction, assignLead, createLead, updateLeadStage } from "@/actions/operations";
+import { initialOperationState } from "@/lib/action-state";
 
 const stages = ["new", "contacted", "interested", "viewing_scheduled", "negotiation", "converted", "lost"];
 
 export default function PipelinePage() {
-  const { state, activeOrg } = useAppContext();
+  return <DashboardShell><Suspense fallback={<p role="status">Loading pipeline…</p>}><Pipeline /></Suspense></DashboardShell>;
+}
+
+function Pipeline() {
+  const { state, activeOrg, currentUser, assignees } = useAppContext();
+  const team = assignees.filter((member) => member.organizationId === activeOrg?.id);
+  const activeOnly = useSearchParams().get("status") === "active";
+  const visibleStages = activeOnly ? stages.filter((stage) => stage !== "converted" && stage !== "lost") : stages;
   const [result, formAction, pending] = useActionState(createLead, initialOperationState);
   const [interactionState, interactionAction, interactionPending] = useActionState(addLeadInteraction, initialOperationState);
   const [form, setForm] = useState({ title: "", contactId: "", propertyId: "", value: "", notes: "" });
@@ -19,9 +28,8 @@ export default function PipelinePage() {
   const orgProperties = state.properties.filter((property) => property.orgId === activeOrg?.id && property.status === "available");
 
   return (
-    <DashboardShell>
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-        <form action={formAction} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <form id="lead-form" action={formAction} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-2xl font-semibold text-slate-900">Create lead</h2>
           <input type="hidden" name="organizationId" value={activeOrg?.id ?? ""} />
           <div className="mt-6 space-y-4">
@@ -62,9 +70,10 @@ export default function PipelinePage() {
         </form>
 
         <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-2xl font-semibold text-slate-900">Kanban pipeline</h2>
+          <h2 className="text-2xl font-semibold text-slate-900">{activeOnly ? "Active lead pipeline" : "Lead pipeline"}</h2>
+          {activeOnly && <Link href="/dashboard/pipeline" className="mt-2 inline-block text-sm font-semibold text-teal-800 underline">Show all stages</Link>}
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {stages.map((stage) => {
+            {visibleStages.map((stage) => {
               const stageLeads = orgLeads.filter((lead) => lead.stage === stage);
               return (
                 <div key={stage} className="rounded-2xl bg-slate-50 p-3">
@@ -74,7 +83,14 @@ export default function PipelinePage() {
                       stageLeads.map((lead) => (
                         <div key={lead.id} className="rounded-2xl bg-white p-3 shadow-sm">
                           <p className="font-medium text-slate-900">{lead.title}</p>
-                          <p className="mt-1 text-sm text-slate-600">K{lead.value.toLocaleString()}</p>
+                          <p className="mt-1 text-sm text-slate-600">K{lead.value.toLocaleString("en-ZM")}</p>
+                          <p className="mt-1 break-words text-xs text-slate-600">Assigned to {team.find((member) => member.id === lead.assignedTo)?.name ?? "an inactive team member"}</p>
+                          {currentUser?.role === "owner" && activeOrg && <LeadAssignment
+                            leadId={lead.id}
+                            organizationId={activeOrg.id}
+                            assigneeId={lead.assignedTo}
+                            team={team}
+                          />}
                           <form action={updateLeadStage}>
                             <input type="hidden" name="leadId" value={lead.id} />
                             <select name="stage" defaultValue={lead.stage} onChange={(event) => event.currentTarget.form?.requestSubmit()} aria-label={`Stage for ${lead.title}`} className="mt-3 w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm">
@@ -102,6 +118,32 @@ export default function PipelinePage() {
           </form>
         </div>
       </div>
-    </DashboardShell>
   );
+}
+
+
+function LeadAssignment({ leadId, organizationId, assigneeId, team }: {
+  leadId: string;
+  organizationId: string;
+  assigneeId: string;
+  team: { id: string; name: string }[];
+}) {
+  const [result, action, pending] = useActionState(assignLead, initialOperationState);
+  return <details className="mt-2 text-xs">
+    <summary className="cursor-pointer font-semibold text-teal-800">Assign lead</summary>
+    <form action={action} className="mt-2 space-y-2">
+      <input type="hidden" name="organizationId" value={organizationId} />
+      <input type="hidden" name="leadId" value={leadId} />
+      <label className="grid gap-1">Team member
+        <select name="assigneeId" className="min-w-0 rounded-md border border-slate-200 p-2" defaultValue={team.some(({ id }) => id === assigneeId) ? assigneeId : ""} required>
+          <option value="" disabled>Choose team member</option>
+          {team.map(({ id, name }) => <option key={id} value={id}>{name}</option>)}
+        </select>
+      </label>
+      <button disabled={pending} className="rounded-md bg-teal-800 px-3 py-2 font-semibold text-white disabled:opacity-60">
+        {pending ? "Saving…" : "Save assignment"}
+      </button>
+      {result.message && <p role={result.status === "error" ? "alert" : "status"}>{result.message}</p>}
+    </form>
+  </details>;
 }

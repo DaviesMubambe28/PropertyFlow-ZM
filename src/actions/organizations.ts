@@ -1,15 +1,10 @@
 "use server";
 
+import type { OrganizationActionState } from "@/lib/action-state";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { organizationProfileSchema } from "@/lib/validation/organization";
 
-export type OrganizationActionState = {
-  status: "idle" | "error" | "success";
-  message?: string;
-  fields?: Record<string, string[] | undefined>;
-};
-export const initialOrganizationState: OrganizationActionState = { status: "idle" };
 
 export async function updateOrganizationProfile(_state: OrganizationActionState, formData: FormData): Promise<OrganizationActionState> {
   const parsed = organizationProfileSchema.safeParse(Object.fromEntries(formData));

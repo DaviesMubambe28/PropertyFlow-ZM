@@ -1,15 +1,22 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isProtectedPath } from "@/lib/auth/redirects";
+import { demoProperties } from "@/lib/demo-properties";
 import { getPublicEnvironment } from "@/lib/env/public";
 
 export async function proxy(request: NextRequest) {
+  const listingPath = /^\/properties\/([^/]+)$/.exec(request.nextUrl.pathname);
+  if (listingPath && !demoProperties.some(({ id, status }) => status === "available" && id === listingPath[1])) {
+    // Cache Components can stream an unknown segment before notFound() determines its status.
+    return NextResponse.rewrite(new URL("/404", request.url), { status: 404 });
+  }
   let response = NextResponse.next({ request });
   const environment = getPublicEnvironment();
   const supabase = createServerClient(
     environment.NEXT_PUBLIC_SUPABASE_URL,
     environment.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
+      cookieOptions: { httpOnly: true, secure: new URL(environment.NEXT_PUBLIC_APP_URL).protocol === "https:" },
       cookies: {
         getAll: () => request.cookies.getAll(),
         setAll(cookiesToSet) {

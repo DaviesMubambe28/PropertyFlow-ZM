@@ -74,7 +74,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-[#F7F9FC]">
-      <aside className="fixed inset-y-0 left-0 hidden w-72 flex-col border-r border-[#E5EAF0] bg-[#0B192A] p-6 text-white lg:flex">
+      <aside className="fixed inset-y-0 left-0 hidden w-72 flex-col border-r border-[#E5EAF0] overflow-y-auto bg-[#071B30] p-6 text-white lg:flex">
         <Link href="/" className="flex items-center gap-3 text-white">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#142A43] text-white ring-1 ring-white/10">
             <Building2 className="h-4 w-4" />
@@ -111,7 +111,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           )}
         </div>
 
-        <nav className="mt-8 space-y-2">
+        <nav aria-label="Workspace navigation" className="mt-8 space-y-2">
           {visibleNavItems.map((item) => {
             const ItemIcon = item.icon;
             const isActive = pathname === item.href;
@@ -120,6 +120,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
                 className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium ${
                   isActive ? "bg-[#142A43] text-white ring-1 ring-white/10" : "text-slate-200 hover:bg-white/5 hover:text-white"
                 }`}
@@ -171,9 +172,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
-          <p className="mt-3 text-[11px] leading-4 text-[#667085]">
-            Secure account session · Shared agency workspace protected by row-level access controls
-          </p>
+          <form action={signOut} className="mt-1 lg:hidden">
+            <button className="inline-flex min-h-11 items-center gap-2 px-2 text-sm font-medium text-slate-700"><LogOut size={15} aria-hidden="true" /> Sign out</button>
+          </form>
         </header>
 
         <div className="min-w-0 p-4 sm:p-6">{children}</div>

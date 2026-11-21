@@ -25,8 +25,7 @@ export async function inviteAgent(_state: TeamActionState, formData: FormData): 
   if (error || !data) return { status: "error", message: "A pending invitation may already exist for this email." };
 
   const invitePath = `/invitations/${data.id}`;
-  const callbackUrl = new URL("/auth/callback", getPublicEnvironment().NEXT_PUBLIC_APP_URL);
-  callbackUrl.searchParams.set("next", invitePath);
+  const callbackUrl = new URL(`${invitePath}/verify`, getPublicEnvironment().NEXT_PUBLIC_APP_URL);
   try {
     const admin = createAdminClient();
     await admin.auth.admin.inviteUserByEmail(parsed.data.email, { redirectTo: callbackUrl.toString() });
@@ -61,4 +60,14 @@ export async function acceptInvitation(formData: FormData) {
   const { error } = await supabase.rpc("accept_organization_invitation", { p_invitation_id: parsed.data.invitationId });
   if (error) redirect(`/invitations/${parsed.data.invitationId}?error=unavailable`);
   redirect("/dashboard");
+}
+
+export async function exchangeInvitationSession(accessToken: string, refreshToken: string) {
+  if (typeof accessToken !== "string" || typeof refreshToken !== "string" ||
+      accessToken.length < 32 || accessToken.length > 8192 ||
+      refreshToken.length < 8 || refreshToken.length > 512) return false;
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+  return Boolean(!error && data.user);
 }

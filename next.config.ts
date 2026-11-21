@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { privatePages } from "./src/lib/site-url";
 
 const supabaseOrigin = (() => {
   try {
@@ -26,6 +27,7 @@ const contentSecurityPolicy = [
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  devIndicators: false,
   partialPrefetching: true,
   async headers() {
     return [{
@@ -38,7 +40,10 @@ const nextConfig: NextConfig = {
         { key: "X-Frame-Options", value: "DENY" },
         { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
       ],
-    }];
+    }, ...privatePages.map((path) => ({
+      source: `${path}/:path*`,
+      headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+    }))];
   },
   turbopack: {
     rules: {

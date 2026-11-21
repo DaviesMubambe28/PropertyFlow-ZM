@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AppProvider } from "@/components/app-provider";
+import { getSiteOrigin } from "@/lib/site-url";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,9 +14,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const origin = getSiteOrigin();
+
 export const metadata: Metadata = {
-  title: "PropertyFlow ZM",
-  description: "Multi-tenant property management platform for Zambia",
+  metadataBase: origin ? new URL(origin) : undefined,
+  title: { default: "PropertyFlow ZM", template: "%s | PropertyFlow ZM" },
+  description: "Property inventory, client enquiries, viewings, and sales pipeline in one workspace for Zambian real estate agencies.",
+  openGraph: { siteName: "PropertyFlow ZM", type: "website", locale: "en_ZM" },
+  robots: origin ? undefined : { index: false, follow: false },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
