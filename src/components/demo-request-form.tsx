@@ -17,7 +17,7 @@ export function DemoRequestForm() {
   const [result, action, pending] = useActionState(submitDemoRequest, null);
 
   if (result === "received") {
-    return <p className="rounded-lg bg-teal-50 p-4 text-teal-900" role="status">Your demo request has been received. Our team can use the details you provided to follow up.</p>;
+    return <p className="rounded-lg bg-tint p-4 text-deep" role="status">Your demo request has been received. Our team can use the details you provided to follow up.</p>;
   }
 
   return (

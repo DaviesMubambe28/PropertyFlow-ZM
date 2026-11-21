@@ -12,25 +12,25 @@ const audiences = [
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen bg-[#F7F9FC] text-[#17212F]">
+    <div className="min-h-screen bg-canvas text-ink">
       <SiteHeader />
-      <main className="mx-auto max-w-7xl px-5 py-10 sm:px-6 sm:py-14 lg:py-16">
+      <main className="site-width py-10 sm:py-14 lg:py-16">
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10">
-          <section className="rounded-[24px] border border-[#E5EAF0] bg-white p-6 sm:p-8 lg:p-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#087F8C]">A workspace for your work</p>
-            <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-tight text-[#0B192A] sm:text-4xl">Start with the way you manage property.</h1>
-            <p className="mt-4 text-sm leading-6 text-[#667085]">
+          <section className="account-card p-6 sm:p-8 lg:p-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">A workspace for your work</p>
+            <h1 className="mt-4 text-3xl font-semibold leading-tight tracking-tight text-deep sm:text-4xl">Start with the way you manage property.</h1>
+            <p className="mt-4 text-sm leading-6 text-quiet">
               Create the secure workspace your agency will use to manage listings, leads, and team activity.
             </p>
             <div className="mt-7 space-y-3">
               {audiences.map(({ icon: Icon, title, detail }) => (
-                <div key={title} className="flex items-center gap-3 rounded-xl border border-[#E5EAF0] bg-[#F9FBFC] p-3.5">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#EAF6F7] text-[#087F8C]">
+                <div key={title} className="flex items-center gap-3 rounded-xl border border-line bg-canvas p-3.5">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-tint text-brand">
                     <Icon className="h-4 w-4" aria-hidden="true" />
                   </span>
                   <span>
-                    <span className="block text-sm font-semibold text-[#17212F]">{title}</span>
-                    <span className="mt-0.5 block text-xs text-[#667085]">{detail}</span>
+                    <span className="block text-sm font-semibold text-ink">{title}</span>
+                    <span className="mt-0.5 block text-xs text-quiet">{detail}</span>
                   </span>
                 </div>
               ))}
@@ -39,7 +39,7 @@ export default function RegisterPage() {
               <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
               <p>Your account remains inactive until you confirm the verification link sent to your email address.</p>
             </div>
-            <Link href="/features" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#087F8C] hover:text-[#066875]">
+            <Link href="/features" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand hover:text-brand-hover">
               See available capabilities <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </section>

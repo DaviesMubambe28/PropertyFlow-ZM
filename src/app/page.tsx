@@ -1,213 +1,132 @@
+import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  BarChart3,
-  Building2,
-  ChevronDown,
-  ContactRound,
-  ListChecks,
-  ShieldCheck,
-} from "lucide-react";
+import { ArrowDown, ArrowRight, BarChart3, Building2, CalendarDays, ChevronDown, ContactRound, FolderKanban, Search, UsersRound } from "lucide-react";
 import { ProductTour } from "@/components/product-tour";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
-const solutions = [
-  {
-    title: "Real estate agencies",
-    description: "Give your team one shared place for property records, client follow-ups and lead stages.",
-    icon: Building2,
-  },
-  {
-    title: "Independent agents",
-    description: "Keep your working portfolio and sales activity organised without managing a large team.",
-    icon: ContactRound,
-  },
-  {
-    title: "Landlords & managers",
-    description: "Create a workspace for property operations. Dedicated tenancy and rent workflows are still in development.",
-    icon: ShieldCheck,
-    note: "Rental operations in development",
-  },
+const workflows = [
+  { title: "Properties", text: "Keep prices, availability and listing details together.", icon: Building2 },
+  { title: "Contacts", text: "Keep client preferences and conversations close.", icon: ContactRound },
+  { title: "Pipeline", text: "See which enquiries need a follow-up or a viewing.", icon: FolderKanban },
+  { title: "Reporting", text: "Review listings, activity and deals as a team.", icon: BarChart3 },
 ];
 
-const steps = [
-  { number: "01", title: "Set up your workspace", description: "Choose the kind of property business you run and add your account details." },
-  { number: "02", title: "Organise your records", description: "Create property and contact records, then keep the information together in one workspace." },
-  { number: "03", title: "Move work forward", description: "Track leads through the pipeline and keep an eye on your operational overview." },
+const audiences = [
+  { title: "Independent agents", text: "Organise your listings, client notes and next steps.", icon: Search },
+  { title: "Real estate agencies", text: "Coordinate enquiries, viewings and deals in one shared workspace.", icon: UsersRound },
+  { title: "Property managers", text: "Keep availability and rental enquiries organised.", icon: Building2 },
 ];
 
 const faqs = [
-  {
-    question: "Is PropertyFlow ZM connected to a live database?",
-    answer: "Yes. Account, agency, property, CRM, viewing, task, and deal records use a shared tenant-isolated Supabase service. Billing remains a separate launch dependency.",
-  },
-  {
-    question: "Are the properties shown real listings?",
-    answer: "No. Any listings currently shown are development examples for interface demonstration only. They are not verified offers for sale or rent.",
-  },
-  {
-    question: "Can I request a walkthrough for my agency?",
-    answer: "Yes. You can submit a demo request with your company details and the workflows you would like to see.",
-  },
+  { question: "How do I get started?", answer: "Create a workspace and verify your email. Then add your first property or invite your team." },
+  { question: "Can I invite agents to my workspace?", answer: "Yes. Agency owners can invite agents from the workspace team settings." },
+  { question: "What happens when I request a demo?", answer: "Send your company details and the workflows you’d like to see. The team can then follow up with you." },
 ];
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white text-[#17212F]">
+    <>
       <SiteHeader />
-
-      <main>
-        <section className="bg-[#102940] text-white">
-          <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14 lg:py-24">
-            <div>
-              <p className="text-sm font-semibold text-teal-200">Real estate software for Zambia</p>
-              <h1 className="mt-5 text-[clamp(2.5rem,5vw,4.75rem)] font-semibold leading-[1.04] tracking-[-0.045em]">
-                Run your agency from one workspace.
-              </h1>
-              <p className="mt-6 max-w-lg text-lg leading-8 text-slate-200">
-                Manage property listings, follow up with clients and track every viewing and deal with your team.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/contact" className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-[#142A43] hover:bg-teal-50">
-                  Request a demo <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-                <Link href="/register" className="inline-flex min-h-11 items-center rounded-lg border border-slate-400 px-5 py-3 text-sm font-semibold hover:bg-white/10">
-                  Create a workspace
-                </Link>
-              </div>
-            </div>
-            <ProductTour />
-          </div>
-        </section>
-
-        <section id="solutions" className="scroll-mt-24 border-b border-[#E5EAF0] bg-white">
-          <div className="mx-auto max-w-7xl px-5 py-16 sm:px-6 lg:py-20">
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#087F8C]">Solutions</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#0B192A] sm:text-4xl">Built around the way property work gets done.</h2>
-              <p className="mt-4 text-base leading-7 text-[#667085]">Useful workflows for the people managing property, clients and the next step in a deal.</p>
-            </div>
-            <div className="mt-9 grid gap-4 md:grid-cols-3">
-              {solutions.map((solution) => {
-                const Icon = solution.icon;
-                return (
-                  <article key={solution.title} className="rounded-2xl border border-[#E5EAF0] bg-[#F9FBFC] p-5 sm:p-6">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#142A43] text-white">
-                      <Icon className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <h3 className="mt-5 text-lg font-semibold text-[#17212F]">{solution.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-[#667085]">{solution.description}</p>
-                    {"note" in solution && solution.note && (
-                      <p className="mt-4 inline-flex rounded-full border border-[#E5EAF0] bg-white px-2.5 py-1 text-xs font-medium text-[#667085]">{solution.note}</p>
-                    )}
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-[#F7F9FC]">
-          <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:py-20">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#087F8C]">How it works</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#0B192A] sm:text-4xl">Keep listings, enquiries and follow-ups together.</h2>
-              <p className="mt-4 text-base leading-7 text-[#667085]">Keep the important details and next actions connected, from first record to an active pipeline.</p>
-              <Link href="/features" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#087F8C] hover:text-[#066875]">
-                See what’s available <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-            </div>
-            <ol className="divide-y divide-[#E1E7EC] border-y border-[#E1E7EC]">
-              {steps.map((step) => (
-                <li key={step.number} className="grid gap-3 py-5 sm:grid-cols-[56px_1fr] sm:gap-5">
-                  <span className="text-sm font-semibold tabular-nums text-[#087F8C]">{step.number}</span>
-                  <div>
-                    <h3 className="font-semibold text-[#17212F]">{step.title}</h3>
-                    <p className="mt-1.5 text-sm leading-6 text-[#667085]">{step.description}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-7xl px-5 py-16 sm:px-6 lg:py-20">
-          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#087F8C]">Platform overview</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#0B192A] sm:text-4xl">A connected view of your operations.</h2>
-              <p className="mt-4 text-base leading-7 text-[#667085]">Connect property records, client details and deal progress in a shared agency workspace.</p>
-            </div>
-            <Link href="/features" className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-[#087F8C] hover:text-[#066875]">
-              Explore platform <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      <main className="bg-white">
+        <section className="site-width py-19 text-center sm:py-26">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand sm:text-base">Real estate software for Zambia</p>
+          <h1 className="mx-auto mt-4 max-w-4xl text-[clamp(1.85rem,7.1vw,6rem)] font-black uppercase leading-[0.98] tracking-[-0.05em] text-brand">
+            Property work.<br />One workspace.
+          </h1>
+          <p className="mx-auto mt-6 max-w-xl text-base leading-7 text-ink">
+            Manage listings, follow up with clients, and track every viewing and deal with your team.
+          </p>
+          <div className="mt-7 flex flex-wrap justify-center gap-3">
+            <Link href="/register" className="brand-button-secondary inline-flex min-h-11 items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold">
+              Create a workspace <ArrowRight size={16} aria-hidden="true" />
             </Link>
-          </div>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { title: "Property records", description: "Add and review your workspace’s property details.", icon: Building2 },
-              { title: "Contacts", description: "Keep client details and notes together.", icon: ContactRound },
-              { title: "Lead pipeline", description: "Move lead records through defined sales stages.", icon: ListChecks },
-              { title: "Reports", description: "Review summaries calculated from agency workspace records.", icon: BarChart3 },
-            ].map((feature) => {
-              const Icon = feature.icon;
-              return (
-                <article key={feature.title} className="rounded-2xl border border-[#E5EAF0] bg-white p-5">
-                  <Icon className="h-5 w-5 text-[#087F8C]" aria-hidden="true" />
-                  <h3 className="mt-4 font-semibold text-[#17212F]">{feature.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-[#667085]">{feature.description}</p>
-                </article>
-              );
-            })}
+            <a href="#product-tour" className="brand-button-secondary inline-flex min-h-11 items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold">
+              Explore the product <ArrowDown size={16} aria-hidden="true" />
+            </a>
           </div>
         </section>
 
-        <section className="border-y border-[#E5EAF0] bg-[#F7F9FC]">
-          <div className="mx-auto grid max-w-7xl gap-8 px-5 py-14 sm:px-6 md:grid-cols-[1fr_auto] md:items-center">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#087F8C]">Plans</p>
-              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[#0B192A] sm:text-3xl">Find the right workspace for your business.</h2>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-[#667085]">The displayed plan details are prototype examples. Subscription changes and payments are not connected.</p>
+        <section className="site-band">
+          <div className="site-width grid items-center gap-8 pb-12 pt-10 md:grid-cols-[1.04fr_0.96fr] md:gap-12 md:py-0">
+            <div className="md:py-13">
+              <h2 className="max-w-md text-3xl font-bold leading-tight tracking-tight sm:text-4xl">Stay on top of every property.</h2>
+              <p className="mt-3 max-w-sm text-sm leading-6 text-blue-100">Give your team one place to see what’s available, who’s interested and what needs to happen next.</p>
+              <ul className="mt-6 flex flex-wrap gap-5">
+                {[{ label: "Listings", icon: Building2 }, { label: "Viewings", icon: CalendarDays }, { label: "Deals", icon: FolderKanban }].map(({ label, icon: Icon }) => (
+                  <li key={label} className="grid justify-items-center gap-2 text-xs font-semibold">
+                    <span className="grid size-12 place-items-center rounded-full bg-white text-brand"><Icon size={20} aria-hidden="true" /></span>
+                    {label}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <Link href="/pricing" className="brand-button-secondary inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold">
-              View plan examples <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
+            <figure className="relative aspect-[4/3] overflow-hidden border-4 border-white bg-tint md:mt-8 md:-mb-12 md:aspect-[6/5]">
+              <Image src="/marketing/property-exterior.jpg" alt="Contemporary white home with a landscaped courtyard" fill sizes="(max-width: 767px) 90vw, 460px" className="object-cover" />
+            </figure>
           </div>
         </section>
 
-        <section className="mx-auto max-w-4xl px-5 py-16 sm:px-6 lg:py-20">
-          <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#087F8C]">Frequently asked</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#0B192A] sm:text-4xl">A few things to know before you start.</h2>
-          </div>
-          <div className="mt-7 divide-y divide-[#E5EAF0] border-y border-[#E5EAF0]">
-            {faqs.map((faq) => (
-              <details key={faq.question} className="group py-4">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-1 text-sm font-semibold text-[#17212F] marker:hidden sm:text-base">
-                  {faq.question}
-                  <ChevronDown className="h-4 w-4 shrink-0 text-[#667085] transition group-open:rotate-180" aria-hidden="true" />
-                </summary>
-                <p className="max-w-3xl pt-3 text-sm leading-6 text-[#667085]">{faq.answer}</p>
-              </details>
+        <section className="site-width pb-14 pt-12 md:pt-21">
+          <h2 className="text-3xl font-bold tracking-tight text-brand">Everything your team needs to follow through.</h2>
+          <p className="mt-3 max-w-lg text-sm leading-6 text-ink">Connect the property record to the people, appointments and decisions around it.</p>
+          <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-4 md:gap-6">
+            {workflows.map(({ title, text, icon: Icon }) => (
+              <article key={title}>
+                <div className="grid h-23 place-items-center border border-line bg-tint text-brand"><Icon size={38} strokeWidth={1.45} aria-hidden="true" /></div>
+                <h3 className="mt-3 font-bold text-brand">{title}</h3>
+                <p className="mt-1 text-sm leading-6 text-ink">{text}</p>
+              </article>
             ))}
           </div>
         </section>
 
-        <section className="px-5 pb-16 sm:px-6 lg:pb-20">
-          <div className="mx-auto flex max-w-7xl flex-col gap-6 rounded-[24px] bg-[#0B192A] px-6 py-8 text-white sm:px-9 sm:py-10 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#A7DADC]">Ready to explore?</p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">Bring your property workflow into focus.</h2>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Try the local prototype and see how a more organised workspace could work for your team.</p>
-            </div>
-            <Link href="/register" className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0B192A] hover:bg-[#F1F5F8]">
-              Start Your Workspace <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        <section id="product-tour" className="site-width scroll-mt-6 pb-15">
+          <div className="mx-auto mb-7 max-w-lg text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-brand">See the workspace in action.</h2>
+            <p className="mt-3 text-sm leading-6 text-ink">Explore a sample agency’s portfolio, pipeline, activities, and reports.</p>
+          </div>
+          <ProductTour />
+        </section>
+
+        <section id="solutions" className="site-width scroll-mt-6 border-t border-line pb-14 pt-11">
+          <h2 className="text-3xl font-bold tracking-tight text-brand">Built for the way you work.</h2>
+          <div className="mt-7 grid gap-5 sm:grid-cols-3">
+            {audiences.map(({ title, text, icon: Icon }) => (
+              <article key={title} className="border border-line p-5">
+                <Icon size={26} className="text-brand" aria-hidden="true" />
+                <h3 className="mt-4 font-bold text-brand">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-ink">{text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="site-band text-center">
+          <div className="site-width py-12">
+            <h2 className="text-3xl font-bold tracking-tight">See what it could do for your agency.</h2>
+            <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-blue-100">Tell us how you work and what you want to cover in a walkthrough.</p>
+            <Link href="/contact" className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-6 text-sm font-bold text-brand hover:bg-tint">
+              Request a demo <ArrowRight size={16} aria-hidden="true" />
             </Link>
           </div>
         </section>
-      </main>
 
+        <section className="site-width grid gap-7 py-13 md:grid-cols-[0.8fr_1.2fr]">
+          <h2 className="text-3xl font-bold tracking-tight text-brand">Common questions</h2>
+          <div className="divide-y divide-line border-y border-line">
+            {faqs.map(({ question, answer }) => (
+              <details key={question} className="group">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-sm font-semibold text-brand">
+                  {question}<ChevronDown size={16} className="shrink-0 group-open:rotate-180" aria-hidden="true" />
+                </summary>
+                <p className="pb-4 text-sm leading-6 text-ink">{answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      </main>
       <SiteFooter />
-    </div>
+    </>
   );
 }

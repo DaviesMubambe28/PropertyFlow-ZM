@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import Link from "next/link";
 import { initialAuthActionState, requestPasswordReset, updatePassword } from "@/actions/auth";
 
-const inputClassName = "w-full rounded-xl border border-[#D8E0E8] bg-[#F9FBFC] px-3.5 py-3 text-sm outline-none focus:border-[#087F8C] focus:ring-2 focus:ring-[#087F8C]/15";
+const inputClassName = "w-full rounded-xl border border-line bg-canvas px-3.5 py-3 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/15";
 
 function Result({ message, success }: { message?: string; success: boolean }) {
   if (!message) return null;

@@ -1,106 +1,151 @@
 @import "tailwindcss";
 
 :root {
-  --brand-navy: #142a43;
-  --brand-dark-navy: #0b192a;
-  --brand-teal: #087f8c;
-  --brand-teal-hover: #066875;
-  --brand-background: #f7f9fc;
+  --brand-blue: #0646ed;
+  --brand-hover: #0036c6;
+  --brand-deep: #112e79;
+  --brand-ink: #203568;
+  --brand-muted: #4d6088;
+  --brand-border: #bacaf0;
+  --brand-tint: #edf3ff;
   --brand-surface: #ffffff;
-  --brand-text: #17212f;
-  --brand-muted: #667085;
-  --brand-border: #e5eaf0;
-  --brand-success: #16803c;
-  --brand-warning: #c77d0a;
-  --brand-error: #c33434;
-  --background: var(--brand-background);
-  --foreground: var(--brand-text);
-  --card: var(--brand-surface);
-  --muted: var(--brand-border);
-  --accent: var(--brand-navy);
+  --brand-canvas: #f4f7ff;
+  --brand-gutter: #90a8e3;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-brand: var(--brand-blue);
+  --color-brand-hover: var(--brand-hover);
+  --color-deep: var(--brand-deep);
+  --color-ink: var(--brand-ink);
+  --color-quiet: var(--brand-muted);
+  --color-line: var(--brand-border);
+  --color-tint: var(--brand-tint);
+  --color-canvas: var(--brand-canvas);
+  --color-background: var(--brand-canvas);
+  --color-foreground: var(--brand-ink);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 html {
   scroll-behavior: smooth;
+  background: var(--brand-canvas);
+}
+
+html:has(.site-header) {
+  background: var(--brand-gutter);
 }
 
 body {
-  background: var(--brand-background);
-  color: var(--brand-text);
+  background: var(--brand-canvas);
+  color: var(--brand-ink);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-* {
-  box-sizing: border-box;
+body:has(.site-header) {
+  width: min(100%, 75rem);
+  margin-inline: auto;
+  background: var(--brand-surface);
+  box-shadow: 0 14px 40px rgb(17 46 121 / 16%);
+}
+
+.site-width {
+  width: min(100% - 2.5rem, 60rem);
+  margin-inline: auto;
+}
+
+.site-header,
+.site-footer,
+.site-band {
+  background: var(--brand-blue);
+  color: white;
+}
+
+.site-nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.site-nav-link:hover,
+.site-nav-link[aria-current="page"] {
+  text-decoration: underline;
+  text-underline-offset: 0.35rem;
+}
+
+.site-sign-in {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  border-radius: 0.25rem;
+  background: white;
+  color: var(--brand-hover);
+  padding-inline: 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.site-sign-in:hover {
+  background: var(--brand-tint);
 }
 
 ::selection {
-  background: rgba(8, 127, 140, 0.18);
-}
-
-a {
-  text-decoration: none;
-}
-
-input,
-select,
-textarea,
-button {
-  font: inherit;
+  background: #c9d9ff;
+  color: var(--brand-deep);
 }
 
 button,
 input,
 select,
 textarea {
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+  font: inherit;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
 }
 
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
-a:focus-visible {
-  outline: 3px solid rgba(8, 127, 140, 0.2);
-  outline-offset: 2px;
+:focus-visible {
+  outline: 3px solid var(--brand-blue);
+  outline-offset: 3px;
+}
+
+.site-header :focus-visible,
+.site-footer :focus-visible {
+  outline-color: white;
+}
+
+.site-band :focus-visible {
+  outline-color: #a9c6ff;
 }
 
 .brand-button-primary {
-  background: linear-gradient(180deg, var(--brand-teal) 0%, var(--brand-teal-hover) 100%);
+  background: var(--brand-blue);
   color: white;
-  box-shadow: 0 12px 24px rgba(8, 127, 140, 0.18);
 }
 
 .brand-button-primary:hover {
-  background: linear-gradient(180deg, var(--brand-teal-hover) 0%, var(--brand-teal-hover) 100%);
+  background: var(--brand-hover);
 }
 
 .brand-button-secondary {
   background: var(--brand-surface);
-  border: 1px solid var(--brand-border);
-  color: var(--brand-text);
+  border: 1px solid var(--brand-blue);
+  color: var(--brand-hover);
 }
 
 .brand-button-secondary:hover {
-  border-color: rgba(20, 42, 67, 0.18);
-  background: #f3f7fb;
+  background: var(--brand-tint);
 }
 
 .brand-shell {
   background: var(--brand-surface);
   border: 1px solid var(--brand-border);
-  box-shadow: 0 8px 24px rgba(11, 25, 42, 0.04);
 }
 
 .brand-surface-muted {
-  background: linear-gradient(180deg, #f6f9fc 0%, #eef4f7 100%);
+  background: var(--brand-tint);
   border: 1px solid var(--brand-border);
 }
 
@@ -110,9 +155,17 @@ a:focus-visible {
   color: var(--brand-muted);
 }
 
-:focus-visible {
-  outline: 3px solid #087f8c;
-  outline-offset: 3px;
+.account-card {
+  border: 1px solid var(--brand-border);
+  border-top: 0.35rem solid var(--brand-blue);
+  border-radius: 0.5rem;
+  background: white;
+}
+
+@media (min-width: 80rem) {
+  body:has(.site-header) {
+    margin-block: 1.5rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -125,5 +178,31 @@ a:focus-visible {
   select,
   textarea {
     transition: none;
+  }
+}
+
+.page-intro {
+  border-bottom: 1px solid var(--brand-border);
+  background: var(--brand-canvas);
+  text-align: center;
+}
+
+.page-intro h1 {
+  color: var(--brand-blue);
+  font-weight: 850;
+  letter-spacing: -0.05em;
+}
+
+.workspace-rail :focus-visible {
+  outline-color: white;
+}
+
+@media (max-width: 23rem) {
+  .site-header .site-width {
+    width: calc(100% - 1.5rem);
+  }
+
+  .site-sign-in {
+    padding-inline: 0.625rem;
   }
 }

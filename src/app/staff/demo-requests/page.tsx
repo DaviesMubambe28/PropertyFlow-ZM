@@ -34,8 +34,8 @@ export default async function DemoRequestsPage({ searchParams }: { searchParams:
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto max-w-5xl px-5 py-12">
-        <h1 className="text-3xl font-semibold tracking-tight">Demo requests</h1>
+      <main className="site-width py-12">
+        <h1 className="text-3xl font-black tracking-tight text-brand sm:text-4xl">Demo requests</h1>
         <p className="mt-2 text-slate-600">View and follow up on the latest 100 matching enquiries.</p>
         <form className="my-6 flex flex-wrap items-end gap-3">
           <label className="grid gap-1 text-sm font-medium">Name, company or email
@@ -53,10 +53,10 @@ export default async function DemoRequestsPage({ searchParams }: { searchParams:
         {data?.length === 0 && <p>No requests match these filters.</p>}
         <div className="grid gap-4">
           {data?.map((request) => (
-            <article className="rounded-2xl border border-slate-200 bg-white p-5" key={request.id}>
+            <article className="rounded-2xl border border-line bg-white p-5" key={request.id}>
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h2 className="text-xl font-semibold">{request.company}</h2>
-                <span className="rounded-full bg-teal-50 px-3 py-1 text-sm capitalize text-teal-900">{request.status}</span>
+                <span className="rounded-full bg-tint px-3 py-1 text-sm capitalize text-deep">{request.status}</span>
               </div>
               <p className="mt-2 break-words text-sm">{request.name} · {request.email} {request.phone && `· ${request.phone}`}</p>
               <p className="mt-1 text-sm text-slate-600">Team of {request.team_size} · {dateFormat.format(new Date(request.created_at))}</p>

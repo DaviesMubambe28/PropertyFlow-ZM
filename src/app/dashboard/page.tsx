@@ -29,11 +29,11 @@ export default function DashboardOverviewPage() {
     <DashboardShell>
       <div className="space-y-6">
         {activeOrg && currentUser?.role === "owner" && remainingSetup.length > 0 && (
-          <details open className="rounded-2xl border border-teal-200 bg-teal-50 p-5 text-[#142A43]">
+          <details open className="rounded-lg border border-line bg-tint p-5 text-deep">
             <summary className="cursor-pointer font-semibold">Set up your workspace · {setupSteps.length - remainingSetup.length} of {setupSteps.length} complete</summary>
             <ul className="mt-3 grid gap-2 text-sm sm:grid-cols-3">
               {remainingSetup.map((step) => (
-                <li key={step.href}><Link href={step.href} className="inline-flex min-h-11 items-center underline decoration-teal-700 underline-offset-4">{step.label}</Link></li>
+                <li key={step.href}><Link href={step.href} className="inline-flex min-h-11 items-center underline decoration-brand underline-offset-4">{step.label}</Link></li>
               ))}
             </ul>
           </details>
@@ -42,39 +42,39 @@ export default function DashboardOverviewPage() {
           {cards.map((card) => {
             const Icon = card.icon;
             return (
-              <Link href={card.href} key={card.label} className="rounded-2xl border border-[#E5EAF0] bg-white p-5 shadow-sm hover:border-teal-700">
+              <Link href={card.href} key={card.label} className="rounded-lg border border-line bg-white p-5 shadow-sm hover:border-brand">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-[#667085]">{card.label}</p>
-                  <span className="rounded-xl bg-[#EAF6F7] p-2"><Icon className="h-4 w-4 text-[#087F8C]" /></span>
+                  <p className="text-sm text-quiet">{card.label}</p>
+                  <span className="rounded-xl bg-tint p-2"><Icon className="h-4 w-4 text-brand" /></span>
                 </div>
-                <p className="mt-5 text-3xl font-semibold text-[#17212F]">{card.value}</p>
+                <p className="mt-5 text-3xl font-semibold text-ink">{card.value}</p>
               </Link>
             );
           })}
         </div>
 
         <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[28px] border border-[#E5EAF0] bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-[#17212F]">Recently added available properties</h2>
+          <div className="rounded-lg border border-line bg-white p-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-ink">Recently added available properties</h2>
             <div className="mt-6 space-y-4">
               {orgProperties.slice(0, 3).map((property) => (
-                <div key={property.id} className="flex items-center justify-between rounded-2xl bg-[#F7F9FC] p-3">
+                <div key={property.id} className="flex items-center justify-between rounded-lg bg-canvas p-3">
                   <div>
-                    <p className="font-medium text-[#17212F]">{property.title}</p>
-                    <p className="text-sm text-[#667085]">{property.location}</p>
+                    <p className="font-medium text-ink">{property.title}</p>
+                    <p className="text-sm text-quiet">{property.location}</p>
                   </div>
-                  <span className="rounded-full bg-[#EAF6F7] px-2.5 py-1 text-xs font-medium text-[#16803C]">{property.status}</span>
+                  <span className="rounded-full bg-tint px-2.5 py-1 text-xs font-medium text-[#16803C]">{property.status}</span>
                 </div>
               ))}
               {orgProperties.length === 0 && (
-                <p className="rounded-xl border border-dashed border-[#E5EAF0] px-4 py-6 text-sm text-[#667085]">
+                <p className="rounded-xl border border-dashed border-line px-4 py-6 text-sm text-quiet">
                   No active properties in this workspace yet. Add a property to start your portfolio.
                 </p>
               )}
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-[#E5EAF0] bg-[#0B192A] p-6 text-white shadow-sm">
+          <div className="rounded-lg border border-line bg-deep p-6 text-white shadow-sm">
             <h2 className="text-xl font-semibold">Quick actions</h2>
             <div className="mt-5 grid gap-3 text-sm font-medium">
               <Link className="rounded-lg bg-white/10 px-4 py-3 hover:bg-white/20" href="/dashboard/properties#add-property">Add a property</Link>

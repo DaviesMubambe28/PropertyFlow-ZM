@@ -51,77 +51,77 @@ const planned = [
 
 export default function FeaturesPage() {
   return (
-    <div className="min-h-screen bg-white text-[#17212F]">
+    <div className="min-h-screen bg-white text-ink">
       <SiteHeader />
       <main>
-        <section className="bg-[#F7F9FC]">
-          <div className="mx-auto max-w-7xl px-5 py-16 sm:px-6 lg:py-20">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#087F8C]">Platform capabilities</p>
-            <h1 className="mt-3 max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-[#0B192A] sm:text-5xl">
+        <section className="page-intro">
+          <div className="site-width py-14 sm:py-20">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">Platform capabilities</p>
+            <h1 className="mt-3 mx-auto max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-deep sm:text-5xl">
               The building blocks for clearer property operations.
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-[#667085] sm:text-lg sm:leading-8">
+            <p className="mt-5 mx-auto max-w-2xl text-base leading-7 text-quiet sm:text-lg sm:leading-8">
               Explore the workflows represented in PropertyFlow ZM today. Available prototype screens and planned capabilities are intentionally distinguished.
             </p>
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#E5EAF0] bg-white px-3 py-1.5 text-xs font-medium text-[#667085]">
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-line bg-white px-3 py-1.5 text-xs font-medium text-quiet">
               <span className="h-2 w-2 rounded-full bg-[#C77D0A]" />
               Secure shared identity and tenant-isolated operational workspace
             </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:py-18">
+        <section className="mx-auto max-w-6xl px-5 py-14 sm:px-6 lg:py-18">
           <div className="mb-8 flex items-end justify-between gap-5">
             <div>
-              <h2 className="text-2xl font-semibold tracking-tight text-[#0B192A] sm:text-3xl">Available in the prototype</h2>
-              <p className="mt-2 text-sm text-[#667085]">Account and operational records are server-backed and isolated by active agency membership.</p>
+              <h2 className="text-2xl font-semibold tracking-tight text-deep sm:text-3xl">Available in the prototype</h2>
+              <p className="mt-2 text-sm text-quiet">Account and operational records are server-backed and isolated by active agency membership.</p>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {available.map((feature) => {
               const Icon = feature.icon;
               return (
-                <article key={feature.title} className="grid gap-5 rounded-2xl border border-[#E5EAF0] bg-white p-5 sm:grid-cols-[1fr_auto] sm:p-6">
+                <article key={feature.title} className="grid gap-5 rounded-lg border border-line bg-white p-5 sm:grid-cols-[1fr_auto] sm:p-6">
                   <div>
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EAF6F7] text-[#087F8C]">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-tint text-brand">
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </span>
-                    <h3 className="mt-4 text-lg font-semibold text-[#17212F]">{feature.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-[#667085]">{feature.description}</p>
+                    <h3 className="mt-4 text-lg font-semibold text-ink">{feature.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-quiet">{feature.description}</p>
                     <ul className="mt-4 space-y-2">
                       {feature.points.map((point) => (
-                        <li key={point} className="flex items-start gap-2 text-sm text-[#526174]">
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#087F8C]" aria-hidden="true" />
+                        <li key={point} className="flex items-start gap-2 text-sm text-quiet">
+                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
                           {point}
                         </li>
                       ))}
                     </ul>
                   </div>
-                  <span className="h-fit whitespace-nowrap rounded-full bg-[#F1F5F8] px-2.5 py-1 text-[10px] font-medium text-[#526174]">{feature.tag}</span>
+                  <span className="h-fit whitespace-nowrap rounded-full bg-tint px-2.5 py-1 text-[10px] font-medium text-quiet">{feature.tag}</span>
                 </article>
               );
             })}
           </div>
         </section>
 
-        <section className="border-y border-[#E5EAF0] bg-[#F7F9FC]">
-          <div className="mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:py-16">
+        <section className="border-y border-line bg-canvas">
+          <div className="mx-auto max-w-6xl px-5 py-14 sm:px-6 lg:py-16">
             <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#667085]">In development</p>
-              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-[#0B192A] sm:text-3xl">Not every workflow is ready yet.</h2>
-              <p className="mt-3 text-sm leading-6 text-[#667085]">These are not presented as working features in this prototype.</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-quiet">In development</p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-deep sm:text-3xl">Not every workflow is ready yet.</h2>
+              <p className="mt-3 text-sm leading-6 text-quiet">These are not presented as working features in this prototype.</p>
             </div>
             <div className="mt-7 grid gap-4 md:grid-cols-3">
               {planned.map((feature) => {
                 const Icon = feature.icon;
                 return (
-                  <article key={feature.title} className="rounded-2xl border border-[#E5EAF0] bg-white p-5">
+                  <article key={feature.title} className="rounded-lg border border-line bg-white p-5">
                     <div className="flex items-center justify-between gap-3">
-                      <Icon className="h-5 w-5 text-[#667085]" aria-hidden="true" />
-                      <span className="rounded-full border border-[#E5EAF0] px-2.5 py-1 text-[10px] font-medium text-[#667085]">Not available</span>
+                      <Icon className="h-5 w-5 text-quiet" aria-hidden="true" />
+                      <span className="rounded-full border border-line px-2.5 py-1 text-[10px] font-medium text-quiet">Not available</span>
                     </div>
-                    <h3 className="mt-4 font-semibold text-[#17212F]">{feature.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-[#667085]">{feature.description}</p>
+                    <h3 className="mt-4 font-semibold text-ink">{feature.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-quiet">{feature.description}</p>
                   </article>
                 );
               })}
@@ -129,14 +129,14 @@ export default function FeaturesPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:py-16">
-          <div className="flex flex-col gap-5 rounded-[24px] bg-[#0B192A] p-6 text-white sm:p-8 md:flex-row md:items-center md:justify-between">
+        <section className="mx-auto max-w-6xl px-5 py-14 sm:px-6 lg:py-16">
+          <div className="flex flex-col gap-5 rounded-lg bg-deep p-6 text-white sm:p-8 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#A7DADC]">Take a closer look</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-100">Take a closer look</p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight">Explore the current workspace screens.</h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Sign-up and stored records are demonstrations only; avoid entering sensitive or production customer data.</p>
             </div>
-            <Link href="/register" className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#0B192A] hover:bg-[#F1F5F8]">
+            <Link href="/register" className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-deep hover:bg-tint">
               Try the prototype <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>

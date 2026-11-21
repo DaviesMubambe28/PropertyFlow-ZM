@@ -3,12 +3,12 @@ import { SiteHeader } from "@/components/site-header";
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-[#F7F9FC] text-[#17212F]">
+    <div className="min-h-screen bg-canvas text-ink">
       <SiteHeader />
-      <main className="mx-auto max-w-3xl px-5 py-14 sm:px-6 sm:py-20">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#087F8C]">Prototype notice</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[#0B192A]">Terms of use</h1>
-        <div className="mt-7 space-y-6 text-sm leading-7 text-[#526174] sm:text-base">
+      <main className="site-width py-12 sm:py-16">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">Prototype notice</p>
+        <h1 className="mt-3 text-4xl font-black tracking-tight text-brand sm:text-5xl">Terms of use</h1>
+        <div className="mt-7 max-w-3xl space-y-6 border-t border-line pt-7 text-sm leading-7 text-quiet sm:text-base">
           <p>
             This website and application are provided as a frontend demonstration. They are not a production property-management service or a substitute for professional, legal or financial advice.
           </p>

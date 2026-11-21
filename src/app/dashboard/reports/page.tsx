@@ -47,9 +47,9 @@ export default function ReportsPage() {
 
   return (
     <DashboardShell>
-      <div className="rounded-[28px] border border-[#E5EAF0] bg-white p-6 shadow-sm">
-        <h2 className="text-2xl font-semibold text-[#17212F]">Operational reports</h2>
-        <p className="mt-2 text-sm text-slate-600">Dates use Lusaka time. The range filters leads by creation, viewings by appointment, tasks by due date and deals by closing date. Portfolio counts show current availability.</p>
+      <div className="rounded-lg border border-line bg-white p-6 shadow-sm">
+        <h2 className="text-2xl font-semibold text-ink">Operational reports</h2>
+        <p className="mt-2 text-sm text-quiet">Dates use Lusaka time. The range filters leads by creation, viewings by appointment, tasks by due date and deals by closing date. Portfolio counts show current availability.</p>
         <div className="mt-4 flex flex-wrap items-end gap-3">
           <label className="grid gap-1 text-sm font-medium">From
             <input type="date" value={startDate} max={endDate || undefined} onChange={(event) => setStartDate(event.target.value)} className="rounded-lg border border-slate-300 p-2" />
@@ -62,14 +62,14 @@ export default function ReportsPage() {
         {invalidRange && <p role="alert" className="mt-2 text-sm text-red-800">Choose an end date on or after the start date.</p>}
         <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {summary.map((item) => (
-            <div key={item.label} className="rounded-2xl border border-[#E5EAF0] bg-[#F7F9FC] p-4">
-              <p className="text-sm text-[#667085]">{item.label}</p>
-              <p className="mt-3 text-2xl font-semibold text-[#17212F]">{item.value}</p>
+            <div key={item.label} className="rounded-lg border border-line bg-canvas p-4">
+              <p className="text-sm text-quiet">{item.label}</p>
+              <p className="mt-3 text-2xl font-semibold text-ink">{item.value}</p>
             </div>
           ))}
         </div>
-        <h3 className="mt-8 text-lg font-semibold text-[#17212F]">Agent performance</h3>
-        <div className="mt-4 overflow-x-auto"><table className="w-full min-w-[620px] text-left text-sm"><thead className="border-b border-[#E5EAF0] text-[#667085]"><tr><th className="px-3 py-3 font-medium">Agent</th><th className="px-3 py-3 font-medium">Active leads</th><th className="px-3 py-3 font-medium">Viewings</th><th className="px-3 py-3 font-medium">Completed deals</th><th className="px-3 py-3 font-medium">Open tasks</th></tr></thead><tbody>{agentIds.map((agentId) => <tr key={agentId} className="border-b border-[#EEF2F5]"><td className="px-3 py-3 font-medium">{state.users.find((user) => user.id === agentId)?.fullName ?? `Agent ${agentId.slice(0, 8)}`}</td><td className="px-3 py-3">{orgLeads.filter((item) => item.assignedTo === agentId && !["converted", "lost"].includes(item.stage)).length}</td><td className="px-3 py-3">{orgViewings.filter((item) => item.agentId === agentId).length}</td><td className="px-3 py-3">{orgDeals.filter((item) => item.assignedTo === agentId && item.status === "completed").length}</td><td className="px-3 py-3">{orgTasks.filter((item) => item.assigneeId === agentId && item.status !== "done").length}</td></tr>)}{agentIds.length === 0 && <tr><td colSpan={5} className="px-3 py-6 text-center text-[#667085]">No agent activity has been recorded yet.</td></tr>}</tbody></table></div>
+        <h3 className="mt-8 text-lg font-semibold text-ink">Agent performance</h3>
+        <div className="mt-4 overflow-x-auto"><table className="w-full min-w-[620px] text-left text-sm"><thead className="border-b border-line text-quiet"><tr><th className="px-3 py-3 font-medium">Agent</th><th className="px-3 py-3 font-medium">Active leads</th><th className="px-3 py-3 font-medium">Viewings</th><th className="px-3 py-3 font-medium">Completed deals</th><th className="px-3 py-3 font-medium">Open tasks</th></tr></thead><tbody>{agentIds.map((agentId) => <tr key={agentId} className="border-b border-line"><td className="px-3 py-3 font-medium">{state.users.find((user) => user.id === agentId)?.fullName ?? `Agent ${agentId.slice(0, 8)}`}</td><td className="px-3 py-3">{orgLeads.filter((item) => item.assignedTo === agentId && !["converted", "lost"].includes(item.stage)).length}</td><td className="px-3 py-3">{orgViewings.filter((item) => item.agentId === agentId).length}</td><td className="px-3 py-3">{orgDeals.filter((item) => item.assignedTo === agentId && item.status === "completed").length}</td><td className="px-3 py-3">{orgTasks.filter((item) => item.assigneeId === agentId && item.status !== "done").length}</td></tr>)}{agentIds.length === 0 && <tr><td colSpan={5} className="px-3 py-6 text-center text-quiet">No agent activity has been recorded yet.</td></tr>}</tbody></table></div>
       </div>
     </DashboardShell>
   );

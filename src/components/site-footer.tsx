@@ -2,73 +2,33 @@ import Link from "next/link";
 import { Building2 } from "lucide-react";
 
 const linkGroups = [
-  {
-    title: "Platform",
-    links: [
-      { label: "Features", href: "/features" },
-      { label: "Pricing", href: "/pricing" },
-      { label: "Enterprise", href: "/enterprise" },
-      { label: "Property listings", href: "/properties" },
-      { label: "Sign in", href: "/login" },
-    ],
-  },
-  {
-    title: "Solutions",
-    links: [
-      { label: "Real estate agencies", href: "/#solutions" },
-      { label: "Independent agents", href: "/#solutions" },
-      { label: "Landlords", href: "/#solutions" },
-    ],
-  },
-  {
-    title: "Company & support",
-    links: [
-      { label: "About", href: "/about" },
-      { label: "Request a demo", href: "/contact" },
-      { label: "Privacy policy", href: "/privacy" },
-      { label: "Terms of service", href: "/terms" },
-    ],
-  },
+  { title: "Platform", links: [{ label: "Features", href: "/features" }, { label: "Pricing", href: "/pricing" }, { label: "Property listings", href: "/properties" }] },
+  { title: "Company", links: [{ label: "About", href: "/about" }, { label: "Enterprise", href: "/enterprise" }, { label: "Request a demo", href: "/contact" }] },
+  { title: "Support", links: [{ label: "Sign in", href: "/login" }, { label: "Privacy policy", href: "/privacy" }, { label: "Terms of service", href: "/terms" }] },
 ];
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-[#E5EAF0] bg-white">
-      <div className="mx-auto max-w-7xl px-5 py-12 sm:px-6 lg:py-14">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
-          <div className="max-w-sm">
-            <Link href="/" className="inline-flex items-center gap-3 text-[#17212F]">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#142A43] text-white">
-                <Building2 className="h-4 w-4" aria-hidden="true" />
-              </span>
-              <span className="text-lg font-semibold">PropertyFlow ZM</span>
-            </Link>
-            <p className="mt-4 text-sm leading-6 text-[#667085]">
-              A clearer way for Zambian property businesses to organise listings, client follow-ups and deal workflows.
-            </p>
+    <footer className="site-footer">
+      <div className="site-width grid grid-cols-2 gap-8 py-12 sm:grid-cols-4 sm:py-14">
+        <div className="col-span-2 sm:col-span-1">
+          <Link href="/" className="inline-flex items-center gap-2 font-bold tracking-tight">
+            <Building2 size={23} aria-hidden="true" /> PropertyFlow ZM
+          </Link>
+          <p className="mt-3 max-w-52 text-sm leading-6 text-blue-100">Property operations for real estate businesses in Zambia.</p>
+        </div>
+        {linkGroups.map(({ title, links }) => (
+          <div key={title}>
+            <h2 className="text-sm font-bold">{title}</h2>
+            <ul className="mt-3 space-y-2">
+              {links.map(({ label, href }) => (
+                <li key={href}><Link href={href} className="text-sm text-blue-100 hover:underline">{label}</Link></li>
+              ))}
+            </ul>
           </div>
-
-          {linkGroups.map((group) => (
-            <div key={group.title}>
-              <h2 className="text-sm font-semibold text-[#17212F]">{group.title}</h2>
-              <ul className="mt-4 space-y-3">
-                {group.links.map((link) => (
-                  <li key={link.label}>
-                    <Link href={link.href} className="text-sm text-[#667085] transition hover:text-[#142A43]">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-10 flex flex-col gap-2 border-t border-[#E5EAF0] pt-5 text-xs text-[#667085] sm:flex-row sm:items-center sm:justify-between">
-          <p>© PropertyFlow ZM</p>
-          <p>Designed for property businesses in Zambia.</p>
-        </div>
+        ))}
       </div>
+      <p className="site-width border-t border-white/30 py-4 text-xs text-blue-100">© PropertyFlow ZM</p>
     </footer>
   );
 }

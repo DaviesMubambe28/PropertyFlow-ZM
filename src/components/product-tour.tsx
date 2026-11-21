@@ -51,19 +51,19 @@ export function ProductTour() {
   const screen = screens[selected];
 
   return (
-    <section aria-label="Interactive product preview" className="min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white text-[#142A43] shadow-2xl shadow-black/20">
-      <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 sm:px-6">
+    <section aria-label="Interactive product preview" className="min-w-0 overflow-hidden rounded-lg border border-line bg-white text-deep">
+      <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3 sm:px-6">
         <span className="text-sm font-semibold">Agency workspace</span>
-        <span className="rounded bg-teal-50 px-2 py-1 text-xs font-medium text-teal-900">Sample data</span>
+        <span className="rounded bg-tint px-2 py-1 text-xs font-medium text-deep">Sample data</span>
       </div>
-      <div aria-label="Choose a workflow" role="group" className="grid grid-cols-2 gap-1 border-b border-slate-200 bg-slate-50 p-2 min-[480px]:grid-cols-4">
+      <div aria-label="Choose a workflow" role="group" className="grid grid-cols-2 gap-1 border-b border-line bg-tint p-2 min-[480px]:grid-cols-4">
         {screens.map(({ label, icon: Icon }, index) => (
           <button
             key={label}
             type="button"
             aria-pressed={index === selected}
             onClick={() => setSelected(index)}
-            className="flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-2 text-xs font-medium text-slate-700 hover:bg-white aria-pressed:bg-[#142A43] aria-pressed:text-white"
+            className="flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-2 text-xs font-medium text-ink hover:bg-white aria-pressed:bg-brand aria-pressed:text-white"
           >
             <Icon size={15} aria-hidden="true" />{label}
           </button>
@@ -71,18 +71,18 @@ export function ProductTour() {
       </div>
       <div className="p-4 sm:p-6" aria-live="polite">
         <h2 className="text-lg font-semibold">{screen.title}</h2>
-        <p className="mt-1 text-sm leading-6 text-slate-600">{screen.description}</p>
+        <p className="mt-1 text-sm leading-6 text-quiet">{screen.description}</p>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-left text-xs leading-5 sm:text-sm">
-            <thead className="bg-slate-50 text-slate-600">
+            <thead className="bg-tint text-quiet">
               <tr>{screen.columns.map((column) => <th scope="col" className="p-2.5 font-medium" key={column}>{column}</th>)}</tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-line">
               {screen.rows.map(([name, detail, status]) => (
                 <tr key={name}>
                   <th scope="row" className="p-2.5 font-medium">{name}</th>
                   <td className="p-2.5">{detail}</td>
-                  <td className="p-2.5 font-medium text-teal-900">{status}</td>
+                  <td className="p-2.5 font-medium text-deep">{status}</td>
                 </tr>
               ))}
             </tbody>

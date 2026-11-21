@@ -20,20 +20,20 @@ export default function EnterprisePage() {
     <>
       <SiteHeader />
       <main>
-        <section className="bg-[#102940] text-white">
-          <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
-            <p className="font-semibold text-teal-200">For established agencies</p>
-            <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">Coordinate your real estate operations as your team grows.</h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-200">Give agents a shared place to work and agency leaders visibility into listings, follow-ups and transactions.</p>
-            <Link href="/contact" className="mt-8 inline-flex min-h-11 items-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-[#142A43]">
+        <section className="page-intro">
+          <div className="site-width py-14 sm:py-20">
+            <p className="font-semibold text-brand">For established agencies</p>
+            <h1 className="mx-auto mt-5 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">Coordinate your real estate operations as your team grows.</h1>
+            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-quiet">Give agents a shared place to work and agency leaders visibility into listings, follow-ups and transactions.</p>
+            <Link href="/contact" className="mt-8 inline-flex min-h-11 items-center gap-2 brand-button-secondary rounded-full px-5 py-3 text-sm font-semibold">
               Discuss your requirements <ArrowRight size={16} aria-hidden="true" />
             </Link>
           </div>
         </section>
-        <section className="mx-auto grid max-w-6xl gap-5 px-5 py-14 sm:px-8 md:grid-cols-3" aria-label="Agency capabilities">
+        <section className="site-width grid gap-5 py-14 md:grid-cols-3" aria-label="Agency capabilities">
           {capabilities.map(({ title, text, icon: Icon }) => (
-            <article key={title} className="rounded-xl border border-slate-200 bg-white p-6">
-              <Icon className="text-teal-800" aria-hidden="true" />
+            <article key={title} className="rounded-xl border border-line bg-white p-6">
+              <Icon className="text-brand" aria-hidden="true" />
               <h2 className="mt-4 text-lg font-semibold">{title}</h2>
               <p className="mt-2 leading-7 text-slate-600">{text}</p>
             </article>
